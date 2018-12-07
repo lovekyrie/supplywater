@@ -273,7 +273,6 @@ export default {
       applyUnitList: [],
       replaceList: [],
       repairStockRoList: [],
-      repairEntityList: [],
       estateNm: "",
       deviceScatNm: "",
       formValidate: {

@@ -266,11 +266,12 @@ export default {
   data() {
     return {
       title: "设备维修详情",
+      modal1:false,
       ipPk: "",
       repInfo: {},
+      replaceList:[],
       treatStateList: [],
       repairStockRoList: [],
-      repairEntityList:[],
       formValidate: {
         repairLevel: "",
         faultType: "",
@@ -283,6 +284,14 @@ export default {
         replaceFittingNm: "",
         clientEvel: "",
         option: ""
+      },
+       modalValidate:{
+        deviceCd: "",
+        deviceNm: "",
+        deviceSpec: "",
+        deviceBrand: "",
+        stockNum: "",
+        stockManagePk: ""
       },
       ruleValidate: {
         repairLevel: [
@@ -328,7 +337,13 @@ export default {
           { required: true, message: "请输入详细意见", trigger: "change" }
         ]
       },
-      data1: []
+       ruleModalValidate:{
+        deviceCd: [{ required: true, message: "请选择配件编号", trigger: "change" }],
+        deviceNm: [{ required: true, message: "请输入配件名称", trigger: "blur" }],
+        deviceSpec: [{ required: true, message: "请输入规格型号", trigger: "blur" }],
+        deviceBrand: [{ required: true, message: "请输入品牌", trigger: "blur" }],
+        stockNum: [{ required: true, message: "请输入数量", trigger: "blur" }],
+      }
     };
   },
   components: {
@@ -339,11 +354,15 @@ export default {
     this.ipPk = this.until.getQueryString("ipPk");
     this.getInfo();
     this.getTreatStateList();
+    this.getDeviceCdList()
   },
   methods: {
     getInfo() {
       this.until.get("/ph/repairProcess/info/" + this.ipPk).then(res => {
         this.repInfo = res.data;
+        this.repInfo.repairStockDtoxes.forEach(item=>{
+          this.repairStockRoList.push(item.stockManageVo)
+        })
       });
     },
     getTreatStateList() {
@@ -353,6 +372,14 @@ export default {
           this.treatStateList=this.treatStateList.filter(item=>{
             return item.cd==='30020.180' || item.cd==='30020.190'
           })
+        }
+      });
+    },
+    //配件编号
+    getDeviceCdList(){
+      this.until.get("/ph/stockManage/list").then(res => {
+        if (res.status === "200") {
+          this.replaceList = res.data.items;
         }
       });
     },
