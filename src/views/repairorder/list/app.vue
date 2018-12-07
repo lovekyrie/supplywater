@@ -38,7 +38,7 @@ body {
           }
         }
       }
-      img {
+      img{
         position: absolute;
         right: 20px;
         top: 40%;
@@ -48,6 +48,11 @@ body {
         /*-webkit-transform: rotate(180deg);	!* Safari and Chrome *!*/
         /*-o-transform: rotate(180deg);		!* Opera *!*/
         /*-moz-transform: rotate(180deg);		!* Firefox *!*/
+      }
+      button{
+         position: absolute;
+         top: 40%;
+         right: 20px;
       }
       span.btn {
         position: absolute;
@@ -103,7 +108,10 @@ body {
             <span>处理状态：</span>
             {{item.statNm}}
           </p>
-          <img src="../components/img/toDetail.png">
+          <template>
+            <Button v-if="item.statCd==='30020.170'">接单</Button>
+            <img v-else src="../components/img/toDetail.png">
+          </template>
         </div>
       </Card>
     </scroll>

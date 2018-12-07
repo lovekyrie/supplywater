@@ -50,6 +50,7 @@
     }
     .add{
       left: 80%;
+      z-index: 1000;
       span{
         position: absolute;
         top: 50%;
@@ -68,8 +69,8 @@
        <p class="center">
          {{title}}
        </p>
-       <p class="add">
-       <span v-if="add" @click="toAdd">新建</span>
+       <p class="add" @click="goAdd()">
+       <span v-if="add">新建</span>
        </p>
        <p class="right">
          <img src="./img/search.png" v-if="search" @click="goSearch()"/>
@@ -118,7 +119,7 @@
                 window.location.href = url
                 // this.app.InterfaceName('h5_Jump',url)
             },
-            toAdd(){
+            goAdd(){
               let addUrl='add.html'
               window.location.href=addUrl
             }

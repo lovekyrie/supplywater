@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="less" type="text/less">
     html,body{
         width: 100%;
         height: 100%;
@@ -31,22 +31,22 @@
         <myHeader :title="title"></myHeader>
         <Form :label-width="80" class="search">
             <FormItem label="仓库名称">
-                <Select v-model="search.districtCd">
+                <Select v-model="search.warehouseCd">
                     <Option v-for="item in districtNms" :value="item.cd" :key="item.cd">{{item.nm}}</Option>
                 </Select>
             </FormItem>
             <FormItem label="备品名称">
-                <Input v-model="search.phCd" placeholder=""></Input>
+                <Input v-model="search.deviceNm" placeholder=""></Input>
             </FormItem>
 
             <FormItem label="备品规格">
-                <Input v-model="search.phCd" placeholder=""></Input>
+                <Input v-model="search.deviceSpec" placeholder=""></Input>
             </FormItem>
             <FormItem label="负责人">
-                <Input v-model="search.phCd" placeholder=""></Input>
+                <Input v-model="search.responUser" placeholder=""></Input>
             </FormItem>
             <FormItem label="品牌名称">
-                <Input v-model="search.phCd" placeholder=""></Input>
+                <Input v-model="search.deviceBrand" placeholder=""></Input>
             </FormItem>
             <FormItem>
                 <Button type="primary" @click="toSearch()">搜索</Button>
@@ -63,14 +63,12 @@
             return {
                 title:'库存报表查询',
                 districtNms:[],  //行政区域数据
-                options1:{},
-                options2:{},
                 search:{
-                    districtCd:'',
-                    estateNm:'',//小区名称
-                    phCd:'',  //泵房编号
-                    usageDate:'',//启用时间
-                    usageDate2:'',//启用时间
+                    warehouseCd:'', //仓库名称
+                    deviceNm:'',
+                    responUser:'', //品牌名称
+                    deviceSpec:'',//备品规格
+                    deviceBrand:'', //品牌名称
                 },
 
 
@@ -85,40 +83,14 @@
         methods: {
             toSearch(){
 
-                if(this.search.usageDate){
-                    let myDate1 = this.until.formatDate(this.search.usageDate)
-                    this.search.usageDate = myDate1.year+'-'+myDate1.month+'-'+myDate1.day
-                }
-
-                if(this.search.usageDate2){
-                    let myDate2 = this.until.formatDate(this.search.usageDate2)
-                    this.search.usageDate2 = myDate2.year+'-'+myDate2.month+'-'+myDate2.day
-                }
-
                 window.location.href ='list.html?search='+JSON.stringify(this.search)
-            },
-            changeDate1:function(e){
-                this.search.usageDate = e
-                this.options2 = {
-                    disabledDate:date=> {
-                            return date && date.valueOf() < new Date(this.search.usageDate);
-                    }
-                }
-            },
-            changeDate2:function(e){
-                this.search.usageDate2 = e
-                this.options1 = {
-                    disabledDate:date=> {
-                            return date && date.valueOf() > new Date(this.search.usageDate2);
-                    }
-                }
             },
             //获取选项数据
             getSelect(){
                 //行政区域
-                this.until.get('/general/cat/listByPrntCd?prntCd=70000')
+                this.until.get('/general/cat/listByPrntCd?prntCd=ck110')
                     .then(res=>{
-                        // this.districtNms = res.data.items
+                        this.districtNms = res.data.items
                     })
             }
 

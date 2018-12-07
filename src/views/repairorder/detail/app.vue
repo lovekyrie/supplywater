@@ -27,6 +27,9 @@ body {
     .ivu-date-picker {
       width: 100%;
     }
+    h3{
+      margin-bottom: 20px;
+    }
   }
   h3 {
     width: 100%;
@@ -64,9 +67,8 @@ body {
           &:nth-of-type(3) {
             width: 30%;
           }
-          &:nth-of-type(2n),
-          &:nth-last-of-type(1) {
-            width: 7.5%;
+          &:nth-of-type(2n) {
+            width: 10%;
           }
           &:not(:nth-last-of-type(1)) {
             border-right: 1px solid #e1e1e1;
@@ -104,9 +106,8 @@ body {
           &:nth-of-type(3) {
             width: 30%;
           }
-          &:nth-of-type(2n),
-          &:nth-last-of-type(1) {
-            width: 7.5%;
+          &:nth-of-type(2n) {
+            width: 10%;
           }
           &:not(:nth-last-of-type(1)) {
             border-right: 1px solid #e1e1e1;
@@ -180,8 +181,12 @@ body {
         <h3>更换配件</h3>
         <FormItem label="是否更换配件" prop="replaceFittingNm">
           <RadioGroup v-model="formValidate.replaceFittingNm">
-            <Radio label="是"></Radio>
-            <Radio label="否"></Radio>
+            <Radio label="10000.150">
+              <span>是</span>
+            </Radio>
+            <Radio label="10000.160">
+              <span>否</span>
+            </Radio>
           </RadioGroup>
         </FormItem>
         <table>
@@ -318,6 +323,9 @@ export default {
       this.until.get("/general/cat/listByPrntCd?prntCd=30020").then(res => {
         if (res.status === "200") {
           this.treatStateList = res.data.items;
+          this.treatStateList=this.treatStateList.filter(item=>{
+            return item.cd==='30020.180' || item.cd==='30020.190'
+          })
         }
       });
     },

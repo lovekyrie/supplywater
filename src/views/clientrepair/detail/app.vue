@@ -17,6 +17,7 @@ body {
   flex: 1;
   width: 100%;
   overflow: auto;
+  font-size: 12px;
   h3 {
     width: 100%;
     font-size: 0.15rem;

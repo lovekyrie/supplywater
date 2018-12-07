@@ -142,10 +142,7 @@ html {
             <img src="./img/shuixiang.png">
             <br>水箱清洗
           </span>
-          <span @click="go('')">
-            <img src="./img/shuixiang.png">
-            <br>设备维修
-          </span>
+          
           </p>
         </div>
       </div>

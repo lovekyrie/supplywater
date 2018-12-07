@@ -66,7 +66,7 @@ body {
 <template>
   <div id="container">
     <Spin size="large" fix v-if="spinShow"></Spin>
-    <myHeader :title="title" search="search" appBack="appBack" add="add" ></myHeader>
+    <myHeader :title="title" :search="search" :appBack="appBack" :add="add" ></myHeader>
     <p style="text-align: center; line-height: .3rem" v-show="total==0">暂无数据</p>
 
     <scroll class="main" :on-reach-bottom="handleReachBottom">
