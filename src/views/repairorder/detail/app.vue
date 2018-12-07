@@ -201,13 +201,13 @@ body {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, index) in repInfo.repairStockDtoxes" :key="index">
-              <td>{{item.stockManageVo.deviceCd}}</td>
-              <td>{{item.stockManageVo.deviceNm}}</td>
-              <td>{{item.stockManageVo.deviceSpec}}</td>
-              <td>{{item.stockManageVo.deviceBrand}}</td>
-              <td>{{item.stockManageVo.stockNum}}</td>
-              <td>删除</td>
+            <tr v-for="(item, index) in repairStockRoList" :key="index">
+              <td>{{item.deviceCd}}</td>
+              <td>{{item.deviceNm}}</td>
+              <td>{{item.deviceSpec}}</td>
+              <td>{{item.deviceBrand}}</td>
+              <td>{{item.stockNum}}</td>
+              <td @click="deleteStockRo(item)"> 删除</td>
             </tr>
             <tr>
               <td class="add-btn">
@@ -228,6 +228,33 @@ body {
           <Button @click="handleReset('formValidate')" style="margin-left: 8px">重置</Button>
         </FormItem>
       </Form>
+       <template>
+        <Modal v-model="modal1" title="添加配件" @on-ok="ok" @on-cancel="cancel">
+          <Form ref="modalValidate" :model="modalValidate" :rules="ruleModalValidate" :label-width="100">
+            <FormItem label="配件编号" prop="deviceCd">
+              <Select v-model="modalValidate.deviceCd" filterable @on-change="getRepairStock($event)">
+                <Option
+                  v-for="item in replaceList"
+                  :value="item.deviceCd"
+                  :key="item.stockManagePk"
+                >{{item.deviceCd}}</Option>
+              </Select>
+            </FormItem>
+               <FormItem label="配件名称" prop="deviceNm">
+          <Input v-model="modalValidate.deviceNm"></Input>
+        </FormItem>
+           <FormItem label="规格型号" prop="deviceSpec">
+          <Input v-model="modalValidate.deviceSpec"></Input>
+        </FormItem>
+           <FormItem label="品牌" prop="deviceBrand">
+          <Input v-model="modalValidate.deviceBrand"></Input>
+        </FormItem>
+           <FormItem label="数量" prop="stockNum">
+          <Input v-model="modalValidate.stockNum"></Input>
+        </FormItem>
+          </Form>
+        </Modal>
+      </template>
     </div>
   </div>
 </template>
@@ -331,7 +358,25 @@ export default {
     },
     addEquipmentList() {
       //增加表格数据
-      this.repairStockRoList.push(this.repairStockRo);
+      // this.repairStockRoList.push(this.repairStockRo);
+       this.modal1 = true;
+    },
+     ok() {
+      // this.$Message.info("Clicked ok");
+      //往表格里面添加配件信息数据
+      let stockObj={}
+      Object.assign(stockObj,this.modalValidate)
+      
+      this.repairStockRoList.push(stockObj)
+      this.modal1=false
+    },
+    cancel() {
+      this.modal1=false
+    },
+    deleteStockRo(item){
+     this.repairStockRoList= this.repairStockRoList.filter(itemRo=>{
+        return itemRo!=item
+      })
     },
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
