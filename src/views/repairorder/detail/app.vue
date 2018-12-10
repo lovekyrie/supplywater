@@ -179,8 +179,8 @@ body {
           <Input v-model="formValidate.report" type="textarea" :autosize="{minRows: 2,maxRows: 5}"></Input>
         </FormItem>
         <h3>更换配件</h3>
-        <FormItem label="是否更换配件" prop="replaceFittingNm">
-          <RadioGroup v-model="formValidate.replaceFittingNm">
+        <FormItem label="是否更换配件" prop="replaceFittingCd">
+          <RadioGroup v-model="formValidate.replaceFittingCd">
             <Radio label="10000.150">
               <span>是</span>
             </Radio>
@@ -360,8 +360,13 @@ export default {
     getInfo() {
       this.until.get("/ph/repairProcess/info/" + this.ipPk).then(res => {
         this.repInfo = res.data;
+        let stock={}
+        //如果已经填写过，则读取数据
+        Object.assign( this.formValidate,this.repInfo)
         this.repInfo.repairStockDtoxes.forEach(item=>{
-          this.repairStockRoList.push(item.stockManageVo)
+          Object.assign(stock,item.stockManageVo)
+          stock.stockNum=item.repairStockVo.stockNum
+          this.repairStockRoList.push(stock)
         })
       });
     },
@@ -382,6 +387,16 @@ export default {
           this.replaceList = res.data.items;
         }
       });
+    },
+     getRepairStock(e, i) {
+      let repairStock = this.replaceList.filter(item => {
+        return item.deviceCd === e;
+      });
+
+      this.modalValidate.deviceNm=repairStock[0].deviceNm
+      this.modalValidate.deviceSpec=repairStock[0].deviceSpec
+      this.modalValidate.deviceBrand=repairStock[0].deviceBrand
+      this.modalValidate.stockManagePk=repairStock[0].stockManagePk      
     },
     addEquipmentList() {
       //增加表格数据
@@ -410,28 +425,8 @@ export default {
         if (valid) {
           let myDate = this.until.formatDate(this.formValidate.applicationTm);
           this.formValidate.applicationTm = myDate.year + "-" + myDate.month + "-" + myDate.day;
-          let stockObj;
-
-          this.repInfo.repairStockDtoxes.forEach(item=>{
-            this.repairEntityList.push(item.stockManageVo)
-          })
-          if (this.repairStockRoList.length > 0) {
-            this.repairStockRoList.forEach((item, index) => {
-              stockObj = {};
-              stockObj.deviceCd = item["deviceCd" + index];
-              stockObj.deviceNm = item["deviceNm" + index];
-              stockObj.deviceSpec = item["deviceSpec" + index];
-              stockObj.deviceBrand = item["deviceBrand" + index];
-              stockObj.stockNum = item["stockNum" + index];
-              stockObj.stockManagePk = item["stockManagePk" + index];
-
-              this.repairEntityList.push(stockObj);
-            });
-           
-          }
-
-      
-           this.repInfo.repairStockRoList=this.repairEntityList;
+         
+           this.repInfo.repairStockRoList=this.repairStockRoList;
           //维修单号 后端生成
           Object.assign(this.repInfo, this.formValidate);
           this.until

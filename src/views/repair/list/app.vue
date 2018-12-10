@@ -158,12 +158,25 @@
                     let query = new this.Query();
 
                     //搜索功能函数,查询特定数据下的信息
-                    query.buildWhereClause('deviceCd',this.sbCd,'LK');
-                    query.buildWhereClause('estateNm',this.estateNm,'LK');
-                    query.buildWhereClause('deviceScatNm',this.districtCd,'LK');
-                    query.buildWhereClause('billCode',this.billCode,'LK');
-                    query.buildWhereClause('applicantUnitNm',this.applyUnit,'LK');
-                    query.buildWhereClause('statCd',this.treatState,'LK');
+                    
+                   if(this.sbCd){
+                     query.buildWhereClause('deviceCd',this.sbCd,'LK');
+                   }
+                   if(this.estateNm){
+                     query.buildWhereClause('estateNm',this.estateNm,'LK');
+                   }
+                   if(this.districtCd){
+                     query.buildWhereClause('deviceScatNm',this.districtCd,'LK');
+                   }
+                   if(this.billCode){
+                     query.buildWhereClause('billCode',this.billCode,'LK');
+                   }
+                   if(this.applyUnit){
+                     query.buildWhereClause('applicantUnitNm',this.applyUnit,'LK');
+                   }
+                   if(this.treatState){
+                     query.buildWhereClause('statCd',this.treatState,'LK');
+                   }
 
                     // query.buildWhereClause('districtCd',this.districtCd,'LK');
                     // query.buildWhereClause('estateNm',this.estateNm,'LK');
