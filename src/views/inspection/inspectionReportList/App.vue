@@ -47,27 +47,27 @@
 
             <scroll  class="main" :on-reach-bottom="handleReachBottom">
                 <Card dis-hover v-for="(item, index) in list" class="list" :key="index" >
-                    <div @click="toDetail(item.dispatchSendPk)">
+                    <div @click="toDetail(item.inspTaskPk)">
                         <p>
-                            <span>区域：</span>{{item.dispatchFromNm}}
+                            <span>区域：</span>{{item.districtNm}}
                         </p>
                         <p>
-                            <span>供水模式：</span>{{item.bmNm}}
+                            <span>供水模式：</span>{{item.waterSupplyModeNm}}
                         </p>
                         <p>
-                            <span>小区名称：</span>{{item.address}}
+                            <span>小区名称：</span>{{item.estateNm}}
                         </p>
                         <p>
-                            <span>巡检单位：</span>{{item.dealStatus | state}}
+                            <span>巡检单位：</span>{{item.inspUnitNm}}
                         </p>
                         <p>
-                            <span>巡检时间：</span>{{item.proLvNm}}
+                            <span>巡检时间：</span>{{item.inspectPlanTime}}
                         </p>
                         <p>
-                            <span>巡检人：</span>{{item.sendTm}}
+                            <span>巡检人：</span>{{item.inspectorName}}
                         </p>
                         <p>
-                            <span>巡检状态：</span>{{item.sendTm}}
+                            <span>巡检状态：</span>{{item.taskExeStatus | state}}
                         </p>
                         <img src="../components/img/toDetail.png"/>
                     </div>
@@ -116,9 +116,10 @@
                     // query.buildWhereClause('dealStatus',this.search.dealStatus,'LK');
                     // query.buildWhereClause('proLvNm',this.search.proLvNm,'LK');
                     // query.buildWhereClause('bmNm',this.search.bmNm,'LK');
+                    query.buildWhereClause("taskExeStatus","已巡检");
                     query.buildPageClause(this.pageNo,this.pageSize);
                     let param = query.getParam();
-                    this.until.get('/ph/dispatchSend/page',param)
+                    this.until.get('/ph/inspTask/page',param)
                         .then(res=>{
                             this.spinShow = false
 

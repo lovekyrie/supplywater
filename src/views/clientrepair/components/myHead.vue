@@ -40,24 +40,16 @@
       justify-content: flex-end;
       padding-right: .1rem;
       span{
-        padding: .05rem;
+        padding: .05rem 0.1rem;
         border: 1px solid #e2e2e2;
         border-radius: 3px;
+          font-size: .2rem;
       }
       img{
         width: .3rem;
       }
     }
-    .add{
-      left: 80%;
-      z-index: 1000;
-      span{
-        position: absolute;
-        top: 50%;
-        font-size: .2rem;
-        transform: translateY(-50%);
-      }
-    }
+   
   }
 </style>
 
@@ -69,10 +61,8 @@
        <p class="center">
          {{title}}
        </p>
-       <p class="add" @click="goAdd()">
-       <span v-if="add">新建</span>
-       </p>
        <p class="right">
+           <span v-if="add" @click="goAdd()">新建</span>
          <img src="./img/search.png" v-if="search" @click="goSearch()"/>
        </p>
   </div>

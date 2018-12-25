@@ -11,8 +11,6 @@
             flex-direction: column;
         }
     }
-
-
     .main{
         flex: 1;
         width: 100%!important;
@@ -38,34 +36,34 @@
 <template>
     <div id="container">
         <Spin size="large" fix v-if="spinShow"></Spin>
-        <myHeader :title="title" search="inspectionMissionList" indexBack="true"></myHeader>
+        <myHeader :title="title" search="inspectionMissionList"  indexBack="true"></myHeader>
             <scroll  class="main" :on-reach-bottom="handleReachBottom">
                 <Card dis-hover v-for="(item, index) in list" class="list" :key="index" >
-                    <div @click="toDetail(item.dispatchSendPk)">
+                    <div @click="toDetail(item.inspTaskPk)">
                         <p>
-                            <span>区域：</span>{{item.dispatchFromNm}}
+                            <span>区域：</span>{{item.districtNm}}
                         </p>
 
                         <p>
-                            <span>泵房名称：</span>{{item.address}}
+                            <span>泵房名称：</span>{{item.estateNm}}
                         </p>
                         <p>
-                            <span>供水分区：</span>{{item.bmNm}}
+                            <span>供水分区：</span>{{item.waterSupplyModeNm}}
                         </p>
                         <p>
-                            <span>设备套数：</span>{{item.dealStatus | state}}
+                            <span>设备套数：</span>{{item.deviceQty}}
                         </p>
                         <p>
-                            <span>巡检单位：</span>{{item.proLvNm}}
+                            <span>巡检单位：</span>{{item.inspUnitNm}}
                         </p>
                         <p>
-                            <span>巡检时间：</span>{{item.sendTm}}
+                            <span>巡检时间：</span>{{item.inspectPlanTime}}
                         </p>
                         <p>
-                            <span>巡检人：</span>{{item.sendTm}}
+                            <span>巡检人：</span>{{item.inspectorName}}
                         </p>
                         <p>
-                            <span>巡检状态：</span>{{item.sendTm}}
+                            <span>巡检状态：</span>{{item.taskExeStatus | state}}
                         </p>
                         <img src="../components/img/toDetail.png"/>
                     </div>
@@ -88,7 +86,20 @@
                 list:[],
                 pageNo:1,
                 pageSize:10,
-                total:''
+                total:'',
+                search:{
+                    //泵房名称
+                    estateNm:"",
+                    //巡检单位
+                    inspUnitCd:"",
+                    //开始时间
+                    inspectPlanTimeBeg:"",
+                    //结束时间
+                    inspectPlanTimeEnd:"",
+                    //供水模式
+                    waterSupplyModeCd:"",
+                }
+                
             }
         },
         components:{
@@ -96,15 +107,21 @@
         },
         mounted() {
             let myData = JSON.parse(this.until.getQueryString('search'))
+            console.log(myData);
+            
             if(myData){
-
-                this.usageTm = myData.usageDate+' '+myData.usageTime
+               /*  this.usageTm = myData.usageDate+' '+myData.usageTime
                 this.handOverTm = myData.handOverDate+' '+myData.handOverTime
-
                 this.districtCd = myData.districtCd
                 this.estateNm = myData.estateNm
-                this.phCd = myData.phCd
-            }
+                this.phCd = myData.phCd */
+                this.search.estateNm = myData.estateNm
+               this.search.inspUnitCd = myData.inspUnitCd
+               this.search.waterSupplyModeCd = myData.waterSupplyModeCd
+               this.search.inspectPlanTimeBeg = myData.inspectPlanTimeBeg
+               this.search.inspectPlanTimeEnd = myData.inspectPlanTimeEnd
+
+          }
             this.getList()
         },
         methods: {
@@ -112,11 +129,21 @@
                 let $q = new Promise((resolve,reject)=>{
                     let query = new this.Query();
                     // query.buildWhereClause('dealStatus',this.search.dealStatus,'LK');
-                    // query.buildWhereClause('proLvNm',this.search.proLvNm,'LK');
-                    // query.buildWhereClause('bmNm',this.search.bmNm,'LK');
+                    query.buildWhereClause('estateNm',this.search.estateNm,'LK');
+                    query.buildWhereClause('inspUnitCd',this.search.inspUnitCd,'LK');
+                    if(this.search.inspectPlanTimeBeg!=null && this.search.inspectPlanTimeBeg!=undefined && this.search.inspectPlanTimeBeg!=''){
+                        query.buildWhereClause("inspectPlanTime",this.search.inspectPlanTimeBeg,'GE');
+                        query.buildWhereClause("inspectPlanTime",this.search.inspectPlanTimeEnd,'LE');
+                    }
+                   // query.buildWhereClause('inspectPlanTimeBeg',this.search.inspectPlanTimeBeg,'GE');
+                  // query.buildWhereClause('inspectPlanTimeEnd',this.search.inspectPlanTimeEnd,'LE');
+                    query.buildWhereClause('waterSupplyModeCd',this.search.waterSupplyModeCd,'LK');
+                    query.buildWhereClause("taskExeStatus","待巡检");
                     query.buildPageClause(this.pageNo,this.pageSize);
                     let param = query.getParam();
-                    this.until.get('/ph/dispatchSend/page',param)
+                    console.log(param);
+                    
+                    this.until.get('/ph/inspTask/page',param)
                         .then(res=>{
                             this.spinShow = false
 
@@ -156,10 +183,6 @@
                     }, 2000);
                 });
             },
-            toEdit(ipPk,val){
-                let url='edit.html?type='+val+'&ipPk='+ipPk
-                window.location.href = url
-            }
         },
 
         filters:{

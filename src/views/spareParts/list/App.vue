@@ -37,7 +37,7 @@
 <template>
     <div id="container">
         <Spin size="large" fix v-if="spinShow"></Spin>
-        <myHeader :title="title" search="searchPlan" indexBack="true"></myHeader>
+        <myHeader :title="title" search="searchPlan" appBack="true"></myHeader>
         <scroll class="main" :on-reach-bottom="handleReachBottom">
             <Card dis-hover v-for="(item, index) in list" class="list" :key="index">
                 <div>
@@ -78,6 +78,7 @@
 <script>
     import Loading from "../../../hero/components/loading";
     import myHeader from "../components/myHead";
+import { log } from 'util';
 
     export default {
         data() {
@@ -127,10 +128,12 @@
                     this.until.get('/ph/stockManage/page', param)
                         .then(res => {
                             this.spinShow = false
-
                             if (res.status == 200 && res.data.items) {
+                               
+                                
                                 this.list.push(...res.data.items)
                                 this.total = res.page.total
+                                 console.log(res.data.items);
                             }
                             resolve('ok');
                         }, err => {

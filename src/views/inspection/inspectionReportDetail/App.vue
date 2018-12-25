@@ -47,24 +47,24 @@
         <div class="main">
             <h3>基础信息</h3>
             <div>
-                <p>设备名称：{{info.dispatchFromNm}}</p>
+                <p>设备名称：{{info.inspectorName}}</p>
                 <p>设备编号：{{info.bmNm}}</p>
-                <p>小区名称：{{info.sendTm}}</p>
+                <p>小区名称：{{info.estateName}}</p>
                 <p>巡检日期：{{info.dealLimit}}</p>
-                <p>巡检单位：{{info.reportMan}}</p>
+                <p>巡检单位：{{info.inspectUnit}}</p>
                 <p>巡检人：{{info.reportPhone }}</p>
-                <p>供水方式：{{info.proLvNm}}</p>
-                <p>供水分区：{{info.districtNm}}</p>
-                <p>其他需要说明的问题：{{info.address}}</p>
+                <p>供水方式：{{info.waterSupplyMode}}</p>
+                <p>供水分区：{{info.waterSupplyArea}}</p>
+                <p>其他需要说明的问题：{{}}</p>
             </div>
             <h3>泵房设施</h3>
             <div>
-                <p>水泵运行编号：{{info.arriveTm }}</p>
-                <p>进水压力（Mpa）：{{info.startTm }}</p>
-                <p>出水压力（Mpa）：{{info.startTm }}</p>
-                <p>电流（A）：{{info.startTm }}</p>
-                <p>变频器频率（Hz）：{{info.startTm }}</p>
-                <p>电度表读数（度）：{{info.startTm }}</p>
+                <p>水泵运行编号：{{info.pumpRunningIdSuperHigh }}</p>
+                <p>进水压力（Mpa）：{{info.inletPressureSuperHigh}}</p>
+                <p>出水压力（Mpa）：{{info.effluentPressureSuperHigh }}</p>
+                <p>电流（A）：{{info.electricCurrentSuperHigh }}</p>
+                <p>变频器频率（Hz）：{{info.converterFrequencySuperHigh }}</p>
+                <p>电度表读数（度）：{{info.ammeterDegree }}</p>
                 <div style="border-top: 1px solid #f2f2f2; margin-top: 15px; padding-top: 10px">
                     <p>
                         1、电源控制箱：
@@ -183,7 +183,7 @@
             </div>
             <h3>水箱（池）</h3>
             <div>
-                <p>1、水箱（池）与水泵联运系统运转情况：{{info.receiveTm }}</p>
+                <p>1、水箱（池）与水泵联运系统运转情况：{{info.waterPoolAndPumpLinkage }}</p>
                 <div>
                     <p>
                         2、
@@ -194,10 +194,10 @@
                         浮球阀使用情况：
                     </p>
                 </div>
-                <p>3、每季检查电动碟阀远程启闭功能完好情况：{{info.receiveMan}}；检查日期</p>
-                <p>4、水箱（池）是否有泄露现象：{{info.receivePhone}}</p>
-                <p>5、水箱（池）水位是否正常：{{info.proTypeNm}}  水位显示 米</p>
-                <p>6、水箱加盖上锁情况：{{info.proReason}}</p>
+                <p>3、每季检查电动碟阀远程启闭功能完好情况：{{info.checkElectricBufferValveRemoteOnOffPerSeason}}；检查日期</p>
+                <p>4、水箱（池）是否有泄露现象：{{info.waterPoolLeaking}}</p>
+                <p>5、水箱（池）水位是否正常：{{info.waterLevelOfPool}}  水位显示 米</p>
+                <p>6、水箱加盖上锁情况：{{info.waterPoolCoverLocked}}</p>
             </div>
             <h3>门禁视频</h3>
             <div>
@@ -259,7 +259,7 @@
         },
         methods: {
             getInfo(){
-                this.until.get('/ph/dispatchSend/info/'+this.ipPk)
+                this.until.get('/ph/InspReport/info/'+this.ipPk)
                     .then(res=>{
                         this.info = res.data
                     })

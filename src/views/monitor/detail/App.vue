@@ -49,20 +49,23 @@
 </style>
 
 <template>
+
     <div id="container">
         <myHeader :title="title"></myHeader>
         <div class="main">
+            
             <div>
+                <iframe :src="src" style="width: 100%;height: 600px;"></iframe>
                 <img :src="info.dispatchFromNm"/>
             </div>
             <div>
-                <p>生产厂家：{{info.dispatchFromNm}}</p>
-                <p>品牌：{{info.bmNm}}</p>
-                <p>型号：{{info.sendTm}}</p>
-                <p>功率：{{info.dealLimit}}</p>
-                <p>流量：{{info.reportMan}}</p>
-                <p>扬程：{{info.reportPhone }}</p>
-                <p>额定电流：{{info.proLvNm}}</p>
+                <p>生产厂家：{{info.product}}</p>
+                <p>品牌：{{info.pp}}</p>
+                <p>型号：{{info.xh}}</p>
+                <p>功率：{{info.gl}}</p>
+                <p>流量：{{info.ll}}</p>
+                <p>扬程：{{info.yc }}</p>
+                <p>额定电流：{{info.dl}}</p>
             </div>
         </div>
     </div>
@@ -77,6 +80,7 @@
                 title:'调度监控详情',
                 ipPk:'',
                 info:{},
+                src:"",
             }
         },
         components:{
@@ -84,13 +88,17 @@
         },
         mounted() {
             this.ipPk = this.until.getQueryString('ipPk')
+            this.src = "http://111.2.25.208:6081/view/ph/equipment/equipmentInfoApp.html?pk="+this.ipPk
             this.getInfo()
         },
         methods: {
             getInfo(){
-                this.until.get('/ph/dispatchSend/info/'+this.ipPk)
+
+                this.until.get('/ph/equipment/info/'+this.ipPk)
                     .then(res=>{
                         this.info = res.data
+                        console.log(this.info);
+                        
                     })
             }
         },

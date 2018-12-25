@@ -2,11 +2,11 @@
 html,
 body {
   width: 100%;
-  height: 200%;
+  height: 100%;
   font-size: 0.1rem;
   #container {
     width: 100%;
-    height: 200%;
+    height: 100%;
     display: flex;
     display: -webkit-flex;
     flex-direction: column;
@@ -120,7 +120,7 @@ body {
   }
 }
 
-.ivu-modal{
+.ivu-modal {
   width: 70% !important;
   margin: auto;
 }
@@ -131,13 +131,41 @@ body {
     <myHeader :title="title"></myHeader>
     <div class="main">
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
+        <FormItem label="泵房名称" prop="phPk">
+          <Select
+            v-model="phPk"
+            :loading="loading"
+            filterable
+            remote
+            :remote-method="remotePhQuery"
+            @on-change="selectPh($event)"
+          >
+            <Option v-for="item in phList" :value="item.phCd" :key="item.phCd">{{item.estateNm}}</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="设备大类" prop="deviceBigPk">
+          <Select v-model="deviceBigPk" @on-change="selectBig($event)">
+            <Option v-for="item in deviceBigList" :value="item.cd" :key="item.cd">{{item.nm}}</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="设备小类" prop="deviceSmallPk">
+          <Select v-model="deviceSmallPk" @on-change="selectSamll($event)">
+            <Option v-for="item in deviceSmallList" :value="item.cd" :key="item.cd">{{item.nm}}</Option>
+          </Select>
+        </FormItem>
         <FormItem label="设备编号" prop="devicePk">
-          <Select v-model="formValidate.devicePk" filterable @on-change="selectOpt($event)">
+          <Select
+            v-model="formValidate.devicePk"
+            filterable
+            remote
+            :remote-method="remoteQuery"
+            @on-change="selectOpt($event)"
+          >
             <Option
               v-for="item in equipmentList"
               :value="item.phDevicePk"
               :key="item.phDevicePk"
-            >{{item.deviceCd}} {{item.estateNm}} {{item.deviceScatNm}}</Option>
+            >{{item.deviceCd}}</Option>
           </Select>
         </FormItem>
         <FormItem label="小区名称" prop="estateNm">
@@ -213,7 +241,7 @@ body {
               <td>{{item.deviceSpec}}</td>
               <td>{{item.deviceBrand}}</td>
               <td>{{item.stockNum}}</td>
-              <td @click="deleteStockRo(item)"> 删除</td>
+              <td @click="deleteStockRo(item)">删除</td>
             </tr>
             <tr>
               <td class="add-btn">
@@ -229,9 +257,18 @@ body {
       </Form>
       <template>
         <Modal v-model="modal1" title="添加配件" @on-ok="ok" @on-cancel="cancel">
-          <Form ref="modalValidate" :model="modalValidate" :rules="ruleModalValidate" :label-width="100">
+          <Form
+            ref="modalValidate"
+            :model="modalValidate"
+            :rules="ruleModalValidate"
+            :label-width="100"
+          >
             <FormItem label="配件编号" prop="deviceCd">
-              <Select v-model="modalValidate.deviceCd" filterable @on-change="getRepairStock($event)">
+              <Select
+                v-model="modalValidate.deviceCd"
+                filterable
+                @on-change="getRepairStock($event)"
+              >
                 <Option
                   v-for="item in replaceList"
                   :value="item.deviceCd"
@@ -239,18 +276,18 @@ body {
                 >{{item.deviceCd}}</Option>
               </Select>
             </FormItem>
-               <FormItem label="配件名称" prop="deviceNm">
-          <Input v-model="modalValidate.deviceNm"></Input>
-        </FormItem>
-           <FormItem label="规格型号" prop="deviceSpec">
-          <Input v-model="modalValidate.deviceSpec"></Input>
-        </FormItem>
-           <FormItem label="品牌" prop="deviceBrand">
-          <Input v-model="modalValidate.deviceBrand"></Input>
-        </FormItem>
-           <FormItem label="数量" prop="stockNum">
-          <Input v-model="modalValidate.stockNum"></Input>
-        </FormItem>
+            <FormItem label="配件名称" prop="deviceNm">
+              <Input v-model="modalValidate.deviceNm"></Input>
+            </FormItem>
+            <FormItem label="规格型号" prop="deviceSpec">
+              <Input v-model="modalValidate.deviceSpec"></Input>
+            </FormItem>
+            <FormItem label="品牌" prop="deviceBrand">
+              <Input v-model="modalValidate.deviceBrand"></Input>
+            </FormItem>
+            <FormItem label="数量" prop="stockNum">
+              <Input v-model="modalValidate.stockNum"></Input>
+            </FormItem>
           </Form>
         </Modal>
       </template>
@@ -268,13 +305,23 @@ export default {
   data() {
     return {
       title: "设备维修申请",
+      pageNo: 1,
+      pageSize: 20,
+      loading: false,
+      loading1: false,
       modal1: false,
       equipmentList: [],
+      phList: [],
+      deviceSmallList:[],
+      deviceBigList:[],
       applyUnitList: [],
       replaceList: [],
       repairStockRoList: [],
       estateNm: "",
       deviceScatNm: "",
+      phPk: "",
+      deviceBigPk: "",
+      deviceSmallPk:'',
       formValidate: {
         applicationTm: "", //申请时间
         applicantUnitCd: "", //申请单位
@@ -286,7 +333,7 @@ export default {
         diagnosis: "", //故障描述
         replaceFittingCd: "" //是否更换配件
       },
-      repairStockRo:{
+      repairStockRo: {
         deviceCd: "",
         deviceNm: "",
         deviceSpec: "",
@@ -294,7 +341,7 @@ export default {
         stockNum: "",
         stockManagePk: ""
       },
-      modalValidate:{
+      modalValidate: {
         deviceCd: "",
         deviceNm: "",
         deviceSpec: "",
@@ -337,12 +384,20 @@ export default {
           { required: true, message: "请选择是否更换配件", trigger: "change" }
         ]
       },
-      ruleModalValidate:{
-        deviceCd: [{ required: true, message: "请选择配件编号", trigger: "change" }],
-        deviceNm: [{ required: true, message: "请输入配件名称", trigger: "blur" }],
-        deviceSpec: [{ required: true, message: "请输入规格型号", trigger: "blur" }],
-        deviceBrand: [{ required: true, message: "请输入品牌", trigger: "blur" }],
-        stockNum: [{ required: true, message: "请输入数量", trigger: "blur" }],
+      ruleModalValidate: {
+        deviceCd: [
+          { required: true, message: "请选择配件编号", trigger: "change" }
+        ],
+        deviceNm: [
+          { required: true, message: "请输入配件名称", trigger: "blur" }
+        ],
+        deviceSpec: [
+          { required: true, message: "请输入规格型号", trigger: "blur" }
+        ],
+        deviceBrand: [
+          { required: true, message: "请输入品牌", trigger: "blur" }
+        ],
+        stockNum: [{ required: true, message: "请输入数量", trigger: "blur" }]
       }
     };
   },
@@ -352,8 +407,59 @@ export default {
   },
   mounted() {
     this.getSelect();
+    this.getDeviceBigList();
   },
   methods: {
+    remotePhQuery(val) {
+      if (val) {
+        this.loading1 = true;
+        let query = new this.Query();
+        query.buildWhereClause("phNm", val, "LK");
+        let param = query.getParam();
+
+        setTimeout(() => {
+          this.until.get("/ph/pumph/list", param).then(res => {
+            if (res.status === "200") {
+              this.phList = res.data.items;
+            } else {
+              this.phList = [];
+            }
+          });
+        }, 200);
+      } else {
+        this.phList = [];
+      }
+    },
+    remoteQuery(val) {
+      this.loading1 = true;
+      let query = new this.Query();
+      if (val) {
+        query.buildWhereClause("deviceCd", val, "LK");
+      } 
+      else {
+
+        if (this.phPk) {
+          query.buildWhereClause("phCd", this.phPk, "EQ");
+        }
+        if (this.deviceBigPk) {
+          query.buildWhereClause("deviceBcatCd", this.deviceBigPk, "EQ");
+        }
+         if (this.deviceSmallPk) {
+          query.buildWhereClause("deviceScatCd", this.deviceSmallPk, "EQ");
+        }
+      }
+      let param = query.getParam();
+
+      setTimeout(() => {
+        this.until.get("/ph/device/list", param).then(res => {
+          if (res.status === "200") {
+            this.equipmentList = res.data.items;
+          } else {
+            this.equipmentList = [];
+          }
+        });
+      }, 200);
+    },
     //提交
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
@@ -361,7 +467,7 @@ export default {
           let myDate = this.until.formatDate(this.formValidate.applicationTm);
           this.formValidate.applicationTm =
             myDate.year + "-" + myDate.month + "-" + myDate.day;
-          
+
           this.formValidate.repairStockRoList = this.repairStockRoList;
           //维修单号 后端生成
           this.until
@@ -391,7 +497,10 @@ export default {
     //获取选项数据
     getSelect() {
       //设备编号
-      this.until.get("/ph/device/list").then(res => {
+      let query = new this.Query();
+      query.buildPageClause(this.pageNo, this.pageSize);
+      let param = query.getParam();
+      this.until.get("/ph/device/list", param).then(res => {
         if (res.status === "200") {
           this.equipmentList = res.data.items;
         }
@@ -423,15 +532,51 @@ export default {
       this.estateNm = equipment[0]["estateNm"];
       this.deviceScatNm = equipment[0]["deviceScatNm"];
     },
+    selectPh(e) {
+      //设备编号动态读取
+      this.remoteQuery();
+    },
+    selectBig(e) {
+      this.until.get("/general/cat/listByPrntCd", { prntCd: e }).then(
+        res => {
+          if (res.status === "200") {
+            this.deviceSmallList = res.data.items;
+          } else {
+            this.deviceSmallList = [];
+          }
+        },
+        err => {
+          this.deviceSmallList = [];
+        }
+      );
+      this.remoteQuery();
+    },
+    selectSamll(){
+      this.remoteQuery();
+    },
+    getDeviceBigList() {
+      this.until.get("/general/cat/listByPrntCd", { prntCd: 500.1 }).then(
+        res => {
+          if (res.status === "200") {
+            this.deviceBigList = res.data.items;
+          } else {
+            this.deviceBigList = [];
+          }
+        },
+        err => {
+          this.deviceBigList = [];
+        }
+      );
+    },
     getRepairStock(e, i) {
       let repairStock = this.replaceList.filter(item => {
         return item.deviceCd === e;
       });
 
-      this.modalValidate.deviceNm=repairStock[0].deviceNm
-      this.modalValidate.deviceSpec=repairStock[0].deviceSpec
-      this.modalValidate.deviceBrand=repairStock[0].deviceBrand
-      this.modalValidate.stockManagePk=repairStock[0].stockManagePk      
+      this.modalValidate.deviceNm = repairStock[0].deviceNm;
+      this.modalValidate.deviceSpec = repairStock[0].deviceSpec;
+      this.modalValidate.deviceBrand = repairStock[0].deviceBrand;
+      this.modalValidate.stockManagePk = repairStock[0].stockManagePk;
     },
     addEquipmentList() {
       //增加表格数据
@@ -441,19 +586,19 @@ export default {
     ok() {
       // this.$Message.info("Clicked ok");
       //往表格里面添加配件信息数据
-      let stockObj={}
-      Object.assign(stockObj,this.modalValidate)
-      
-      this.repairStockRoList.push(stockObj)
-      this.modal1=false
+      let stockObj = {};
+      Object.assign(stockObj, this.modalValidate);
+
+      this.repairStockRoList.push(stockObj);
+      this.modal1 = false;
     },
     cancel() {
-      this.modal1=false
+      this.modal1 = false;
     },
-    deleteStockRo(item){
-     this.repairStockRoList= this.repairStockRoList.filter(itemRo=>{
-        return itemRo!=item
-      })
+    deleteStockRo(item) {
+      this.repairStockRoList = this.repairStockRoList.filter(itemRo => {
+        return itemRo != item;
+      });
     }
   }
 };

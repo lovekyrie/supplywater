@@ -9,8 +9,8 @@
     p{
       height: .8rem;
       overflow: hidden;
-      position: absolute;
       width: 100%;
+      position: absolute;
     }
     img{
       width:.35rem;
@@ -43,6 +43,7 @@
         border: 1px solid #e2e2e2;
         border-radius: 3px;
           font-size: .2rem;
+          
       }
       img{
         width: .3rem;
@@ -61,7 +62,6 @@
          {{title}}
        </p>
        <p class="right">
-         <span v-if="newCreated" @click="goCreate()">新建</span>
          <img src="./img/search.png" v-if="search" @click="goSearch(search)"/>
        </p>
   </div>
@@ -71,21 +71,29 @@
 
     export default {
         name: 'App',
-        props:['title','newCreated','search','indexBack'],
+        props:['title','newCreated','search','indexBack','appBack'],
         mounted(){
            // this.abc();
 
         },
         methods: {
-            back(){
+           back(){
+                if(this.appBack){
+                    this.app.InterfaceName('h5_historyBack',{})
+                }else {
+                    window.history.go(-1)
+                }
+            },
+
+
+          /*   back(){
                 if(this.indexBack){
                     window.location.href = 'index.html'
                 }else {
                     window.history.go(-1)
                 }
-            },
+            }, */
             goCreate(){
-
                 let url = 'add.html'
                 window.location.href = url
             },

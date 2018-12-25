@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="less" scoped>
     html,body{
         width: 100%;
         height: 100%;
@@ -33,26 +33,28 @@
             <FormItem label="巡检日期">
                 <Row>
                     <Col span="11">
-                        <DatePicker type="date" placeholder="" v-model="search.usageDate" @on-change="changeDate1" :options="options1"></DatePicker>
+                        <DatePicker type="date" placeholder="" v-model="search.inspectPlanTimeBeg" @on-change="changeDate1" :options="options1"></DatePicker>
                     </Col>
                     <Col span="2" style="text-align: center">-</Col>
                     <Col span="11">
-                        <DatePicker type="date" placeholder="" v-model="search.usageDate2" @on-change="changeDate2" :options="options2"></DatePicker>
+                        <DatePicker type="date" placeholder="" v-model="search.inspectPlanTimeEnd" @on-change="changeDate2" :options="options2"></DatePicker>
                     </Col>
                 </Row>
             </FormItem>
             <FormItem label="泵房编号">
-                <Input v-model="search.phCd" placeholder=""></Input>
+                <Input v-model="search.estateNm" placeholder=""></Input>
             </FormItem>
             <FormItem label="巡检单位">
-                <Select v-model="search.districtCd">
-                    <Option v-for="item in districtNms" :value="item.cd" :key="item.cd">{{item.nm}}</Option>
-                </Select>
+            <el-select  v-model="search.inspUnitCd" filterable placeholder="巡检单位" clearable >
+            <el-option  v-for="item in inspUnitNms"  :key="item.nm"  :label="item.nm"  :value="item.cd"> </el-option>
+             </el-select>
             </FormItem>
             <FormItem label="供水模式">
-                <Select v-model="search.districtCd">
-                    <Option v-for="item in districtNms" :value="item.cd" :key="item.cd">{{item.nm}}</Option>
-                </Select>
+             
+            <el-select  v-model="search.waterSupplyModeCd" filterable placeholder="供水模式" clearable >
+            <el-option  v-for="item in waterSupplyModeNms"  :key="item.cd"  :label="item.nm"  :value="item.cd"> </el-option>
+             </el-select>
+           
             </FormItem>
 
             <FormItem>
@@ -63,22 +65,34 @@
 </template>
 
 <script>
+    import Vue from 'vue';
     import Loading from "../../../hero/components/loading";
     import myHeader from "../components/myHead";
+    import ElementUI from 'element-ui';
+    import 'element-ui/lib/theme-chalk/index.css';
+    Vue.use(ElementUI);
     export default {
         data() {
             return {
                 title:'',
                 type:'', //查询类型(巡检任务、巡检报表、过期巡检)
-                districtNms:[],  //行政区域数据
+                //巡检单位
+                inspUnitCd:[],
+                //供水模式
+                waterSupplyModeNms:[],
                 options1:{},
                 options2:{},
+                inspUnitNms:[],
                 search:{
-                    districtCd:'',
+                    estateNm:"",//泵房名称
+                    //供水模式
+                    waterSupplyModeCd:'',
+                    //巡检单位
+                    inspUnitNmCd:"",
                     estateNm:'',//小区名称
                     phCd:'',  //泵房编号
-                    usageDate:'',//启用时间
-                    usageDate2:'',//启用时间
+                    inspectPlanTimeBeg:'',//启用时间
+                    inspectPlanTimeEnd:'',//结束时间
                 },
 
 
@@ -88,13 +102,13 @@
             Loading,myHeader
         },
         mounted() {
+             this.getSelect()
             this.title = this.until.getQueryString('title')+'查询'
             this.type = this.until.getQueryString('type')
-            this.getSelect()
+           
         },
         methods: {
             toSearch(){
-
                 if(this.search.usageDate){
                     let myDate1 = this.until.formatDate(this.search.usageDate)
                     this.search.usageDate = myDate1.year+'-'+myDate1.month+'-'+myDate1.day
@@ -125,11 +139,18 @@
             },
             //获取选项数据
             getSelect(){
-                //行政区域
-                this.until.get('/general/cat/listByPrntCd?prntCd=70000')
+                //巡检单位
+                 this.until.get('/general/cat/listByPrntCd?prntCd=30010.400')
                     .then(res=>{
-                        // this.districtNms = res.data.items
-                    })
+                         this.inspUnitNms = res.data.items
+                    }) 
+                 //供水模式   
+                 this.until.get('/general/cat/listByPrntCd?prntCd=6a')
+                    .then(res=>{
+                         this.waterSupplyModeNms = res.data.items
+                    }) 
+
+
             }
 
         },

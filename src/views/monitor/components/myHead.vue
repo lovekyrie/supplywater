@@ -71,14 +71,15 @@
 
     export default {
         name: 'App',
-        props:['title','newCreated','search','indexBack'],
+        props:['title','newCreated','search','indexBack','appBack'],
         mounted(){
            // this.abc();
 
         },
         methods: {
             back(){
-                if(this.indexBack){
+                if(this.appBack){
+                   this.app.InterfaceName('h5_historyBack',{})
                     // window.location.href = 'index.html'
                 }else {
                     window.history.go(-1)

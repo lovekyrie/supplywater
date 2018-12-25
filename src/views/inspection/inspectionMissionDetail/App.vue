@@ -38,22 +38,22 @@
         <myHeader :title="title"></myHeader>
         <div class="main">
             <div>
-                <p>巡检单位名称：{{info.dispatchFromNm}}</p>
-                <p>小区名称：{{info.bmNm}}</p>
-                <p>行政区域名称：{{info.sendTm}}</p>
-                <p>供水模式：{{info.dealLimit}}</p>
-                <p>设备套数：{{info.reportMan}}</p>
-                <p>巡检计划时间：{{info.reportPhone }}</p>
-                <p>计划完成时间：{{info.proLvNm}}</p>
-                <p>巡检周期：{{info.districtNm}}</p>
-                <p>巡检人姓名：{{info.address}}</p>
-                <p>巡检人编号：{{info.proContent}}</p>
-                <p>任务执行次数：{{info.receiveMsg}}</p>
-                <p>巡检完成情况：{{info.arriveTm }}</p>
-                <p>任务结束时间：{{info.startTm }}</p>
-                <p>备注：{{info.receiveTm }}</p>
-                <p>分类：{{info.endTm}}</p>
-                <p>状态：{{info.receiveMan}}</p>
+                <p>巡检单位名称：{{info.inspUnitNm}}</p>
+                <p>小区名称：{{info.estateNm}}</p>
+                <p>行政区域名称：{{info.districtNm}}</p>
+                <p>供水模式：{{info.waterSupplyModeNm}}</p>
+                <p>设备套数：{{info.deviceQty}}</p>
+                <p>巡检计划时间：{{info.inspectPlanTime }}</p>
+                <p>计划完成时间：{{info.inspectPlanDoneTime}}</p>
+                <p>巡检周期：{{info.inspectCycle}}</p>
+                <p>巡检人姓名：{{info.inspectorName}}</p>
+                <p>巡检人编号：{{info.inspectorId}}</p>
+                <p>任务执行次数：{{info.taskExeNum}}</p>
+                <p>巡检完成情况：{{info.taskExeStatus }}</p>
+                <p>任务结束时间：{{info.taskEndTime }}</p>
+                <p>备注：{{info.rmks }}</p>
+                <p>分类：{{info.catNm}}</p>
+                <p>状态：{{info.statNm}}</p>
             </div>
         </div>
     </div>
@@ -79,10 +79,10 @@
         },
         methods: {
             getInfo(){
-                this.until.get('/ph/dispatchSend/info/'+this.ipPk)
+                this.until.get('/ph/inspTask/info/'+this.ipPk)
                     .then(res=>{
                         this.info = res.data
-                    })
+                })
             }
         },
 

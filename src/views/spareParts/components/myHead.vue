@@ -61,7 +61,7 @@
          {{title}}
        </p>
        <p class="right">
-         <span v-if="newCreated" @click="goCreate()">新建</span>
+        <!--  <span v-if="newCreated" @click="goCreate()">新建</span> -->
          <img src="./img/search.png" v-if="search" @click="goSearch(search)"/>
        </p>
   </div>
@@ -71,24 +71,29 @@
 
     export default {
         name: 'App',
-        props:['title','newCreated','search','indexBack'],
+        props:['title','newCreated','search','indexBack','appBack'],
         mounted(){
            // this.abc();
 
         },
         methods: {
+         
             back(){
-                if(this.indexBack){
-                    // window.location.href = 'index.html'
+              if(this.appBack){
+                    this.app.InterfaceName('h5_historyBack',{})
                 }else {
                     window.history.go(-1)
                 }
+              /*   if(this.indexBack){
+                     window.location.href = 'index.html'
+                }else {
+                    window.history.go(-1)
+                } */
             },
-            goCreate(){
-
+           /*  goCreate(){
                 let url = 'add.html'
                 window.location.href = url
-            },
+            }, */
             goSearch(val){
                 let url = 'search.html'
                 window.location.href = url

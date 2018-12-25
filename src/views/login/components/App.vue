@@ -27,19 +27,11 @@
       }
     },
     mounted() {
+      
     },
     methods: {
       submit(){
-        /*let phone = this.reg.checkPhone(this.phone);
-        if (phone != "ok") {
-          return this.Toast(phone);
-        }*/
-        // let psd = this.reg.checkLoginPwd(this.psd);
-        // if(psd !='ok'){
-        //   return this.Toast(psd);
-        // }
         let param = {
-
         }
         this.until.post('/general/access/appLogin?username=admin&password=1124&rememberMe=true',param)
           .then(res=>{
@@ -49,7 +41,6 @@
               this.Toast(res.message)
             }
           },err=>{});
-
       },
       Toast(val){
         this.$hero.confirm.show({

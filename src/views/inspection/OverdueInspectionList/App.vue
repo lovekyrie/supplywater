@@ -49,30 +49,30 @@
 
             <scroll  class="main" :on-reach-bottom="handleReachBottom">
                 <Card dis-hover v-for="(item, index) in list" class="list" :key="index" >
-                    <div @click="toDetail(item.dispatchSendPk)">
+                    <div @click="toDetail(item.inspTaskPk)">
                         <p>
-                            <span>区域：</span>{{item.dispatchFromNm}}
+                            <span>区域：</span>{{item.districtNm}}
                         </p>
                         <p>
-                            <span>供水模式：</span>{{item.bmNm}}
+                            <span>供水模式：</span>{{item.waterSupplyModeNm}}
                         </p>
                         <p>
-                            <span>小区名称：</span>{{item.address}}
+                            <span>小区名称：</span>{{item.estateNm}}
                         </p>
                         <p>
-                            <span>巡检单位：</span>{{item.dealStatus | state}}
+                            <span>巡检单位：</span>{{item.inspUnitNm}}
                         </p>
                         <p>
-                            <span>巡检时间：</span>{{item.proLvNm}}
+                            <span>巡检时间：</span>{{item.inspectPlanTime}}
                         </p>
                         <p>
-                            <span>巡检人：</span>{{item.sendTm}}
+                            <span>巡检人：</span>{{item.inspectorName}}
                         </p>
                         <p>
-                            <span>巡检状态：</span>{{item.sendTm}}
+                            <span>巡检状态：</span>{{item.taskExeStatus | state}}
                         </p>
                         <p>
-                            <span>任务结束时间：</span>{{item.sendTm}}
+                            <span>任务结束时间：</span>{{item.taskEndTime}}
                         </p>
                         <img src="../components/img/toDetail.png"/>
                     </div>
@@ -123,43 +123,15 @@
                     // query.buildWhereClause('dealStatus',this.search.dealStatus,'LK');
                     // query.buildWhereClause('proLvNm',this.search.proLvNm,'LK');
                     // query.buildWhereClause('bmNm',this.search.bmNm,'LK');
+                    query.buildWhereClause("taskExeStatus","逾期");
                     query.buildPageClause(this.pageNo,this.pageSize);
                     let param = query.getParam();
-                    this.until.get('/ph/dispatchSend/page',param)
+                    this.until.get('/ph/inspTask/page',param)
                         .then(res=>{
                             this.spinShow = false
-
                             if(res.status == 200 && res.data.items){
-                                this.listTotal.push(...res.data.items)
+                                this.list.push(...res.data.items)
                                 this.total = res.page.total
-                                if(this.type==1){
-
-                                    res.data.items.forEach((item)=>{
-                                        if(item.dealStatus==0 || item.dealStatus==1 || item.dealStatus==2 || item.dealStatus==3){
-                                            this.list.push(item)
-                                        }
-                                    })
-                                }
-                                if(this.type==2){
-
-                                    res.data.items.forEach((item)=>{
-                                        if(item.dealStatus=='0' || item.dealStatus=='3'){
-                                            this.list.push(item)
-                                        }
-                                    })
-                                }
-                                if(this.type==3){
-                                    res.data.items.forEach((item,index)=>{
-                                        if(item.dealStatus==4 || item.dealStatus==5){
-                                            console.log(index)
-                                            this.list.push(item)
-                                        }
-                                    })
-                                }
-                                if(this.list.length < this.pageSize && this.listTotal.length < this.total){
-                                    this.pageNo++
-                                    this.getList()
-                                }
                             }
                             resolve('ok');
                         },err=>{});
@@ -170,7 +142,7 @@
             toDetail(ipPk){
                 let url = 'inspectionReportDetail.html?ipPk='+ipPk+'&title='+this.title
                 window.location.href = url
-                // this.app.InterfaceName('h5_Jump',url)
+                
             },
             change(val){
               this.type = val
@@ -184,7 +156,7 @@
             handleReachBottom () {
                 return new Promise(resolve => {
                     setTimeout(() => {
-                        if(this.listTotal.length < this.total){
+                        if(this.list.length < this.total){
                             this.spinShow = true
                             this.pageNo++
                             this.getList()

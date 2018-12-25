@@ -58,7 +58,7 @@ html {
         width: 100%;
         span {
           display: inline-block;
-          float: left;
+          float:left;
           text-align: center;
           border-right: 1px solid #e5e5e5;
 

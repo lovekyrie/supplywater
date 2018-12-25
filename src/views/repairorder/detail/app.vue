@@ -2,11 +2,11 @@
 html,
 body {
   width: 100%;
-  height: 200%;
+  height: 100%;
   font-size: 0.1rem;
   #container {
     width: 100%;
-    height: 200%;
+    height: 100%;
     display: flex;
     display: -webkit-flex;
     flex-direction: column;
@@ -160,17 +160,17 @@ body {
             <Option v-for="item in treatStateList" :value="item.cd" :key="item.cd">{{item.nm}}</Option>
           </Select>
         </FormItem>
-        <FormItem label="完成时间：">
+        <FormItem label="完成时间："  prop="complateTm">
           <Row>
             <Col span="11">
-              <FormItem prop="complateTm">
+              <FormItem>
                 <DatePicker type="date" v-model="formValidate.complateTm"></DatePicker>
               </FormItem>
             </Col>
           </Row>
         </FormItem>
         <FormItem label="维修用时（小时）：" prop="repairUsedTm">
-          <Input v-model="formValidate.repairUsedTm"></Input>
+          <Input type="number" v-model="formValidate.repairUsedTm"></Input>
         </FormItem>
         <FormItem label="维修费用（元）：" prop="repairCost">
           <Input v-model="formValidate.repairCost"></Input>
@@ -278,8 +278,8 @@ export default {
         serviceman: "",
         statCd: "",
         complateTm: "",
-        repairUsedTm: "",
-        repairCost: "",
+        repairUsedTm: 0,
+        repairCost: 0,
         report: "",
         replaceFittingNm: "",
         clientEvel: "",
@@ -306,20 +306,9 @@ export default {
         statCd: [
           { required: true, message: "请选择维修状态", trigger: "change" }
         ],
-        complateTm: [
-          {
-            required: true,
-            type: "date",
-            message: "请选择完成时间",
-            trigger: "change"
-          }
-        ],
-        repairUsedTm: [
-          { required: true, message: "请输入维修用时（小时）", trigger: "blur" }
-        ],
-        repairCost: [
-          { required: true, message: "请输入维修费用（元）", trigger: "blur" }
-        ],
+        complateTm:[ { required: true ,type:"date",message:"请输入维修用时（小时）",trigger:"blur"}],
+        repairUsedTm:[ { required: true ,type:"number",message:"请输入维修用时（小时）",trigger:"blur"}],
+        repairCost:[ { required: true ,type:"number",message:"请输入维修费用（元）",trigger:"blur"}],
         report: [
           {
             required: true,
@@ -331,10 +320,10 @@ export default {
           { required: true, message: "请选择是否更换配件", trigger: "change" }
         ],
         clientEvel: [
-          { required: true, message: "请输入客户评价", trigger: "change" }
+          { required: true, message: "请输入客户评价", trigger: "blur" }
         ],
         option: [
-          { required: true, message: "请输入详细意见", trigger: "change" }
+          { required: true, message: "请输入详细意见", trigger: "blur" }
         ]
       },
        ruleModalValidate:{
@@ -362,7 +351,7 @@ export default {
         this.repInfo = res.data;
         let stock={}
         //如果已经填写过，则读取数据
-        Object.assign( this.formValidate,this.repInfo)
+        Object.assign(this.formValidate,this.repInfo)
         this.repInfo.repairStockDtoxes.forEach(item=>{
           Object.assign(stock,item.stockManageVo)
           stock.stockNum=item.repairStockVo.stockNum

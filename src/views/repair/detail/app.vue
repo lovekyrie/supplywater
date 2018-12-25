@@ -142,7 +142,7 @@ body {
             <td>{{item.stockManageVo.deviceNm}}</td>
             <td>{{item.stockManageVo.deviceSpec}}</td>
             <td>{{item.stockManageVo.deviceBrand}}</td>
-            <td>{{item.stockManageVo.num}}</td>
+            <td>{{item.repairStockVo.stockNum}}</td>
           </tr>
         </tbody>
       </table>

@@ -47,43 +47,43 @@
 <template>
     <div id="container">
         <Spin size="large" fix v-if="spinShow"></Spin>
-        <myHeader :title="title" search="searchPlan" indexBack="true"></myHeader>
+        <myHeader :title="title" search="searchPlan" appBack="true"></myHeader>
             <scroll  class="main" :on-reach-bottom="handleReachBottom">
                 <Card dis-hover v-for="(item, index) in list" class="list" :key="index" >
-                    <div @click="toDetail(item.dispatchSendPk)">
+                    <div @click="toDetail(item.monEquipmentPk)">
                         <p>
-                            <span>编号：</span>{{item.dispatchFromNm}}
+                            <span>编号：</span>{{item.monEquipmentPk}}
                         </p>
 
                         <p>
                             <span>名称：</span>{{item.address}}
                         </p>
                         <p>
-                            <span>通讯状态：</span>{{item.bmNm}}
+                            <span>通讯状态：</span>{{item.datetimes}}
                         </p>
                         <ul>
                             <li>
-                                进水压力：<br/>
-                                1#电流：<br/>
-                                1#泵：
+                                进水压力：{{item.press1}}<br/>
+                                1#电流：{{item.dl1}}<br/>
+                                1#泵：{{item.pump1bp==0?'停止':'变频'}}
                             </li>
                             <li>
-                                出水压力：<br/>
-                                2#电流：<br/>
-                                2#泵：
+                                出水压力： {{item.press2}}<br/>
+                                2#电流：{{item.dl2}}<br/>
+                                2#泵：{{item.pump2bp==0?'停止':'变频'}}
                             </li>
                             <li>
-                                出水设定压力：<br/>
-                                3#电流：<br/>
-                                3#泵：
+                                出水设定压力：{{item.pressset}}<br/> 
+                                3#电流：{{item.dl3}}<br/>
+                                3#泵：{{item.pump3bp==0?'停止':'变频'}}
                             </li>
                             <li>
-                                浊度：<br/>
-                                4#电流：<br/>
-                                4#泵：
+                                浊度：{{item.ntu}}<br/>
+                                4#电流：{{item.dl4}}<br/>
+                                4#泵：{{item.pump4bp==0?'停止':'变频'}}
                             </li>
                             <li>
-                                余氯：
+                                余氯：{{item.cl}}
                             </li>
                         </ul>
                         <img src="../components/img/toDetail.png"/>
@@ -135,12 +135,15 @@
                     // query.buildWhereClause('bmNm',this.search.bmNm,'LK');
                     query.buildPageClause(this.pageNo,this.pageSize);
                     let param = query.getParam();
-                    this.until.get('/ph/dispatchSend/page',param)
-                        .then(res=>{
+                    //this.until.get('/ph/dispatchSend/page',param)
+                     this.until.get('/ph/equipment/pagex',param)
+                     .then(res=>{
                             this.spinShow = false
 
                             if(res.status == 200 && res.data.items){
                                 this.list.push(...res.data.items)
+                                console.log(this.list);
+                                
                                 this.total = res.page.total
                             }
                             resolve('ok');
