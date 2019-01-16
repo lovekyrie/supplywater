@@ -58,7 +58,7 @@ html {
         width: 100%;
         span {
           display: inline-block;
-          float:left;
+          float: left;
           text-align: center;
           border-right: 1px solid #e5e5e5;
 
@@ -159,6 +159,7 @@ html {
         </div>
         <div class="content">
           <span @click="goMonitor()">
+            <!-- /viwes/monitor/list.html -->
             <img src="./img/tiaodu.png">
             <br>调度监控
           </span>
@@ -228,7 +229,7 @@ export default {
   },
   mounted() {
     //默认登陆管理员 用于解决原生登陆 H5没有登陆调用不了接口问题
-    this.login()
+    this.until.login();
   },
   methods: {
     //原生跳转
@@ -239,33 +240,21 @@ export default {
       this.app.InterfaceName("h5_beforcheck");
     },
     //通知原生跳转 备品备件
-    goSpareParts(){
+    goSpareParts() {
       this.app.InterfaceName("h5_goSpareParts");
     },
-     //通知原生跳转 设备巡检
-    goLnspection(){
+    //通知原生跳转 设备巡检
+    goLnspection() {
       this.app.InterfaceName("h5_goLnspection");
-    }, 
-     //通知原生跳转 设备维修
-    goRepair(){
+    },
+    //通知原生跳转 设备维修
+    goRepair() {
       this.app.InterfaceName("h5_goRepair");
-    }, 
-     //通知原生跳转 调度监控
-    goMonitor(){
+    },
+    //通知原生跳转 调度监控
+    goMonitor() {
       this.app.InterfaceName("h5_goMonitor");
-    }, 
-
-     login(){
-        let param = {
-        }
-        this.until.post('/general/access/appLogin?username=admin&password=1124&rememberMe=true',param)
-          .then(res=>{
-            if(res.status == 200){
-              this.until.loSave('DD_token',JSON.stringify(res.data));
-            }
-          },err=>{});
-      },
-
+    }
   }
 };
 </script>

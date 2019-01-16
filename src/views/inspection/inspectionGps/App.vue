@@ -1,12 +1,13 @@
 <style lang="less">
 @import "~vux/src/styles/reset.less";
 /* 地图容器必须设置宽和高属性 */
-html,body{
-        width: 100%;
-        height: 100%;
-    }
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
 .dialog-demo {
-  .weui-dialog{
+  .weui-dialog {
     border-radius: 8px;
     padding-bottom: 8px;
   }
@@ -34,35 +35,20 @@ html,body{
 </style>
 
 <template>
-  <baidu-map  class="map" :center="center"  :zoom="zoom"   @ready="handler" :scroll-wheel-zoom="true" :dragging="true" >
-    
-    <bm-polyline
-      :path="polylinePath"
-      stroke-color="blue"
-      :stroke-opacity="0.5"
-      :stroke-weight="2"
-    ></bm-polyline>
-    
-    
-    <bml-lushu
-      :path="path"
-      :icon="icon"
-      :play="play"
-      :rotation="true"
-      :speed="2000"
-    > </bml-lushu>
-    
-    
+  <baidu-map
+    class="map"
+    :center="center"
+    :zoom="zoom"
+    @ready="handler"
+    :scroll-wheel-zoom="true"
+    :dragging="true"
+  >
+    <bm-polyline :path="polylinePath" stroke-color="blue" :stroke-opacity="0.5" :stroke-weight="2"></bm-polyline>
 
-    <bm-point-collection
-      :points="points"
-      shape="BMAP_POINT_SHAPE_WATERDROP"
-      @click="clickHandler"
-    ></bm-point-collection>
-    <bm-info-window
-      :show="infoWindow.show"
-      :position="pointInfo"
-    >
+    <bml-lushu :path="path" :icon="icon" :play="play" :rotation="true" :speed="2000"></bml-lushu>
+
+    <bm-point-collection :points="points" shape="BMAP_POINT_SHAPE_WATERDROP" @click="clickHandler"></bm-point-collection>
+    <bm-info-window :show="infoWindow.show" :position="pointInfo">
       <ul>
         <li>小区名称：{{infoWindow.estateNm}}</li>
         <li>行政区域：{{infoWindow.districtNm}}</li>
@@ -75,27 +61,17 @@ html,body{
         @click.native="clickWaterSupplyAreaNm(value)"
         mini
         type="primary"
-        v-for="(value,i) in infoWindow.waterSupplyAreaNm" :key="i"
-      > {{value}} </x-button>
-
+        v-for="(value,i) in infoWindow.waterSupplyAreaNm"
+        :key="i"
+      >{{value}}</x-button>
     </bm-info-window>
     <bm-control>
-      <x-button
-        @click.native="show5 = true"
-        :gradients="['#1D62F0', '#19D5FD']"
-      >搜索站点</x-button>
-      <x-button
-        @click.native="show6 = true"
-        :gradients="['#A644FF', '#FC5BC4']"
-      >巡检轨迹</x-button>
+      <x-button @click.native="show5 = true" :gradients="['#1D62F0', '#19D5FD']">搜索站点</x-button>
+      <x-button @click.native="show6 = true" :gradients="['#A644FF', '#FC5BC4']">巡检轨迹</x-button>
     </bm-control>
     <!-- 搜索站点 -->
     <div>
-      <popup
-        v-model="show5"
-        :hide-on-blur="true"
-        max-height="50%"
-      >
+      <popup v-model="show5" :hide-on-blur="true" max-height="50%">
         <div class="popup2">
           <search
             @result-click="resultClick"
@@ -109,35 +85,15 @@ html,body{
         </div>
       </popup>
     </div>
-    
+
     <!-- 巡检轨迹 -->
     <div>
-      <popup
-        v-model="show6"
-        :hide-on-blur="true"
-      >
+      <popup v-model="show6" :hide-on-blur="true">
         <div class="popup2">
-          <picker
-            :data='year7'
-            :columns=3
-            v-model='year7Value'
-            @on-change='change'
-            ref="picker1"
-          ></picker>
-          <datetime
-            v-model="startTime"
-            format="YYYY-MM-DD HH:mm"
-            title="开始时间"
-          ></datetime>
-          <datetime
-            v-model="endTime"
-            format="YYYY-MM-DD HH:mm"
-            title="结束时间"
-          ></datetime>
-          <x-button
-            @click.native="startGps()"
-            :gradients="['#FF2719', '#FF61AD']"
-          >开始回放巡检轨迹</x-button>
+          <picker :data="year7" :columns="3" v-model="year7Value" @on-change="change" ref="picker1"></picker>
+          <datetime v-model="startTime" format="YYYY-MM-DD HH:mm" title="开始时间"></datetime>
+          <datetime v-model="endTime" format="YYYY-MM-DD HH:mm" title="结束时间"></datetime>
+          <x-button @click.native="startGps()" :gradients="['#FF2719', '#FF61AD']">开始回放巡检轨迹</x-button>
         </div>
       </popup>
     </div>
@@ -148,15 +104,15 @@ import Vue from "vue";
 import Loading from "../../../hero/components/loading";
 import { log } from "util";
 import BaiduMap from "vue-baidu-map";
-import { BmlLushu ,BmlMarkerClusterer } from "vue-baidu-map";
-import { XButton, Popup, Search, Picker, Datetime} from "vux";
+import { BmlLushu, BmlMarkerClusterer } from "vue-baidu-map";
+import { XButton, Popup, Search, Picker, Datetime } from "vux";
 Vue.use(BaiduMap, {
   ak: "hKosSsrAcdMkt2lcjYkwLrDA83qfoBvk"
 });
 export default {
   data() {
     return {
-      name:'',
+      name: "",
       play: true,
       path: [],
       polylinePath: [],
@@ -204,20 +160,21 @@ export default {
 
   mounted() {
     this.addPois();
-   
+
     //默认登陆管理员 用于解决原生登陆 H5没有登陆调用不了接口问题
-    this.login()
+    this.login();
     this.getUserInfo();
   },
   methods: {
-
     //点击供水区域
     clickWaterSupplyAreaNm(value) {
-       var num= value.replace(/[^0-9]/ig,"");
-       //let url = 'inspectionMissionDetail.html?ipPk='+ipPk
-        window.location.href = "http://111.2.25.208:6081/view/ph/equipment/equipmentInfoApp.html?pk="+num
-        //window.open("http://111.2.25.208:6081/view/ph/equipment/equipmentInfoApp.html?pk="+num)
-        //this.showDialogStyle = true;
+      var num = value.replace(/[^0-9]/gi, "");
+      //let url = 'inspectionMissionDetail.html?ipPk='+ipPk
+      window.location.href =
+        "http://111.2.25.208:6081/view/ph/equipment/equipmentInfoApp.html?pk=" +
+        num;
+      //window.open("http://111.2.25.208:6081/view/ph/equipment/equipmentInfoApp.html?pk="+num)
+      //this.showDialogStyle = true;
     },
 
     reset() {
@@ -225,12 +182,12 @@ export default {
     },
     //开始回放巡检轨迹
     startGps() {
-        let query = new this.Query();
-        query.buildWhereClause('sysUserNm',this.name,'EQ');
-        query.buildWhereClause('crtTm',this.startTime,'GE');
-        query.buildWhereClause('crtTm',this.endTime,'LE');
-        let param = query.getParam();
-        this.until.get("/ph/inspGps/pageMap", param).then(res => {
+      let query = new this.Query();
+      query.buildWhereClause("sysUserNm", this.name, "EQ");
+      query.buildWhereClause("crtTm", this.startTime, "GE");
+      query.buildWhereClause("crtTm", this.endTime, "LE");
+      let param = query.getParam();
+      this.until.get("/ph/inspGps/pageMap", param).then(res => {
         var pts = [];
         for (var i = 0; i < res.data[0].length; i++) {
           pts.push(
@@ -250,8 +207,6 @@ export default {
       this.show6 = false;
     },
 
-  
-
     //初始化地图信息
     handler({ BMap, map }) {
       this.center.lng = 121.57900597;
@@ -264,37 +219,35 @@ export default {
     },
     //选择巡检人员
     change(value) {
-     this.name = value[1];
+      this.name = value[1];
     },
     //获取人员信息
     getUserInfo() {
-        //获取单位信息
-        this.until.get('/general/cat/listByPrntCd?prntCd=30010.400')
-          .then(res=>{
-            //循环获取单位信息
-            for (var i = 0; i < res.data.items.length; i++) {
-              var element = res.data.items[i];
-            var obj={
-                name:element.nm,
-                value:element.cd,
-                parent:0
-            }
-              this.year7.push(obj)      
-            }
-         })
-       this.until.get('/ph/userx/list')
-          .then(res=>{
-            //循环人员信息
-            for (var i = 0; i < res.data.items.length; i++) { 
-              var element = res.data.items[i]
-               var obj={
-                name:element.nkNm,
-                value:element.nkNm,
-                parent:element.deptPk
-            }
-             this.year7.push(obj)       
-            }
-       })
+      //获取单位信息
+      this.until.get("/general/cat/listByPrntCd?prntCd=30010.400").then(res => {
+        //循环获取单位信息
+        for (var i = 0; i < res.data.items.length; i++) {
+          var element = res.data.items[i];
+          var obj = {
+            name: element.nm,
+            value: element.cd,
+            parent: 0
+          };
+          this.year7.push(obj);
+        }
+      });
+      this.until.get("/ph/userx/list").then(res => {
+        //循环人员信息
+        for (var i = 0; i < res.data.items.length; i++) {
+          var element = res.data.items[i];
+          var obj = {
+            name: element.nkNm,
+            value: element.nkNm,
+            parent: element.deptPk
+          };
+          this.year7.push(obj);
+        }
+      });
     },
     //选择站点 地图跳转
     resultClick(item) {
@@ -338,7 +291,7 @@ export default {
     addPois() {
       this.until.get("/ph/pumph/list").then(res => {
         const points = [];
-        
+
         for (var i = 0; i < res.data.items.length; i++) {
           var pointsData = res.data.items[i];
           var point = new BMap.Point(pointsData.lng, pointsData.lat);
@@ -361,23 +314,27 @@ export default {
           //设备厂家
           point.deviceSupplyerNm = pointsData.deviceSupplyerNm;
           points.push(point);
-          
         }
         this.points = points;
-        
       });
     },
-   login(){
-        let param = {
-        }
-        this.until.post('/general/access/appLogin?username=admin&password=1124&rememberMe=true',param)
-          .then(res=>{
-            if(res.status == 200){
-              this.until.loSave('DD_token',JSON.stringify(res.data));
+    login() {
+      let param = {};
+      this.until
+        .post(
+          "/general/access/appLogin?username=admin&password=1124&rememberMe=true",
+          param
+        )
+        .then(
+          res => {
+            if (res.status == 200) {
+              this.until.loSave("JS_token", JSON.stringify(res.data));
             }
-          },err=>{});
-      },
- }
+          },
+          err => {}
+        );
+    }
+  }
 };
 </script>
 

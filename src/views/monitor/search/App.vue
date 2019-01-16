@@ -18,10 +18,29 @@
         width: 100%!important;
         overflow-y: auto;
         .ivu-form-item{
-            width: 60%;
-            margin: 0 auto;
-            margin-top:10px;
-            margin-bottom: 10px;
+            width: 90%;
+            margin: 10px auto 30px;
+            .ivu-form-item-label{
+              text-align: left;
+            }
+             .ivu-form-item-content{
+               margin-left: 20%;
+            }
+            button{
+              width: 100%;
+            }
+            
+        }
+        >div{
+          &:nth-last-of-type(1){
+             .ivu-form-item-content{
+               margin-left: 0 !important;
+               button{
+                 border-color: #01aef0;
+                 background-color: #01aef0;
+               }
+             }
+          }
         }
     }
 </style>
@@ -29,7 +48,7 @@
 <template>
     <div id="container">
         <myHeader :title="title"></myHeader>
-        <Form :label-width="80" class="search">
+        <Form class="search">
             <FormItem label="泵房编号">
                 <Input v-model="search.phCd" placeholder=""></Input>
             </FormItem>
@@ -117,7 +136,7 @@
                 //行政区域
                 this.until.get('/general/cat/listByPrntCd?prntCd=70000')
                     .then(res=>{
-                        // this.districtNms = res.data.items
+                         this.districtNms = res.data.items
                     })
             }
 
