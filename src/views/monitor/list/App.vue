@@ -23,9 +23,19 @@ body {
       .ivu-table-tbody {
         .ivu-table-row {
           td {
+            height: 0.8rem;
             a {
               color: #01afec;
             }
+          }
+        }
+      }
+    }
+    .ivu-table-fixed {
+      .ivu-table-fixed-body {
+        .ivu-table-row {
+          td {
+            height: 0.8rem;
           }
         }
       }
@@ -308,7 +318,8 @@ export default {
       this.phCd = myData.phCd;
     }
 
-    if (!this.until.isLogined()) {
+    let cookieVal = this.until.getCookie("yui2-token");
+    if (!cookieVal) {
       let promise = this.until.login();
       promise.then(res => {
         this.getList();

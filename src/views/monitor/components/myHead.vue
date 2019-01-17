@@ -1,11 +1,11 @@
 <style lang="less">
 #header {
-  width: 100%;
-  padding: 0;
-  height: 0.8rem;
-  background: #01aef0;
-  border-bottom: 1px solid #e2e2e2;
   position: relative;
+  border-bottom: 1px solid #01aef0;
+  padding: 0;
+  width: 100%;
+  height: 0.8rem;
+  background-color: #01aef0;
   p {
     height: 0.8rem;
     overflow: hidden;

@@ -151,7 +151,8 @@ export default {
       this.treatState = myData.treatState;
     }
 
-    if (!this.until.isLogined()) {
+    let cookieVal = this.until.getCookie("yui2-token");
+    if (!cookieVal) {
       let promise = this.until.login();
       promise.then(res => {
         this.getList();

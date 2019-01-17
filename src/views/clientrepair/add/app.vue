@@ -132,7 +132,7 @@ body {
     <div class="main">
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
         <FormItem label="泵房名称" prop="phPk">
-          <Select
+          <Select placeholder="请输入关键字"
             v-model="phPk"
             :loading="loading"
             filterable
@@ -264,7 +264,7 @@ body {
             :label-width="100"
           >
             <FormItem label="配件编号" prop="deviceCd">
-              <Select
+              <Select placeholder="请输入关键字"
                 v-model="modalValidate.deviceCd"
                 filterable
                 @on-change="getRepairStock($event)"
@@ -273,7 +273,7 @@ body {
                   v-for="item in replaceList"
                   :value="item.deviceCd"
                   :key="item.stockManagePk"
-                >{{item.deviceCd}}</Option>
+                >{{item.deviceCd}},{{item.deviceNm}}</Option>
               </Select>
             </FormItem>
             <FormItem label="配件名称" prop="deviceNm">
