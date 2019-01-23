@@ -78,11 +78,11 @@ body {
           </p>
           <p>
             <span>小区名称：</span>
-            {{item.estateNm}}
+            {{item.phNm}}
           </p>
           <p>
             <span>设备名称：</span>
-            {{item.deviceScatNm}}
+            {{item.deviceNm}}
           </p>
           <p>
             <span>维修单号：</span>

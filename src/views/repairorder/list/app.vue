@@ -83,11 +83,11 @@ body {
           </p>
           <p>
             <span>小区名称：</span>
-            {{item.estateNm}}
+            {{item.phNm}}
           </p>
           <p>
             <span>设备名称：</span>
-            {{item.deviceScatNm}}
+            {{item.deviceNm}}
           </p>
           <p>
             <span>维修单号：</span>
@@ -182,7 +182,10 @@ export default {
           query.buildWhereClause("applicantUnitNm", this.search.applyUnit, "LK");
         }
         if (this.search.treatState) {
-          query.buildWhereClause("statCd", this.search.treatState, "LK");
+            query.buildWhereClause("statCd", this.search.treatState, "LK");
+        }
+        else{
+           query.buildWhereClause("statCd",'30020.170,30020.180,30020.190', "IN"); //已确认 进行中 已完成
         }
 
         query.buildPageClause(this.pageNo, this.pageSize);

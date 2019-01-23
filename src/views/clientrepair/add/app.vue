@@ -130,90 +130,85 @@ body {
   <div id="container">
     <myHeader :title="title"></myHeader>
     <div class="main">
-      <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
-        <FormItem label="泵房名称" prop="phPk">
-          <Select placeholder="请输入关键字"
-            v-model="phPk"
-            :loading="loading"
-            filterable
-            remote
-            :remote-method="remotePhQuery"
-            @on-change="selectPh($event)"
-          >
-            <Option v-for="item in phList" :value="item.phCd" :key="item.phCd">{{item.estateNm}}</Option>
+      <Form  ref="formValidate"   :model="formValidate"  :rules="ruleValidate" :label-width="100"  >
+        
+        <FormItem  label="申请单位"  prop="applicantUnitCd">
+          <Select  v-model="formValidate.applicantUnitCd"   filterable >
+            <Option   v-for="item in applyUnitList"  :value="item.cd"  :key="item.sysCatPk">{{item.nm}}</Option>
           </Select>
         </FormItem>
-        <FormItem label="设备大类" prop="deviceBigPk">
-          <Select v-model="deviceBigPk" @on-change="selectBig($event)">
-            <Option v-for="item in deviceBigList" :value="item.cd" :key="item.cd">{{item.nm}}</Option>
-          </Select>
-        </FormItem>
-        <FormItem label="设备小类" prop="deviceSmallPk">
-          <Select v-model="deviceSmallPk" @on-change="selectSamll($event)">
-            <Option v-for="item in deviceSmallList" :value="item.cd" :key="item.cd">{{item.nm}}</Option>
-          </Select>
-        </FormItem>
-        <FormItem label="设备编号" prop="devicePk">
-          <Select
-            v-model="formValidate.devicePk"
-            filterable
-            remote
-            :remote-method="remoteQuery"
-            @on-change="selectOpt($event)"
-          >
-            <Option
-              v-for="item in equipmentList"
-              :value="item.phDevicePk"
-              :key="item.phDevicePk"
-            >{{item.deviceCd}}</Option>
-          </Select>
-        </FormItem>
-        <FormItem label="小区名称" prop="estateNm">
-          <Input v-model="estateNm"></Input>
-        </FormItem>
-        <FormItem label="设备名称" prop="deviceScatNm">
-          <Input v-model="deviceScatNm"></Input>
-        </FormItem>
-        <!-- <FormItem label="维修单号" prop="billCode">
-          <Input v-model="formValidate.billCode"></Input>
-        </FormItem>-->
+
         <FormItem label="申请时间">
-          <Row>
-            <Col span="11">
-              <FormItem prop="applicationTm">
-                <DatePicker type="date" v-model="formValidate.applicationTm"></DatePicker>
-              </FormItem>
-            </Col>
-          </Row>
+          <FormItem prop="applicationTm">
+            <DatePicker   type="date"  v-model="formValidate.applicationTm"   ></DatePicker>
+          </FormItem>
         </FormItem>
-        <FormItem label="申请单位" prop="applicantUnitCd">
-          <Select v-model="formValidate.applicantUnitCd" filterable>
-            <Option v-for="item in applyUnitList" :value="item.cd" :key="item.sysCatPk">{{item.nm}}</Option>
-          </Select>
+
+        <FormItem   label="申请人"   prop="proposer" >
+         <Input v-model="formValidate.proposer"></Input>
         </FormItem>
-        <FormItem label="申请人" prop="proposer">
-          <Input v-model="formValidate.proposer"></Input>
-        </FormItem>
-        <FormItem label="联系电话" prop="mob">
+        
+        <FormItem  label="联系电话"   prop="mob" >
           <Input v-model="formValidate.mob"></Input>
-        </FormItem>
-        <FormItem label="维修单位" prop="repairUnitCd">
-          <Select v-model="formValidate.repairUnitCd" filterable>
-            <Option v-for="item in applyUnitList" :value="item.cd" :key="item.sysCatPk">{{item.nm}}</Option>
+         </FormItem>
+       
+        <FormItem  label="维修单位"  prop="repairUnitCd" > 
+          <Select  v-model="formValidate.repairUnitCd"  filterable >
+            <Option  v-for="item in applyUnitList"  :value="item.cd"  :key="item.sysCatPk" >{{item.nm}}</Option>
           </Select>
         </FormItem>
-        <FormItem label="预算费用" prop="estimatedCost">
+
+        <FormItem  label="泵房名称"   prop="estateNm">
+          <Select placeholder="请输入关键字"  v-model="formValidate.estateNm"   filterable  remote
+            :remote-method="remotePhQuery"  @on-change="remoteQuery()" >
+            <Option
+              v-for="item in phList"
+              :value="item.estateNm"
+              :key="item.phCd"
+            >{{item.estateNm}}</Option>
+          </Select>
+        </FormItem>
+
+        <FormItem  label="设备大类" prop="deviceBigPk">
+          <Select  v-model="deviceBigPk"  @on-change="selectBig($event)" >
+            <Option  v-for="item in deviceBigList"  :value="item.cd" :key="item.sysCatPk">{{item.nm}}</Option>
+          </Select>
+        </FormItem>
+
+        <FormItem  label="设备小类"  prop="deviceSmallPk">
+          <Select  v-model="deviceSmallPk"   @on-change="selectSamll($event)" >
+            <Option  v-for="item in deviceSmallList"  :value="item.cd"  :key="item.sysCatPk">{{item.nm}}</Option>
+          </Select>
+        </FormItem>
+
+        <FormItem  label="设备子类"  prop="deviceDPk">
+          <Select  v-model="deviceDPk"  @on-change="selectDcat($event)" >
+            <Option v-for="item in deviceDList" :value="item.cd"  :key="item.sysCatPk">{{item.nm}}</Option>
+          </Select>
+        </FormItem>
+
+        <FormItem  label="设备名称" prop="deviceNm"  >
+          <Select  v-model="deviceNm"  @on-change="remoteQuery()">
+            <Option  v-for="item in deviceNms"  :value="item.nm"  :key="item.sysCatPk">{{item.nm}}</Option>
+          </Select>
+        </FormItem>
+
+        <FormItem  label="设备编号"   prop="devicePk" >
+          <Select  v-model="formValidate.devicePk"  filterable remote :remote-method="remoteQuery" @on-change="selectOpt($event)">
+            <Option   v-for="item in equipmentList"  :value="item.deviceCd"  :key="item.phDevicePk" >{{item.deviceCd}}</Option>
+          </Select>
+        </FormItem>
+     
+        <FormItem label="故障描述"  prop="diagnosis"  >
+          <Input  v-model="formValidate.diagnosis"  type="textarea"  :autosize="{minRows: 2,maxRows: 5}"></Input>
+        </FormItem>
+
+        <FormItem  label="预算费用"  prop="estimatedCost"  >
           <Input v-model="formValidate.estimatedCost"></Input>
         </FormItem>
-        <FormItem label="故障描述" prop="diagnosis">
-          <Input
-            v-model="formValidate.diagnosis"
-            type="textarea"
-            :autosize="{minRows: 2,maxRows: 5}"
-          ></Input>
-        </FormItem>
-        <h3>更换配件</h3>
-        <FormItem label="是否更换配件" prop="replaceFittingCd">
+
+        <!-- <h3>更换配件</h3> -->
+        <FormItem label="是否更换配件"  prop="replaceFittingCd" >
           <RadioGroup v-model="formValidate.replaceFittingCd">
             <Radio label="10000.150">
               <span>是</span>
@@ -223,106 +218,55 @@ body {
             </Radio>
           </RadioGroup>
         </FormItem>
-        <table>
-          <thead>
-            <tr>
-              <th>配件编号</th>
-              <th>配件名称</th>
-              <th>规格型号</th>
-              <th>品牌</th>
-              <th>数量</th>
-              <th>操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(item, index) in repairStockRoList" :key="index">
-              <td>{{item.deviceCd}}</td>
-              <td>{{item.deviceNm}}</td>
-              <td>{{item.deviceSpec}}</td>
-              <td>{{item.deviceBrand}}</td>
-              <td>{{item.stockNum}}</td>
-              <td @click="deleteStockRo(item)">删除</td>
-            </tr>
-            <tr>
-              <td class="add-btn">
-                <Button type="dashed" long @click="addEquipmentList">添加</Button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+
+        <FormItem  v-if="formValidate.replaceFittingCd=='10000.150'"  label="配件名称"  prop="deviceCd" >
+          <Select placeholder="请输入关键字"   v-model="formValidate.deviceCd"  filterable  @on-change="getRepairStock($event)">
+            <Option  v-for="item in replaceList"  :value="item.stockManagePk"  >
+              {{item.deviceNm}},{{item.deviceSpec}},【{{item.deviceBrand}}】
+            </Option>
+          </Select>
+        </FormItem>
+        <!-- <i-table  border   :content="self"  :columns="columns7"  :data="listData"></i-table> -->
+  
         <FormItem>
-          <Button type="primary" @click="handleSubmit('formValidate')">提交</Button>
-          <!-- <Button @click="handleReset('formValidate')" style="margin-left: 8px">重置</Button> -->
+          <!-- <Button  type="primary"   @click="handleSubmit('formValidate')" >提交</Button> -->
+          <Button  type="primary"   @click="add()" >提交</Button>
         </FormItem>
       </Form>
-      <template>
-        <Modal v-model="modal1" title="添加配件" @on-ok="ok" @on-cancel="cancel">
-          <Form
-            ref="modalValidate"
-            :model="modalValidate"
-            :rules="ruleModalValidate"
-            :label-width="100"
-          >
-            <FormItem label="配件编号" prop="deviceCd">
-              <Select placeholder="请输入关键字"
-                v-model="modalValidate.deviceCd"
-                filterable
-                @on-change="getRepairStock($event)"
-              >
-                <Option
-                  v-for="item in replaceList"
-                  :value="item.deviceCd"
-                  :key="item.stockManagePk"
-                >{{item.deviceCd}},{{item.deviceNm}}</Option>
-              </Select>
-            </FormItem>
-            <FormItem label="配件名称" prop="deviceNm">
-              <Input v-model="modalValidate.deviceNm"></Input>
-            </FormItem>
-            <FormItem label="规格型号" prop="deviceSpec">
-              <Input v-model="modalValidate.deviceSpec"></Input>
-            </FormItem>
-            <FormItem label="品牌" prop="deviceBrand">
-              <Input v-model="modalValidate.deviceBrand"></Input>
-            </FormItem>
-            <FormItem label="数量" prop="stockNum">
-              <Input v-model="modalValidate.stockNum"></Input>
-            </FormItem>
-          </Form>
-        </Modal>
-      </template>
-    </div>
-  </div>
-</template>
     </div>
   </div>
 </template>
 
 <script>
+import Vue from "vue";
+import { XButton, Popup, Search, Picker, Datetime } from "vux";
 import Loading from "../../../hero/components/loading";
 import myHeader from "../components/myHead";
 export default {
   data() {
     return {
       title: "设备维修申请",
-      pageNo: 1,
-      pageSize: 20,
       loading: false,
       loading1: false,
-      modal1: false,
       equipmentList: [],
       phList: [],
-      deviceSmallList:[],
-      deviceBigList:[],
+      deviceSmallList: [],
+      deviceDList: [],
+      deviceBigList: [],
+      deviceNms: [],
       applyUnitList: [],
       replaceList: [],
       repairStockRoList: [],
-      estateNm: "",
       deviceScatNm: "",
-      phPk: "",
+      deviceNm: "",
       deviceBigPk: "",
-      deviceSmallPk:'',
+      deviceSmallPk: "",
+      deviceDPk: "",
+      part:[],  //配件
+      device:[],//设备
+      listData:[],//向后台传数据
       formValidate: {
+        devicePk:"",
         applicationTm: "", //申请时间
         applicantUnitCd: "", //申请单位
         repairUnitCd: "", //维修单位
@@ -331,28 +275,10 @@ export default {
         repairUnitCd: "", //维修单位
         estimatedCost: "", //预算费用
         diagnosis: "", //故障描述
-        replaceFittingCd: "" //是否更换配件
-      },
-      repairStockRo: {
-        deviceCd: "",
-        deviceNm: "",
-        deviceSpec: "",
-        deviceBrand: "",
-        stockNum: "",
-        stockManagePk: ""
-      },
-      modalValidate: {
-        deviceCd: "",
-        deviceNm: "",
-        deviceSpec: "",
-        deviceBrand: "",
-        stockNum: "",
-        stockManagePk: ""
+        replaceFittingCd: "" ,//是否更换配件
+        estateNm:""//泵房名称
       },
       ruleValidate: {
-        // devicePk: [
-        //   { required: true, message: "请选择设备编号", trigger: "change" }
-        // ],
         billCode: [
           { required: true, message: "请输入维修单号", trigger: "blur" }
         ],
@@ -384,21 +310,6 @@ export default {
           { required: true, message: "请选择是否更换配件", trigger: "change" }
         ]
       },
-      ruleModalValidate: {
-        deviceCd: [
-          { required: true, message: "请选择配件编号", trigger: "change" }
-        ],
-        deviceNm: [
-          { required: true, message: "请输入配件名称", trigger: "blur" }
-        ],
-        deviceSpec: [
-          { required: true, message: "请输入规格型号", trigger: "blur" }
-        ],
-        deviceBrand: [
-          { required: true, message: "请输入品牌", trigger: "blur" }
-        ],
-        stockNum: [{ required: true, message: "请输入数量", trigger: "blur" }]
-      }
     };
   },
   components: {
@@ -410,13 +321,16 @@ export default {
     this.getDeviceBigList();
   },
   methods: {
+    addRow() {
+     
+    },
+ 
     remotePhQuery(val) {
       if (val) {
         this.loading1 = true;
         let query = new this.Query();
         query.buildWhereClause("phNm", val, "LK");
         let param = query.getParam();
-
         setTimeout(() => {
           this.until.get("/ph/pumph/list", param).then(res => {
             if (res.status === "200") {
@@ -435,21 +349,24 @@ export default {
       let query = new this.Query();
       if (val) {
         query.buildWhereClause("deviceCd", val, "LK");
-      } 
-      else {
-
-        if (this.phPk) {
-          query.buildWhereClause("phCd", this.phPk, "EQ");
+      } else {
+        if (this.formValidate.estateNm) {
+          query.buildWhereClause("estateNm", this.formValidate.estateNm, "EQ");
         }
         if (this.deviceBigPk) {
           query.buildWhereClause("deviceBcatCd", this.deviceBigPk, "EQ");
         }
-         if (this.deviceSmallPk) {
+        if (this.deviceSmallPk) {
           query.buildWhereClause("deviceScatCd", this.deviceSmallPk, "EQ");
+        }
+        if (this.deviceDPk) {
+          query.buildWhereClause("deviceDcatCd", this.deviceDPk, "EQ");
+        }
+        if (this.deviceNm) {
+          query.buildWhereClause("deviceNm", this.deviceNm, "EQ");
         }
       }
       let param = query.getParam();
-
       setTimeout(() => {
         this.until.get("/ph/device/list", param).then(res => {
           if (res.status === "200") {
@@ -461,53 +378,109 @@ export default {
       }, 200);
     },
     //提交
-    handleSubmit(name) {
-      this.$refs[name].validate(valid => {
-        if (valid) {
-          let myDate = this.until.formatDate(this.formValidate.applicationTm);
-          this.formValidate.applicationTm =
-            myDate.year + "-" + myDate.month + "-" + myDate.day;
+    // handleSubmit(name) {
+    //   this.$refs[name].validate(valid => {
+    //     if (valid) {
+    //       let myDate = this.until.formatDate(this.formValidate.applicationTm);
+    //       this.formValidate.applicationTm =
+    //         myDate.year + "-" + myDate.month + "-" + myDate.day;
 
-          this.formValidate.repairStockRoList = this.repairStockRoList;
-          //维修单号 后端生成
-          this.until
+    //       this.formValidate.repairStockRoList = this.repairStockRoList;
+    //       //维修单号 后端生成
+    //       this.until
+    //         .postData(
+    //           "/ph/deviceRepair/edit",
+    //           JSON.stringify(this.formValidate)
+    //         )
+    //         .then(res => {
+    //           if (res.status == 200) {
+    //             this.$Message.success("提交成功!");
+    //             setTimeout(() => {
+    //               window.location.href = "list.html";
+    //             }, 1500);
+    //           } else {
+    //             this.$Message.error(res.message);
+    //           }
+    //         });
+    //     } else {
+    //       this.$Message.error("请填写完整信息！");
+    //     }
+    //   });
+    // },
+   
+  add(){
+     var a = {
+        applicantUnitCd: this.formValidate.applicantUnitCd, //申请单位
+        applicationTm: this.formValidate.applicationTm, //申请时间
+        proposer: this.formValidate.proposer, //申请人
+        mob:this.formValidate.mob, //联系电话
+        repairUnitCd: this.formValidate.repairUnitCd, //维修单位
+        phNm: this.formValidate.estateNm, //泵房
+        deviceCd: this.formValidate.devicePk, //设备主键~
+        deviceNm: this.deviceNm, //设备名称~
+        diagnosis: this.formValidate.diagnosis, //故障描述
+        estimatedCost: this.formValidate.estimatedCost, //预算费用
+        replaceFittingCd: this.formValidate.replaceFittingCd, //是否更换配件
+        stockId: this.part.stockManagePk, //配件id
+        stockNm: this.part.deviceNm, //配件名称
+        stockSpec: this.part.deviceSpec, //配件规格
+        stockBrand: this.part.deviceBrand //配件品牌
+      };
+      this.listData.push(a);
+         this.until
             .postData(
               "/ph/deviceRepair/edit",
-              JSON.stringify(this.formValidate)
+              JSON.stringify(this.listData)
             )
             .then(res => {
               if (res.status == 200) {
-                this.$Message.success("提交成功!");
-                setTimeout(() => {
-                  window.location.href = "list.html";
-                }, 1500);
+                //this.$Message.success("提交成功!");
+                this.$Modal.confirm({
+                    title: '提交成功',
+                    content: '是否继续添加维修申请？',
+                    onOk: () => {
+                        this.listData = [],
+                        this.deviceBigPk='',
+                        this.deviceSmallPk='',
+                        this.deviceDPk='',
+                        this.deviceNm='',
+                        this.formValidate.devicePk='',
+                        this.formValidate.diagnosis='',
+                        this.formValidate.estimatedCost='',
+                        this.formValidate.replaceFittingCd='10000.160',
+                        this.part=[],
+                        this.formValidate.deviceCd,
+                        this.$Message.info('提交成功继续添加');
+                    },
+                    onCancel: () => {
+                       // this.$Message.info('Clicked cancel');
+                         window.location.href = "list.html";
+                    }
+                });
+
+                // setTimeout(() => {
+                //   window.location.href = "list.html";
+                // }, 1500);
               } else {
                 this.$Message.error(res.message);
               }
             });
-        } else {
-          this.$Message.error("请填写完整信息！");
-        }
-      });
-    },
-    //取消
-    handleReset(name) {
-      this.$refs[name].resetFields();
-    },
+      console.log(this.listData);
+  },
+   
     //获取选项数据
     getSelect() {
       //设备编号
-      let query = new this.Query();
-      query.buildPageClause(this.pageNo, this.pageSize);
-      let param = query.getParam();
-      this.until.get("/ph/device/list", param).then(res => {
-        if (res.status === "200") {
-          this.equipmentList = res.data.items;
-        }
-      });
+      // let query = new this.Query();
+      // query.buildPageClause(this.pageNo, this.pageSize);
+      // let param = query.getParam();
+      // this.until.get("/ph/device/list", param).then(res => {
+      //   if (res.status === "200") {
+      //     this.equipmentList = res.data.items;
+      //   }
+      // });
       //单位
-      this.until
-        .get("/general/cat/listByPrntCd", { prntCd: "30010.400" })
+      this.until.get("/general/cat/listByPrntCd", { prntCd: "30010.400" })
         .then(res => {
           if (res.status === "200") {
             this.applyUnitList = res.data.items;
@@ -517,43 +490,45 @@ export default {
       this.until.get("/ph/stockManage/list").then(res => {
         if (res.status === "200") {
           this.replaceList = res.data.items;
+          console.log(this.replaceList);
+          
         }
       });
     },
-    /**
-     * e $event
-     * name choose equipment
-     */
     selectOpt(e) {
-      let equipment = this.equipmentList.filter(item => {
-        return item.phDevicePk === e;
-      });
-
-      this.estateNm = equipment[0]["estateNm"];
-      this.deviceScatNm = equipment[0]["deviceScatNm"];
+      console.log(e);
+      this.device = e;
     },
     selectPh(e) {
-      //设备编号动态读取
       this.remoteQuery();
     },
     selectBig(e) {
-      this.until.get("/general/cat/listByPrntCd", { prntCd: e }).then(
-        res => {
-          if (res.status === "200") {
-            this.deviceSmallList = res.data.items;
-          } else {
-            this.deviceSmallList = [];
-          }
-        },
-        err => {
-          this.deviceSmallList = [];
+      this.until.get("/general/cat/listByPrntCd", { prntCd: e }).then(res => {
+        if (res.status === "200") {
+          this.deviceSmallList = res.data.items;
         }
-      );
+      });
       this.remoteQuery();
     },
-    selectSamll(){
+    //选择设备小类 赋值设备子类
+    selectSamll(e) {
+      this.until.get("/general/cat/listByPrntCd", { prntCd: e }).then(res => {
+        if (res.status === "200") {
+          this.deviceDList = res.data.items;
+        }
+      });
       this.remoteQuery();
     },
+    //选择设备子类 赋值设备名称
+    selectDcat(e) {
+      this.until.get("/general/cat/listByPrntCd", { prntCd: e }).then(res => {
+        if (res.status === "200") {
+          this.deviceNms = res.data.items;
+        }
+      });
+      this.remoteQuery();
+    },
+    //获取设备大类
     getDeviceBigList() {
       this.until.get("/general/cat/listByPrntCd", { prntCd: 500.1 }).then(
         res => {
@@ -568,38 +543,14 @@ export default {
         }
       );
     },
-    getRepairStock(e, i) {
-      let repairStock = this.replaceList.filter(item => {
-        return item.deviceCd === e;
+    getRepairStock(e) {
+       this.until.get("/ph/stockManage/info/"+e).then(res => {
+        if (res.status === "200") {
+          this.part = res.data;
+        }
       });
-
-      this.modalValidate.deviceNm = repairStock[0].deviceNm;
-      this.modalValidate.deviceSpec = repairStock[0].deviceSpec;
-      this.modalValidate.deviceBrand = repairStock[0].deviceBrand;
-      this.modalValidate.stockManagePk = repairStock[0].stockManagePk;
+      console.log(this.part);
     },
-    addEquipmentList() {
-      //增加表格数据
-      // this.repairStockRoList.push(this.repairStockRo);
-      this.modal1 = true;
-    },
-    ok() {
-      // this.$Message.info("Clicked ok");
-      //往表格里面添加配件信息数据
-      let stockObj = {};
-      Object.assign(stockObj, this.modalValidate);
-
-      this.repairStockRoList.push(stockObj);
-      this.modal1 = false;
-    },
-    cancel() {
-      this.modal1 = false;
-    },
-    deleteStockRo(item) {
-      this.repairStockRoList = this.repairStockRoList.filter(itemRo => {
-        return itemRo != item;
-      });
-    }
   }
 };
 </script>

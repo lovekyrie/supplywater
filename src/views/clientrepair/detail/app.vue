@@ -96,9 +96,10 @@ body {
     <myHeader :title="title"></myHeader>
     <div class="main">
       <div>
-        <p>设备编号：{{deviceInfo.deviceCd}}</p>
-        <p>小区名称：{{deviceInfo.estateNm}}</p>
-        <p>设备名称：{{deviceInfo.deviceScatNm}}</p>
+        <p>维修单状态：{{info.statNm}}</p>
+        <p>设备编号：{{info.deviceCd}}</p>
+        <p>小区名称：{{info.phNm}}</p>
+        <p>设备名称：{{info.deviceNm}}</p>
         <p>维修单号：{{info.billCode}}</p>
         <p>申请时间：{{info.applicationTm}}</p>
         <p>申请单位：{{info.applicantUnitNm}}</p>
@@ -107,33 +108,13 @@ body {
         <p>维修单位：{{info.repairUnitNm}}</p>
         <p>预算费用：{{info.estimatedCost}}</p>
         <p>故障描述：{{info.diagnosis}}</p>
-      </div>
-      <h3>更换配件</h3>
-      <div>
+         <h3>配件</h3>
         <p>是否更换配件：{{info.replaceFittingNm}}</p>
-        <!-- table -->
+        <p>配件名称：{{info.stockNm}}</p>
+        <p>配件规格：{{info.stockSpec}}</p>
+        <p>配件品牌：{{info.stockBrand}}</p>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>配件编号</th>
-            <th>配件名称</th>
-            <th>规格型号</th>
-            <th>品牌</th>
-            <th>数量</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, index) in info.repairStockDtoxes" :key="index">
-            <td>{{item.stockManageVo.deviceCd}}</td>
-            <td>{{item.stockManageVo.deviceNm}}</td>
-            <td>{{item.stockManageVo.deviceSpec}}</td>
-            <td>{{item.stockManageVo.deviceBrand}}</td>
-            <td>{{item.repairStockVo.stockNum}}</td>
-          </tr>
-        </tbody>
-      </table>
-
+      <!-- <h3>更换配件</h3> -->
     </div>
   </div>
 </template>
@@ -161,23 +142,25 @@ export default {
     this.devicePk=this.until.getQueryString("pk")
 
     this.getInfo();
-    this.getDeviceInfo();
+    //this.getDeviceInfo();
   },
   methods: {
     getInfo() {
       this.until.get("/ph/deviceRepair/info/" + this.ipPk).then(res => {
         this.info = res.data;
+        console.log(this.info);
+        
       });
     },
-    getDeviceInfo(){
-      this.until.get("/ph/device/info/"+this.devicePk).then(
-        res=>{
-          if(res.status==='200'){
-            this.deviceInfo=res.data
-          }
-        }
-      )
-    }
+    // getDeviceInfo(){
+    //   this.until.get("/ph/device/info/"+this.devicePk).then(
+    //     res=>{
+    //       if(res.status==='200'){
+    //         this.deviceInfo=res.data
+    //       }
+    //     }
+    //   )
+    // }
   }
 };
 </script>

@@ -93,6 +93,14 @@ var webpackConfig = {
 
 module.exports = vuxLoader.merge(webpackConfig, {
   options: {},
-  plugins: ['vux-ui', 'progress-bar', 'duplicate-style'],
-  
-})
+  plugins: ['vux-ui', 'progress-bar', 'duplicate-style','AMap'],
+  // externals: {
+  //   'AMap': 'AMap'
+  // },
+ })
+
+// module.exports = {
+//   externals: {
+//         'AMap': 'AMap'
+//       },
+// }

@@ -66,12 +66,7 @@ body {
 
 <template>
   <div id="container">
-    <header>
-      <img src="./img/head_background.png">
-      <p class="left">
-        <img src="./img/backWhite.png" @click="back">
-      </p>
-    </header>
+    <myHeader appBack="true"></myHeader>
     <div @click="toPlan()">
       <p>
         <img src="./img/plan.png">
@@ -90,11 +85,14 @@ body {
 </template>
 
 <script>
+import myHeader from "../components/myHead";
 export default {
   data() {
     return {};
   },
-  components: {},
+  components: {
+    myHeader
+  },
   mounted() {},
   methods: {
     toPlan() {

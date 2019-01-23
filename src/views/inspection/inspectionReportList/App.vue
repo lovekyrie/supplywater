@@ -94,7 +94,12 @@ export default {
       list: [],
       pageNo: 1,
       pageSize: 10,
-      total: ""
+      total: "",
+      estateNm: "",
+      phCd: "",
+      usageTm: "",
+      handOverTm: "",
+      districtCd: ""
     };
   },
   components: {
@@ -129,6 +134,7 @@ export default {
         // query.buildWhereClause('dealStatus',this.search.dealStatus,'LK');
         // query.buildWhereClause('proLvNm',this.search.proLvNm,'LK');
         // query.buildWhereClause('bmNm',this.search.bmNm,'LK');
+        query.buildWhereClause("estateNm", this.estateNm, "LK");
         query.buildWhereClause("taskExeStatus", "已巡检");
         query.buildPageClause(this.pageNo, this.pageSize);
         let param = query.getParam();
