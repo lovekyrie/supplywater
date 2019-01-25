@@ -248,7 +248,7 @@ export default {
 
   mounted() {
     //默认登陆管理员 用于解决原生登陆 H5没有登陆调用不了接口问题
-    this.login();
+   // this.login();
     this.addPois(); //添加泵房点 
     this.getUserNewTm();
     this.getUserInfo();

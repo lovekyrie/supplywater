@@ -5,11 +5,11 @@
       <!-- time -->
       <div>
         <span>
-          <i>2019</i>年
-          <i>01</i>月
-          <i>16</i>日 星期
-          <i>三</i>
-          <i>09:01:06</i>
+          <i>{{current.year}}</i>年
+          <i>{{current.month}}</i>月
+          <i>{{current.day}}</i>日 星期
+          <i>{{current.week}}</i>
+          <i>{{current.hour}}:{{current.minite}}:{{current.second}}</i>
         </span>
       </div>
       <!-- titleName -->
@@ -18,12 +18,28 @@
         <span>Ningbo Wisdom Water Supply Management Platform</span>
       </div>
       <!-- weather -->
-      <div>天气预报模块</div>
+      <div>
+        <dl v-for="(item, index) in castsList" :key="index">
+          <dt>{{item.dateName}}</dt>
+          <dd>
+            <div>
+              <svg class="icon" aria-hidden="true">
+                <use v-bind="{'xlink:href':'#'+item.iconSource}"></use>
+                <!-- <use xlink:href="item.iconSource"></use> -->
+              </svg>
+            </div>
+            <div>
+              <span>{{item.dayweather}} {{item.nighttemp}}-{{item.daytemp}}°C</span>
+              <span>{{item.daywind}} {{item.daypower}}</span>
+            </div>
+          </dd>
+        </dl>
+      </div>
     </div>
 
     <div class="content">
-      <!-- 扇形图 -->
       <div id="left-cont">
+        <!-- 任务派单 -->
         <div class="order">
           <div class="cont-title">
             <span>任务派单信息</span>
@@ -55,6 +71,7 @@
             </div>
           </div>
         </div>
+        <!-- 水箱清洗&设备保养 -->
         <div class="equip-maintain">
           <div class="cont-title">
             <span>水箱清洗</span>
@@ -99,6 +116,7 @@
             </div>
           </div>
         </div>
+        <!-- 设备档案信息 -->
         <div class="equip">
           <div class="cont-title">
             <span>设备档案信息</span>
@@ -107,7 +125,7 @@
             <div>
               <span>
                 <b>{{deviceData.lifeWaterPumpNum}}</b>
-                &nbsp;&nbsp;&nbsp;&nbsp;11kw及以上：{{deviceData.geNum}}
+                &nbsp;&nbsp;&nbsp;&nbsp;11kw以上：{{deviceData.geNum}}
               </span>
               <span>生活水泵&nbsp;&nbsp;&nbsp;11kw以下：{{deviceData.ltNum}}</span>
             </div>
@@ -252,11 +270,13 @@ export default {
   },
   data() {
     return {
+      current: "",
       inspectRateList: [],
       deviceData: {},
       phData: {},
       sendOrder: {},
       mapData: {},
+      castsList: [],
       pieChartList: [],
       barChartList: [],
       barSDataList: [],
@@ -268,37 +288,173 @@ export default {
     };
   },
   mounted() {
-    let cookieVal = this.until.getCookie("yui2-token");
-    if (!this.until.isLogined() || !cookieVal) {
-      let promise = this.until.login();
-      promise
-        .then(res => {
-          this.getStatasList();
-        })
-        .then(res => {
-          this.getCircleChart();
-        })
-        .then(res => {
-          this.getBarChart();
-        });
-    } else {
-      let promise = this.getStatasList();
-      promise
-        .then(res => {
-          this.getCircleChart();
-        })
-        .then(res => {
-          this.getBarChart();
-        });
-    }
+    /* 系统时间 */
+    this.timer = setInterval(() => {
+      this.current = this.until.formatDate();
+    }, 1000);
+
+    let promise = this.getStatasList();
+    promise
+      .then(res => {
+        this.getCircleChart();
+      })
+      .then(res => {
+        this.getBarChart();
+      });
 
     /**获取其他数据 */
     this.getOtherStatisData();
     this.getEquipMaintainChart();
     this.getCleanRateChart();
     this.getQualityDefendChart();
+    /**调用高德地图天气API */
+    this.getWeatherList();
+  },
+  beforeDestroy() {
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
   },
   methods: {
+    getWeatherList() {
+      /* 330200是宁波市 */
+      let param = {
+        key: "c296aed4abfa59d995a87b99c3739b39",
+        city: "330200",
+        extensions: "all"
+      };
+      this.until
+        .get("https://restapi.amap.com/v3/weather/weatherInfo", param)
+        .then(
+          res => {
+            if (res.status == 1) {
+              res.forecasts[0] &&
+                res.forecasts[0].casts.forEach((item, index) => {
+                  if (index === 0) {
+                    item.dateName = "今天";
+                    this.castsList.push(item);
+                  } else if (index === 1) {
+                    item.dateName = "明天";
+                    this.castsList.push(item);
+                  } else if (index === 2) {
+                    item.dateName = "后天";
+                    this.castsList.push(item);
+                  }
+
+                  switch (item.dayweather) {
+                    case "晴":
+                      item.iconSource = "icon-qingtian";
+                      break;
+                    case "晴间多云":
+                      item.iconSource = "icon-qingzhuanduoyun";
+                      break;
+                    case "多云":
+                      item.iconSource = "icon-duoyunzhuanqing";
+                      break;
+                    case "少云":
+                    case "阴":
+                      item.iconSource = "icon-yintian";
+                      break;
+                    case "有风":
+                    case "平静":
+                    case "微风":
+                    case "和风":
+                    case "清风":
+                    case "强风/劲风":
+                    case "疾风":
+                    case "大风":
+                    case "烈风":
+                    case "风暴":
+                    case "狂爆风":
+                    case "飓风":
+                    case "热带风暴":
+                      item.iconSource = "icon-feng";
+                      break;
+                    case "阵雨":
+                    case "强阵雨":
+                      item.iconSource = "icon-zhenyu";
+                      break;
+                    case "雷阵雨":
+                    case "强雷阵雨":
+                    case "雷阵雨并伴有冰雹":
+                      item.iconSource = "icon-leizhenyu";
+                      break;
+                    case "小雨":
+                    case "毛毛雨/细雨":
+                    case "雨":
+                      item.iconSource = "icon-xiaoyu";
+                      break;
+                    case "小雨-中雨":
+                    case "中雨":
+                      item.iconSource = "icon-zhongyu";
+                      break;
+                    case "中雨-大雨":
+                    case "大雨":
+                      item.iconSource = "icon-dayu";
+                      break;
+                    case "大雨-暴雨":
+                    case "暴雨-大暴雨":
+                    case "暴雨":
+                    case "大暴雨":
+                    case "特大暴雨":
+                    case "极端降雨":
+                    case "大暴雨-特大暴雨":
+                      item.iconSource = "icon-baoyu";
+                      break;
+                    case "雨雪天气":
+                    case "雨夹雪":
+                    case "阵雨夹雪":
+                    case "冻雨":
+                      item.iconSource = "icon-yujiaxue";
+                      break;
+                    case "雪":
+                    case "小雪":
+                      item.iconSource = "icon-xiaoxue";
+                      break;
+                    case "中雪":
+                    case "小雪-中雪":
+                      item.iconSource = "icon-zhongxue";
+                      break;
+                    case "大雪":
+                    case "中雪-大雪":
+                      item.iconSource = "icon-daxue";
+                      break;
+                    case "暴雪":
+                    case "阵雪":
+                    case "大雪-暴雪":
+                      item.iconSource = "icon-baoxue";
+                      break;
+                    case "浮尘":
+                    case "扬沙":
+                    case "沙尘暴":
+                      item.iconSource = "icon-shachengbao1";
+                      break;
+                    case "强沙尘暴":
+                    case "龙卷风":
+                      item.iconSource = "icon-shachengbao";
+                      break;
+                    case "雾":
+                    case "浓雾":
+                    case "强浓雾":
+                    case "轻雾":
+                    case "大雾":
+                    case "特强浓雾":
+                    case "霾":
+                    case "中度霾":
+                    case "重度霾":
+                    case "严重霾":
+                      item.iconSource = "icon-youwu";
+                      break;
+                    default:
+                      item.iconSource = "icon-qingtian";
+                      break;
+                  }
+                });
+            }
+          },
+          err => {}
+        );
+    },
     getOtherStatisData() {
       this.until.get("/ph/stat/indexPhDeviceOrderData").then(
         res => {
@@ -546,6 +702,7 @@ export default {
         },
         xAxis: [
           {
+            show: false,
             type: "category",
             data: this.barXDataList,
             axisTick: {
@@ -659,12 +816,47 @@ html {
           text-align: center;
           line-height: 2;
           &:nth-of-type(1) {
-            font-size: 24px;
+            font-size: 22px;
             letter-spacing: 4px;
           }
           &:nth-last-of-type(1) {
-            font-size: 14px;
+            font-size: 13px;
             color: #7a8187;
+          }
+        }
+      }
+      &:nth-last-of-type(1) {
+        display: flex;
+        flex-flow: row nowrap;
+        > dl {
+          flex: 1;
+          text-align: left;
+          dt {
+            font-size: 18px;
+          }
+          dd {
+            display: flex;
+            flex-flow: row nowrap;
+            align-items: center;
+            justify-content: space-between;
+            text-align: left;
+            div {
+              &:nth-of-type(1) {
+                width: 20%;
+                svg {
+                  width: 40px;
+                  height: 40px;
+                }
+              }
+              &:nth-last-of-type(1) {
+                width: 70%;
+                display: flex;
+                flex-flow: row wrap;
+                span {
+                  width: 100%;
+                }
+              }
+            }
           }
         }
       }
@@ -714,11 +906,11 @@ html {
             display: flex;
             flex-flow: row wrap;
             &:nth-of-type(1) {
-              width: 50%;
+              width: 60%;
             }
             &:nth-of-type(2),
             &:nth-of-type(3) {
-              width: 25%;
+              width: 20%;
             }
             &:not(:nth-last-of-type(1)) {
               border-right: 1px solid #2c5575;
@@ -851,6 +1043,9 @@ html {
           width: 100%;
           display: flex;
           flex-flow: row nowrap;
+          &:nth-of-type(1) {
+            margin-bottom: 3%;
+          }
           span {
             width: 33%;
             text-align: center;

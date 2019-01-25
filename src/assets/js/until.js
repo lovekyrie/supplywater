@@ -345,7 +345,7 @@ class until {
     // str = str==""?new Date():new Date(str.replace(/-/g, "/"));
     str = str == "" ? new Date() : new Date(str);
 
-    let week = ["星期天", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+    let week = ["天", "一", "二", "三", "四", "五", "六"];
     let year = str.getFullYear();
     let month = str.getMonth() + 1 < 10 ? "0" + (str.getMonth() + 1) : str.getMonth() + 1;
     let day = str.getDate() < 10 ? "0" + str.getDate() : str.getDate();

@@ -231,13 +231,13 @@ body {
           </tbody>
         </table> -->
 
-        <h3>反馈信息</h3>
+        <!-- <h3>反馈信息</h3>
         <FormItem label="客户评价：" prop="clientEvel">
           <Input v-model="formValidate.clientEvel"></Input>
         </FormItem>
         <FormItem label="详细意见：" prop="option">
           <Input v-model="formValidate.option" type="textarea" :autosize="{minRows: 2,maxRows: 5}"></Input>
-        </FormItem>
+        </FormItem> -->
         <FormItem>
           <Button type="primary" @click="handleSubmit('formValidate')" :disabled="isOver">提交</Button>
           <Button @click="handleReset('formValidate')" style="margin-left: 8px" :disabled="isOver">重置</Button>
