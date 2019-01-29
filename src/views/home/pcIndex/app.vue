@@ -125,9 +125,12 @@
             <div>
               <span>
                 <b>{{deviceData.lifeWaterPumpNum}}</b>
-                &nbsp;&nbsp;&nbsp;&nbsp;11kw以上：{{deviceData.geNum}}
               </span>
-              <span>生活水泵&nbsp;&nbsp;&nbsp;11kw以下：{{deviceData.ltNum}}</span>
+              <span>生活水泵</span>
+            </div>
+            <div>
+              <span>11kw以上：{{deviceData.geNum}}</span>
+              <span>11kw以下：{{deviceData.ltNum}}</span>
             </div>
             <div>
               <span>
@@ -239,7 +242,7 @@
               <span>巡检统计</span>
             </div>
             <div>
-              <span id="quality">50%</span>
+              <span id="quality"></span>
               <span>水质维护</span>
             </div>
           </div>
@@ -478,6 +481,7 @@ export default {
             this.barSDataList = res.data.barSdata;
             this.barXDataList = res.data.barXdata;
             this.inspectTotal = res.data.total;
+
             resolve(this.inspectRateList);
           }
         });
@@ -486,39 +490,61 @@ export default {
     getCircleChart() {
       // param.cirLdata.add("巡检总数:" + param.total);
       var arr = this.inspectRateList;
-      var subtext = "";
-      for (var i = 0; i < arr.length; i++) {
-        subtext = subtext + arr[i].name + " ";
+      var centerData = 0;
+      if (Object.keys(arr[0]).length > 0) {
+        var did = 0;
+        if (arr[0].name.indexOf("已巡检") != -1) {
+          did = arr[0].value;
+        }
+        centerData = (did / this.inspectTotal) * 100;
+        centerData = centerData.toFixed(2);
       }
-      var piechart = echarts.init(document.getElementById("statis"));
+      var subtext = "巡检总数:" + this.inspectTotal + " ";
+      for (let i = 0; i < arr.length; i++) {
+        subtext = subtext + arr[i].name + " ";
+        if (arr[i].name.indexOf("已巡检") != -1) {
+          arr[i].name = centerData + "%";
+        } else {
+          arr[i].name = "";
+        }
+      }
+
+      var circhart = echarts.init(document.getElementById("statis"));
       // 指定图表的配置项和数据
       var option = {
+        color: ["#1e90ff", "#0e48d3"],
         tooltip: {
           trigger: "item",
           formatter: "{a} <br/>{b}({d}%)"
-        },
-        color: ["#1e90ff", "#0e48d3"],
-        grid: {
-          top: "20%"
         },
         series: [
           {
             name: "巡检率",
             type: "pie",
-            radius: "100%",
+            radius: ["80%", "100%"],
             center: ["50%", "50%"],
+            avoidLabelOverlap: true,
             label: {
               normal: {
-                show: false
+                show: true,
+                position: "center",
+                textStyle: {
+                  fontSize: "16",
+                  fontWeight: "normal"
+                }
               },
               emphasis: {
-                show: false
+                show: true,
+                textStyle: {
+                  fontSize: "12",
+                  fontWeight: "normal"
+                },
+                title: {
+                  top: "50%"
+                }
               }
             },
-            labelLine: {
-              show: false
-            },
-            data: this.pieChartList,
+            data: this.inspectRateList,
             itemStyle: {
               emphasis: {
                 shadowBlur: 10,
@@ -530,7 +556,7 @@ export default {
         ]
       };
       // 使用刚指定的配置项和数据显示图表。
-      piechart.setOption(option);
+      circhart.setOption(option);
     },
     getEquipMaintainChart() {
       var circhart = echarts.init(document.getElementById("equip"));
@@ -622,30 +648,36 @@ export default {
       var circhart = echarts.init(document.getElementById("quality"));
       // 指定图表的配置项和数据
       var option = {
+        color: ["#1e90ff", "#0e48d3"],
         tooltip: {
           trigger: "item",
           formatter: "{a} <br/>{b}({d}%)"
         },
-        color: ["#1e90ff", "#0e48d3"],
-        grid: {
-          top: "20%"
-        },
         series: [
           {
-            name: "维护率",
+            name: "巡检率",
             type: "pie",
-            radius: "100%",
+            radius: ["80%", "100%"],
             center: ["50%", "50%"],
+            avoidLabelOverlap: true,
             label: {
               normal: {
-                show: false
+                show: true,
+                position: "center",
+                // formatter: "{b}({d}%)",
+                // formatter: centerData + "%",
+                textStyle: {
+                  fontSize: "16",
+                  fontWeight: "normal"
+                }
               },
               emphasis: {
-                show: false
+                show: true,
+                textStyle: {
+                  fontSize: "16",
+                  fontWeight: "normal"
+                }
               }
-            },
-            labelLine: {
-              show: false
             },
             data: this.qualityDefendList,
             itemStyle: {
@@ -794,7 +826,8 @@ html {
     flex-flow: row nowrap;
     justify-content: space-between;
     align-items: center;
-    height: 10%;
+    height: 12%;
+    min-height: 80px;
     padding: 1.5% 0;
     border-bottom: 1px dashed #687681;
     > div {
@@ -831,9 +864,6 @@ html {
         > dl {
           flex: 1;
           text-align: left;
-          dt {
-            font-size: 18px;
-          }
           dd {
             display: flex;
             flex-flow: row nowrap;
@@ -863,17 +893,16 @@ html {
     }
   }
   .content {
-    height: 90%;
+    height: 82%;
     width: 100%;
-    min-height: 645px;
-    min-width: 1192px;
+    min-height: 635px;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-content: space-between;
-    padding: 2% 0;
+    padding: 1% 0;
     > div {
-      width: 30%;
+      width: 32%;
     }
     #left-cont,
     #right-cont,
@@ -906,13 +935,18 @@ html {
             display: flex;
             flex-flow: row wrap;
             &:nth-of-type(1) {
-              width: 60%;
+              width: 20%;
+            }
+            &:nth-of-type(2) {
+              margin-top: 3%;
+              width: 40%;
+            }
+            &:nth-of-type(3),
+            &:nth-last-of-type(1) {
+              width: 20%;
             }
             &:nth-of-type(2),
             &:nth-of-type(3) {
-              width: 20%;
-            }
-            &:not(:nth-last-of-type(1)) {
               border-right: 1px solid #2c5575;
             }
             span {
@@ -1000,8 +1034,12 @@ html {
           justify-content: space-around;
           margin: 3% 0;
           > div {
+            display: flex;
+            flex-flow: column wrap;
+            justify-content: space-between;
             padding: 2% 0;
             width: 25%;
+            height: 120px;
             text-align: center;
             span {
               &:nth-of-type(1) {
@@ -1015,14 +1053,16 @@ html {
     }
     .complete-rate {
       #vendor {
-        height: 350px;
+        height: 300px;
       }
     }
     #mid-cont {
       position: relative;
       .map {
         border: 0;
-        height: 48%;
+        width: 100%;
+        height: 36%;
+        text-align: center;
         background-color: rgba(0, 0, 0, 0);
         img {
           width: auto;

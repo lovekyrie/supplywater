@@ -52,30 +52,38 @@ html,body{
                   <!-- 搜索小区控件 -->
                   <el-row>
                      <el-tooltip effect="dark" content="搜索" placement="left">
-                      <el-button  type="primary" @click="dialogxq = true" icon="el-icon-search"></el-button>
+                       <img  src="./img/搜索.png" @click="dialogxq = true">
                       </el-tooltip>
                        <el-dialog title="搜索小区"  :visible.sync="dialogxq" :center='true'  :modal='false'   width="20%">
                               <el-select   v-model="value" filterable placeholder="搜索小区" clearable  @change="resultClick" >
                                  <el-option  v-for="item in points"  :key="item.estateNm"  :label="item.estateNm"  :value="item"> </el-option>
-                            </el-select>
+                              </el-select>
                       </el-dialog>  
                   </el-row>
                  <!-- 巡检轨迹控件 -->
                   <el-row>
                     <el-tooltip effect="dark" content="回放巡检轨迹" placement="left">
-                    <el-button type="primary"  @click="dialogxj = true"  icon="el-icon-share" ></el-button>
+                     <img  src="./img/回放巡检轨迹.png" @click="dialogxj = true">
                       </el-tooltip>
                      <el-dialog title="巡检轨迹"  :visible.sync="dialogxj" :center='true'  :modal='false'   width="30%">
+                             
                              <el-row>
-                             <el-select  v-model="userVal" filterable placeholder="巡检人员" clearable  >
-                                 <el-option  v-for="item in patrolUser"  :key="item.sysUserPk"  :label="item.nkNm"  :value="item.nkNm"> </el-option>
-                            </el-select>
+                                <el-select  v-model="userUnit" filterable placeholder="巡检单位" clearable  @change="getUserInfo()" >
+                                    <el-option  v-for="item in userUnits"  :key="item.cd"  :label="item.nm" :value="item.cd"> </el-option>
+                                </el-select>
+                            </el-row>
+                             
+                             
+                             <el-row>
+                                <el-select  v-model="userVal" filterable placeholder="巡检人员" clearable  >
+                                    <el-option  v-for="item in patrolUser"  :key="item.sysUserPk"  :label="item.nkNm"  :value="item.nkNm"> </el-option>
+                                </el-select>
                             </el-row>
                             <el-row>
                                   <el-date-picker   value-format="yyyy-MM-dd"  v-model="startTime"  type="date" placeholder="开始时间"> </el-date-picker>
                              </el-row>
                              <el-row>
-                                   <el-date-picker   value-format="yyyy-MM-dd" v-model="endTime"  type="date" placeholder="结束时间"> </el-date-picker>
+                                   <el-date-picker  value-format="yyyy-MM-dd" v-model="endTime"  type="date" placeholder="结束时间"> </el-date-picker>
                             </el-row>
                             <span slot="footer">
                              <el-button type="primary" @click="startGps">确 定</el-button>
@@ -84,19 +92,21 @@ html,body{
                   </el-row>
                 <el-row>
                    <el-tooltip effect="dark" content="显示泵站" placement="left">
-                  <el-button v-if="checked === true"  type="primary"  icon="el-icon-location-outline" @click="chEd(true)"></el-button>
+                    <img  v-if="checked === true"  src="./img/显示泵站.png" @click="chEd(true)">
+                    <img  v-if="checked === false"  src="./img/显示泵站-选中.png" @click="chEd(false)">
+                  
                   </el-tooltip>
-                  <el-button v-if="checked === false"  icon="el-icon-location-outline" @click="chEd(false)"></el-button>
+                 
                </el-row>
                 <el-row>
                   <el-tooltip effect="dark" content="显示巡检人员" placement="left">
-                     <el-button  v-if="checkUser === true" type="primary"  icon="el-icon-service" @click="chUs(true)"></el-button>
+                    <img  v-if="checkUser === true"  src="./img/显示巡检人员.png" @click="chUs(true)">
+                    <img  v-if="checkUser === false"  src="./img/显示巡检人员-选中.png" @click="chUs(false)">
                   </el-tooltip>
-                   <el-button  v-if="checkUser === false" icon="el-icon-service" @click="chUs(false)"></el-button>   
                </el-row>
                <el-row>
                   <el-tooltip  effect="dark" content="初始化巡检回放" placement="left">
-                  <el-button  type="primary"  icon="el-icon-refresh" @click="resetXJ()"></el-button>
+                  <img src="./img/初始化巡检回放.png" @click="resetXJ()">
                   </el-tooltip>
                </el-row>
 
@@ -123,7 +133,7 @@ html,body{
     </el-row>
     <el-row :gutter="10">
       <el-col :span="6"><img src="./img/维修管理.png"   @click="lookWX(infoWindow.estateNm)"  weight='35' height="35" ></el-col>
-      <el-col :span="6"><img src="./img/巡检管理.png"  @click="lookXJ(infoWindow.estateNm)" weight='35' height="35"></el-col>
+      <el-col :span="6"><img src="./img/巡检管理.png"   @click="lookXJ(infoWindow.estateNm)"  weight='35' height="35"></el-col>
     </el-row>
     </bm-info-window>
    <!-- 点击人员点出现的信息框 -->
@@ -202,7 +212,9 @@ export default {
       zoom: 3,
       results: [],
       value: "",
-      userVal:"",
+      userVal:"", //巡检人员
+      userUnit:'',//巡检单位
+      userUnits:'',
       popupVisible: false,
       spinShow: false, //加载中
       title: "巡检轨迹",
@@ -248,10 +260,12 @@ export default {
 
   mounted() {
     //默认登陆管理员 用于解决原生登陆 H5没有登陆调用不了接口问题
-   // this.login();
+    this.login();
     this.addPois(); //添加泵房点 
     this.getUserNewTm();
     this.getUserInfo();
+
+    this.getUnitList();//获取巡检单位信息
     
    
    
@@ -438,12 +452,26 @@ export default {
     },
     //获取人员信息
     getUserInfo() {
-       this.until.get('/ph/userx/list')
+        let query = new this.Query();
+        query.buildWhereClause("deptPk", this.userUnit, "EQ");
+        let param = query.getParam();
+       this.until.get('/ph/userx/list',param)
           .then(res=>{
             this.patrolUser = res.data.items;
             const points = [];
           })
     },
+    //获取单位信息
+    getUnitList(){
+        this.until.get("/general/cat/listByPrntCd", { prntCd: "30010.400" })
+        .then(res => {
+          if (res.status === "200") {
+            this.userUnits = res.data.items;
+          }
+        });
+    },
+
+
     //获取人员
     getUserNewTm(){
       this.until.get("/ph/inspGps/listOrdTm").then(res => {
