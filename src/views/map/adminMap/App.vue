@@ -5,9 +5,7 @@ html,body{
         width: 100%;
         height: 100%;
     }
-  .el-select .el-input {
-    width: 200px;
-  }
+
   .input-with-select .el-input-group__prepend {
     background-color: #fff;
   }    
@@ -21,12 +19,13 @@ html,body{
   height: 100%;
 }
 .el-row{
-  margin-top: 20px
+  margin-top: 10px
 }
 .popup2 {
   padding-bottom: 15px;
   height: 400px;
 }
+
 </style>
 <template>
   <baidu-map  class="map" :center="center"  :zoom="zoom"   @ready="handler" :scroll-wheel-zoom="true" :dragging="true" >
@@ -55,7 +54,7 @@ html,body{
                        <img  src="./img/搜索.png" @click="dialogxq = true">
                       </el-tooltip>
                        <el-dialog title="搜索小区"  :visible.sync="dialogxq" :center='true'  :modal='false'   width="20%">
-                              <el-select   v-model="value" filterable placeholder="搜索小区" clearable  @change="resultClick" >
+                              <el-select  style="width:100%"  v-model="value" filterable placeholder="搜索小区" clearable  @change="resultClick" >
                                  <el-option  v-for="item in points"  :key="item.estateNm"  :label="item.estateNm"  :value="item"> </el-option>
                               </el-select>
                       </el-dialog>  
@@ -66,24 +65,22 @@ html,body{
                      <img  src="./img/回放巡检轨迹.png" @click="dialogxj = true">
                       </el-tooltip>
                      <el-dialog title="巡检轨迹"  :visible.sync="dialogxj" :center='true'  :modal='false'   width="30%">
-                             
                              <el-row>
-                                <el-select  v-model="userUnit" filterable placeholder="巡检单位" clearable  @change="getUserInfo()" >
+                                  <el-select style="width:100%" v-model="userUnit" filterable placeholder="巡检单位" clearable  @change="getUserInfo()" >
                                     <el-option  v-for="item in userUnits"  :key="item.cd"  :label="item.nm" :value="item.cd"> </el-option>
                                 </el-select>
                             </el-row>
                              
-                             
-                             <el-row>
-                                <el-select  v-model="userVal" filterable placeholder="巡检人员" clearable  >
-                                    <el-option  v-for="item in patrolUser"  :key="item.sysUserPk"  :label="item.nkNm"  :value="item.nkNm"> </el-option>
-                                </el-select>
+                             <el-row >
+                                <el-select style="width:100%"  v-model="userVal" filterable placeholder="巡检人员" clearable>
+                                    <el-option v-for="item in patrolUser"  :key="item.sysUserPk"  :label="item.nkNm"  :value="item.nkNm"> </el-option>
+                                </el-select>  
                             </el-row>
                             <el-row>
-                                  <el-date-picker   value-format="yyyy-MM-dd"  v-model="startTime"  type="date" placeholder="开始时间"> </el-date-picker>
+                                  <el-date-picker style="width:100%"  value-format="yyyy-MM-dd"  v-model="startTime"  type="date" placeholder="开始时间"> </el-date-picker>
                              </el-row>
                              <el-row>
-                                   <el-date-picker  value-format="yyyy-MM-dd" v-model="endTime"  type="date" placeholder="结束时间"> </el-date-picker>
+                                   <el-date-picker style="width:100%" value-format="yyyy-MM-dd" v-model="endTime"  type="date" placeholder="结束时间"> </el-date-picker>
                             </el-row>
                             <span slot="footer">
                              <el-button type="primary" @click="startGps">确 定</el-button>

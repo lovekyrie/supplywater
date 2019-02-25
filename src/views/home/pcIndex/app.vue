@@ -65,7 +65,7 @@
             </div>
             <div>
               <span>
-                <b>{{sendOrder.endRate*100}}%</b>
+                <b>{{sendOrder.endRate*100 | toFixed(2)}}%</b>
               </span>
               <span>完成率</span>
             </div>
