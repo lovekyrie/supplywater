@@ -6,7 +6,7 @@ require('assets/css/common.css');
 // require ('assets/css/mobile.less');
 // require ('assets/css/project.less');
 import 'assets/js/ScreenAdaptive.js';
-// import 'assets/js/vconsole.js';
+import 'assets/js/vconsole.js';
 // import 'element-ui/lib/theme-default/index.css'
 // import ElementUI from 'element-ui'
 

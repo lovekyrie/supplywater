@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "author": "wyh",
   "scripts": {
-    "dev": "node --max_old_space_size=4096 build/dev-server.js --proxy=http://111.2.25.208:6081",
+    "dev": "node --max_old_space_size=4096 build/dev-server.js --proxy=http://192.168.2.159",
     "build": "node build/build.js",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "e2e": "node test/e2e/runner.js",

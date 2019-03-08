@@ -9,8 +9,8 @@ import {
 } from "vue-ydui/dist/lib.rem/dialog/index";
 
 const postImgUrl = 'http://118.178.121.34:8080/uploads/';
-// const hostUrl = 'http://111.2.25.208:6081';
-const hostUrl = 'http://192.168.2.112';
+const hostUrl = 'http://111.2.25.208:6081';
+//const hostUrl = 'http://192.168.2.112';
 
 var $dialog = {
   confirm: Confirm,
