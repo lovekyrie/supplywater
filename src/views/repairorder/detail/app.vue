@@ -2,11 +2,11 @@
 html,
 body {
   width: 100%;
-  height: 200%;
+  height: 100%;
   font-size: 0.1rem;
   #container {
     width: 100%;
-    height: 200%;
+    height: 100%;
     display: flex;
     display: -webkit-flex;
     flex-direction: column;
@@ -129,8 +129,8 @@ body {
     <div class="main">
       <div>
         <p>设备编号：{{repInfo.deviceCd}}</p>
-        <p>小区名称：{{repInfo.estateNm}}</p>
-        <p>设备名称：{{repInfo.deviceScatNm}}</p>
+        <p>小区名称：{{repInfo.phNm}}</p>
+        <p>设备名称：{{repInfo.deviceNm}}</p>
       </div>
       <h3>维修申请</h3>
       <div>
@@ -146,41 +146,41 @@ body {
 
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
         <h3>维修过程</h3>
-        <FormItem label="维修级别：" prop="repairLevel">
-          <Input v-model="formValidate.repairLevel"></Input>
+        <FormItem label="维修级别：" prop="repairLevel"  >
+          <Input v-model="formValidate.repairLevel" :disabled="isOver"></Input>
         </FormItem>
         <FormItem label="故障类型：" prop="faultType">
-          <Input v-model="formValidate.faultType"></Input>
+          <Input v-model="formValidate.faultType" :disabled="isOver"></Input>
         </FormItem>
         <FormItem label="维修人员：" prop="serviceman">
-          <Input v-model="formValidate.serviceman"></Input>
+          <Input v-model="formValidate.serviceman" :disabled="isOver"></Input>
         </FormItem>
         <FormItem label="维修状态：" prop="statCd">
-          <Select v-model="formValidate.statCd">
+          <Select v-model="formValidate.statCd" :disabled="isOver">
             <Option v-for="item in treatStateList" :value="item.cd" :key="item.cd">{{item.nm}}</Option>
           </Select>
         </FormItem>
-        <FormItem label="完成时间：">
+        <FormItem label="完成时间："  prop="complateTm">
           <Row>
             <Col span="11">
-              <FormItem prop="complateTm">
-                <DatePicker type="date" v-model="formValidate.complateTm"></DatePicker>
+              <FormItem>
+                <DatePicker type="date" v-model="formValidate.complateTm" :disabled="isOver"></DatePicker>
               </FormItem>
             </Col>
           </Row>
         </FormItem>
         <FormItem label="维修用时（小时）：" prop="repairUsedTm">
-          <Input v-model="formValidate.repairUsedTm"></Input>
+          <Input type="number" v-model="formValidate.repairUsedTm" :disabled="isOver"></Input>
         </FormItem>
         <FormItem label="维修费用（元）：" prop="repairCost">
-          <Input v-model="formValidate.repairCost"></Input>
+          <Input v-model="formValidate.repairCost" :disabled="isOver"></Input>
         </FormItem>
         <FormItem label="故障分析及工作明细：" prop="report">
-          <Input v-model="formValidate.report" type="textarea" :autosize="{minRows: 2,maxRows: 5}"></Input>
+          <Input v-model="formValidate.report" type="textarea" :autosize="{minRows: 2,maxRows: 5}" :disabled="isOver"></Input>
         </FormItem>
         <h3>更换配件</h3>
-        <FormItem label="是否更换配件" prop="replaceFittingNm">
-          <RadioGroup v-model="formValidate.replaceFittingNm">
+        <FormItem label="是否更换配件" prop="replaceFittingCd">
+          <RadioGroup v-model="formValidate.replaceFittingCd" disabled>
             <Radio label="10000.150">
               <span>是</span>
             </Radio>
@@ -189,72 +189,60 @@ body {
             </Radio>
           </RadioGroup>
         </FormItem>
-        <table>
+
+        <FormItem label="配件名称:" prop="stockNm">
+          <Input  v-model="repInfo.stockNm" disabled></Input>
+        </FormItem>
+
+        <FormItem label="规格型号:" prop="stockSpec">
+          <Input  v-model="repInfo.stockSpec" disabled></Input>
+        </FormItem>
+
+        <FormItem label="品牌:" prop="stockBrand">
+          <Input  v-model="repInfo.stockBrand" disabled></Input>
+        </FormItem>
+
+
+
+        <!-- <FormItem  v-if="formValidate.replaceFittingCd=='10000.150'"  label="配件名称"  prop="deviceCd" >
+          <Select placeholder="请输入关键字"   v-model="formValidate.deviceCd"  filterable  @on-change="">
+            <Option  v-for="item in replaceList"  :value="item.stockManagePk"  >
+              {{item.deviceNm}},{{item.deviceSpec}},【{{item.deviceBrand}}】
+            </Option>
+          </Select>
+        </FormItem> -->
+
+        <!-- <table>
           <thead>
             <tr>
-              <th>配件编号</th>
               <th>配件名称</th>
               <th>规格型号</th>
               <th>品牌</th>
-              <th>数量</th>
-              <th>操作</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(item, index) in repairStockRoList" :key="index">
-              <td>{{item.deviceCd}}</td>
               <td>{{item.deviceNm}}</td>
               <td>{{item.deviceSpec}}</td>
               <td>{{item.deviceBrand}}</td>
-              <td>{{item.stockNum}}</td>
-              <td @click="deleteStockRo(item)"> 删除</td>
             </tr>
-            <tr>
-              <td class="add-btn">
-                <Button type="dashed" long @click="addEquipmentList">添加</Button>
-              </td>
-            </tr>
+           <tr>
+           </tr>
           </tbody>
-        </table>
-        <h3>反馈信息</h3>
+        </table> -->
+
+        <!-- <h3>反馈信息</h3>
         <FormItem label="客户评价：" prop="clientEvel">
           <Input v-model="formValidate.clientEvel"></Input>
         </FormItem>
         <FormItem label="详细意见：" prop="option">
           <Input v-model="formValidate.option" type="textarea" :autosize="{minRows: 2,maxRows: 5}"></Input>
-        </FormItem>
+        </FormItem> -->
         <FormItem>
-          <Button type="primary" @click="handleSubmit('formValidate')">提交</Button>
-          <Button @click="handleReset('formValidate')" style="margin-left: 8px">重置</Button>
+          <Button type="primary" @click="handleSubmit('formValidate')" :disabled="isOver">提交</Button>
+          <Button @click="handleReset('formValidate')" style="margin-left: 8px" :disabled="isOver">重置</Button>
         </FormItem>
       </Form>
-       <template>
-        <Modal v-model="modal1" title="添加配件" @on-ok="ok" @on-cancel="cancel">
-          <Form ref="modalValidate" :model="modalValidate" :rules="ruleModalValidate" :label-width="100">
-            <FormItem label="配件编号" prop="deviceCd">
-              <Select v-model="modalValidate.deviceCd" filterable @on-change="getRepairStock($event)">
-                <Option
-                  v-for="item in replaceList"
-                  :value="item.deviceCd"
-                  :key="item.stockManagePk"
-                >{{item.deviceCd}}</Option>
-              </Select>
-            </FormItem>
-               <FormItem label="配件名称" prop="deviceNm">
-          <Input v-model="modalValidate.deviceNm"></Input>
-        </FormItem>
-           <FormItem label="规格型号" prop="deviceSpec">
-          <Input v-model="modalValidate.deviceSpec"></Input>
-        </FormItem>
-           <FormItem label="品牌" prop="deviceBrand">
-          <Input v-model="modalValidate.deviceBrand"></Input>
-        </FormItem>
-           <FormItem label="数量" prop="stockNum">
-          <Input v-model="modalValidate.stockNum"></Input>
-        </FormItem>
-          </Form>
-        </Modal>
-      </template>
     </div>
   </div>
 </template>
@@ -266,20 +254,22 @@ export default {
   data() {
     return {
       title: "设备维修详情",
-      modal1:false,
+      isOver:false,
       ipPk: "",
       repInfo: {},
       replaceList:[],
       treatStateList: [],
       repairStockRoList: [],
       formValidate: {
+        replaceFittingCd:'',
+        deviceCd:'',
         repairLevel: "",
         faultType: "",
         serviceman: "",
         statCd: "",
         complateTm: "",
-        repairUsedTm: "",
-        repairCost: "",
+        repairUsedTm: 0,
+        repairCost: 0,
         report: "",
         replaceFittingNm: "",
         clientEvel: "",
@@ -294,32 +284,13 @@ export default {
         stockManagePk: ""
       },
       ruleValidate: {
-        repairLevel: [
-          { required: true, message: "请输入维修级别", trigger: "blur" }
-        ],
-        faultType: [
-          { required: true, message: "请输入故障类型", trigger: "blur" }
-        ],
-        serviceman: [
-          { required: true, message: "请输入维修人员", trigger: "blur" }
-        ],
-        statCd: [
-          { required: true, message: "请选择维修状态", trigger: "change" }
-        ],
-        complateTm: [
-          {
-            required: true,
-            type: "date",
-            message: "请选择完成时间",
-            trigger: "change"
-          }
-        ],
-        repairUsedTm: [
-          { required: true, message: "请输入维修用时（小时）", trigger: "blur" }
-        ],
-        repairCost: [
-          { required: true, message: "请输入维修费用（元）", trigger: "blur" }
-        ],
+        repairLevel: [ { required: true, message: "请输入维修级别", trigger: "blur" } ],
+        faultType: [ {required: true, message: "请输入故障类型", trigger: "blur" }   ],
+        serviceman: [{ required: true, message: "请输入维修人员", trigger: "blur" } ],
+        statCd: [{ required: true, message: "请选择维修状态", trigger: "change" }],
+        complateTm:[ { required: true ,type:"date",message:"请输入维修用时（小时）",trigger:"blur"}],
+        //repairUsedTm:[ { required: true ,type:"number",message:"请输入维修用时（小时）",trigger:"blur"}],
+        //repairCost:[ { required: true ,type:"number",message:"请输入维修费用（元）",trigger:"blur"}],
         report: [
           {
             required: true,
@@ -331,10 +302,10 @@ export default {
           { required: true, message: "请选择是否更换配件", trigger: "change" }
         ],
         clientEvel: [
-          { required: true, message: "请输入客户评价", trigger: "change" }
+          { required: true, message: "请输入客户评价", trigger: "blur" }
         ],
         option: [
-          { required: true, message: "请输入详细意见", trigger: "change" }
+          { required: true, message: "请输入详细意见", trigger: "blur" }
         ]
       },
        ruleModalValidate:{
@@ -358,12 +329,45 @@ export default {
   },
   methods: {
     getInfo() {
-      this.until.get("/ph/repairProcess/info/" + this.ipPk).then(res => {
+      this.until.get("/ph/deviceRepair/info/" + this.ipPk).then(res => {
         this.repInfo = res.data;
-        this.repInfo.repairStockDtoxes.forEach(item=>{
-          this.repairStockRoList.push(item.stockManageVo)
-        })
+        console.log(this.repInfo);
+       // this.formValidate.deviceCd = this.repInfo.stockId;
+       this.formValidate.replaceFittingCd = this.repInfo.replaceFittingCd;
+        var a = {
+            deviceNm:this.repInfo.stockNm,
+            deviceSpec:this.repInfo.stockSpec,
+            deviceBrand:this.repInfo.stockBrand,
+            stockManagePk:this.repInfo.stockId,
+            stockNum:1,
+        }
+        this.repairStockRoList.push(a)
+        
+        if (this.repInfo.statNm === '已完成' || this.repInfo.statNm === '已结束' ) {
+          let query = new this.Query();
+          query.buildWhereClause("deviceRepairPk",this.repInfo.deviceRepairPk,"EQ");
+          let param = query.getParam();
+           this.until.get("/ph/repairProcess/list",param).then(res => {
+            console.log(res.data); 
+            this.formValidate = res.data.items[0]
+            this.formValidate.replaceFittingCd = this.repInfo.replaceFittingCd;
+            this.formValidate.statCd = this.repInfo.statCd;
+            this.isOver=true
+
+
       });
+    }
+
+
+
+      });
+      
+      
+    
+    
+  
+
+
     },
     getTreatStateList() {
       this.until.get("/general/cat/listByPrntCd?prntCd=30020").then(res => {
@@ -383,55 +387,14 @@ export default {
         }
       });
     },
-    addEquipmentList() {
-      //增加表格数据
-      // this.repairStockRoList.push(this.repairStockRo);
-       this.modal1 = true;
-    },
-     ok() {
-      // this.$Message.info("Clicked ok");
-      //往表格里面添加配件信息数据
-      let stockObj={}
-      Object.assign(stockObj,this.modalValidate)
-      
-      this.repairStockRoList.push(stockObj)
-      this.modal1=false
-    },
-    cancel() {
-      this.modal1=false
-    },
-    deleteStockRo(item){
-     this.repairStockRoList= this.repairStockRoList.filter(itemRo=>{
-        return itemRo!=item
-      })
-    },
+
     handleSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
           let myDate = this.until.formatDate(this.formValidate.applicationTm);
           this.formValidate.applicationTm = myDate.year + "-" + myDate.month + "-" + myDate.day;
-          let stockObj;
-
-          this.repInfo.repairStockDtoxes.forEach(item=>{
-            this.repairEntityList.push(item.stockManageVo)
-          })
-          if (this.repairStockRoList.length > 0) {
-            this.repairStockRoList.forEach((item, index) => {
-              stockObj = {};
-              stockObj.deviceCd = item["deviceCd" + index];
-              stockObj.deviceNm = item["deviceNm" + index];
-              stockObj.deviceSpec = item["deviceSpec" + index];
-              stockObj.deviceBrand = item["deviceBrand" + index];
-              stockObj.stockNum = item["stockNum" + index];
-              stockObj.stockManagePk = item["stockManagePk" + index];
-
-              this.repairEntityList.push(stockObj);
-            });
-           
-          }
-
-      
-           this.repInfo.repairStockRoList=this.repairEntityList;
+    
+           this.repInfo.repairStockRoList=this.repairStockRoList;
           //维修单号 后端生成
           Object.assign(this.repInfo, this.formValidate);
           this.until

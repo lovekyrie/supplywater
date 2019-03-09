@@ -13,5 +13,9 @@ module.exports = {
     require('autoprefixer')({
       browsers: ['iOS >= 7', 'Android >= 4.1']
     })
-  ]
+  ],
+ // vux-loader
+plugins: [{
+  name: 'vux-ui'
+}]
 }

@@ -78,11 +78,11 @@ body {
           </p>
           <p>
             <span>小区名称：</span>
-            {{item.estateNm}}
+            {{item.phNm}}
           </p>
           <p>
             <span>设备名称：</span>
-            {{item.deviceScatNm}}
+            {{item.deviceNm}}
           </p>
           <p>
             <span>维修单号：</span>
@@ -155,12 +155,24 @@ export default {
       let $q = new Promise((resolve, reject) => {
         let query = new this.Query();
 
-        query.buildWhereClause("deviceCd", this.search.sbCd, "LK");
-        query.buildWhereClause("estateNm", this.search.estateNm, "LK");
-        query.buildWhereClause("deviceScatNm", this.search.districtCd, "LK");
-        query.buildWhereClause("billCode", this.search.billCode, "LK");
-        query.buildWhereClause("applicantUnitNm", this.search.applyUnit, "LK");
-        query.buildWhereClause("statCd", this.search.treatState, "LK");
+       if(this.search.sbCd){
+         query.buildWhereClause("deviceCd", this.search.sbCd, "LK");
+       }
+       if(this.search.estateNm){
+         query.buildWhereClause("estateNm", this.search.estateNm, "LK");
+       }
+       if(this.search.districtCd){
+         query.buildWhereClause("deviceScatNm", this.search.districtCd, "LK");
+       }
+       if(this.search.billCode){
+         query.buildWhereClause("billCode", this.search.billCode, "LK");
+       }
+       if(this.search.applyUnit){
+         query.buildWhereClause("applicantUnitNm", this.search.applyUnit, "LK");
+       }
+       if(this.search.treatState){
+         query.buildWhereClause("statCd", this.search.treatState, "LK");
+       }
 
         query.buildPageClause(this.pageNo, this.pageSize);
         let param = query.getParam();

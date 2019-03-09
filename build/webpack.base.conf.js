@@ -9,6 +9,7 @@ var chunks = Object.keys(entries);
 
 var projectRoot = path.resolve(__dirname, '../')
 const vuxLoader = require('vux-loader')
+/* const webpackConfig = originalConfig */
 
 var vueLoaderConfig = require('./vue-loader.conf')
 
@@ -19,6 +20,8 @@ function resolve(dir) {
 var webpackConfig = {
 
   entry: entries,
+  
+
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
@@ -27,7 +30,7 @@ var webpackConfig = {
       : config.dev.assetsPublicPath
   },
   resolve: {
-    extensions: ['.js', '.vue', '.json'],
+    extensions: ['.js', '.vue', '.json','.less'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
@@ -70,7 +73,7 @@ var webpackConfig = {
     ]
   },
   plugins: [
-
+   
     new webpack.ProvidePlugin({
       $: "jquery",
       jQuery: "jquery"
@@ -90,5 +93,14 @@ var webpackConfig = {
 
 module.exports = vuxLoader.merge(webpackConfig, {
   options: {},
-  plugins: ['vux-ui', 'progress-bar', 'duplicate-style']
-})
+  plugins: ['vux-ui', 'progress-bar', 'duplicate-style','AMap'],
+  // externals: {
+  //   'AMap': 'AMap'
+  // },
+ })
+
+// module.exports = {
+//   externals: {
+//         'AMap': 'AMap'
+//       },
+// }

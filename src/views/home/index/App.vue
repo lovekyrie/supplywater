@@ -132,7 +132,7 @@ html {
               <img src="./img/shebei.png">
               <br>设备信息
             </span>
-            <span @click="go('')">
+            <span @click="goLnspection()">
               <img src="./img/xunjian.png">
               <br>设备巡检
             </span>
@@ -142,12 +142,12 @@ html {
               <img src="./img/shuixiang.png">
               <br>水箱清洗
             </span>
-            <span @click="go('')">
+            <span @click="goRepair()">
               <img src="./img/维修.png">
-              <br>设备维修111
+              <br>设备维修
             </span>
-            <span @click="go('')">
-              <img src="./img/备品.png">
+            <span @click="goSpareParts()">
+              <img src="./img/备件.png">
               <br>备品备件
             </span>
           </p>
@@ -158,7 +158,8 @@ html {
           <span></span>综合监控
         </div>
         <div class="content">
-          <span @click="go('')">
+          <span @click="goMonitor()">
+            <!-- /viwes/monitor/list.html -->
             <img src="./img/tiaodu.png">
             <br>调度监控
           </span>
@@ -226,7 +227,10 @@ export default {
   data() {
     return {};
   },
-  mounted() {},
+  mounted() {
+    //默认登陆管理员 用于解决原生登陆 H5没有登陆调用不了接口问题
+    this.until.login();
+  },
   methods: {
     //原生跳转
     go(url) {
@@ -234,6 +238,22 @@ export default {
     },
     goYanShou() {
       this.app.InterfaceName("h5_beforcheck");
+    },
+    //通知原生跳转 备品备件
+    goSpareParts() {
+      this.app.InterfaceName("h5_goSpareParts");
+    },
+    //通知原生跳转 设备巡检
+    goLnspection() {
+      this.app.InterfaceName("h5_goLnspection");
+    },
+    //通知原生跳转 设备维修
+    goRepair() {
+      this.app.InterfaceName("h5_goRepair");
+    },
+    //通知原生跳转 调度监控
+    goMonitor() {
+      this.app.InterfaceName("h5_goMonitor");
     }
   }
 };
