@@ -133,7 +133,7 @@ export default {
     },
     //待保养
     toWaitMaintenance() {
-      let url = "list.html";
+      let url = "pendinglist.html";
       window.location.href = url;
     },
     back() {

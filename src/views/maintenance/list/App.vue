@@ -1,4 +1,4 @@
-<style lang="less" type="text/less">
+<style lang="less">
 html,
 body {
   width: 100%;
@@ -12,6 +12,29 @@ body {
     flex-direction: column;
   }
 }
+
+.menu {
+  width: 100% !important;
+  display: flex;
+  display: -webkit-flex;
+  border-bottom: 1px solid #e2e2e2;
+
+  p {
+    flex: 1;
+    text-align: center;
+    height: 0.55rem;
+    line-height: 0.55rem;
+    font-size: 0.25rem;
+    &:nth-child(2) {
+      border-left: 1px solid #e2e2e2;
+      border-right: 1px solid #e2e2e2;
+    }
+  }
+  .active {
+    background: #3f51b5;
+    color: #fff;
+  }
+}
 .main {
   flex: 1;
   width: 100% !important;
@@ -23,20 +46,6 @@ body {
       position: relative;
       p {
         line-height: 0.3rem;
-        &:last-child {
-          text-align: right;
-          /*padding-right: 20px;*/
-          span {
-            display: inline-block;
-            width: 1rem;
-            text-align: center;
-            border: 1px solid #e2e2e2;
-            margin-left: 0.05rem;
-            line-height: 0.3rem;
-            height: 0.3rem;
-            border-radius: 5px;
-          }
-        }
       }
       img {
         position: absolute;
@@ -66,12 +75,15 @@ body {
 <template>
   <div id="container">
     <Spin size="large" fix v-if="spinShow"></Spin>
-    <myHeader :title="title" search="true" appBack="true"></myHeader>
-    <p style="text-align: center; line-height: .3rem" v-show="total==0">暂无数据</p>
-
+    <myHeader :title="title" newCreated="true" search="true" appBack="true"></myHeader>
+    <div class="menu">
+      <p @click="change(1)" :class="{active:type==1}">已保养</p>
+      <p @click="change(2)" :class="{active:type==2}">未保养</p>
+      <p @click="change(3)" :class="{active:type==3}">已过期</p>
+    </div>
     <scroll class="main" :on-reach-bottom="handleReachBottom">
       <Card dis-hover v-for="(item, index) in list" class="list" :key="index">
-        <div @click="toDetail(item.deviceRepairPk,item.devicePk)">
+        <div @click="toDetail(item.dispatchSendPk)">
           <p>
             <span>区域：</span>
             {{item.deviceCd}}
@@ -96,7 +108,6 @@ body {
         </div>
       </Card>
     </scroll>
-    <p style="text-align: center; line-height: .3rem" v-show="noMore">数据已加载完</p>
   </div>
 </template>
 
@@ -106,91 +117,80 @@ import myHeader from "../components/myHead";
 export default {
   data() {
     return {
-      title: "待执行保养",
-      spinShow: false,
-      noMore: false,
+      spinShow: false, //加载中
+      title: "任务派单管理",
+      type: 1, //tab类型
+      list: [],
+      listTotal: [],
       pageNo: 1,
       pageSize: 10,
-      total: 0,
-      list: [],
-
-      //搜索字段
-      sbCd: "", //设备编号
-      districtCd: "", //设备名称
-      estateNm: "", //小区名称
-      billCode: "", //维修单号
-      applyTime: "", //申请时间
-      applyUnit: "", //申请单位
-      treatState: "" //处理状态
+      total: ""
     };
   },
   components: {
     Loading,
     myHeader
   },
-  mounted() {
-    let myData = JSON.parse(this.until.getQueryString("search"));
-    console.log(myData);
-    if (myData) {
-      this.sbCd = myData.sbCd;
-      this.estateNm = myData.estateNm;
-      this.districtCd = myData.districtCd;
-      this.billCode = myData.repairNo;
-      this.applyUnit = myData.applyUnit;
-      this.treatState = myData.treatState;
-    }
-
-    let cookieVal = this.until.getCookie("yui2-token");
-    if (!cookieVal) {
-      let promise = this.until.login();
-      promise.then(res => {
-        this.getList();
-      });
-    } else {
-      this.getList();
-    }
-  },
   filters: {
     toDate(i) {
       return i.split(" ")[0];
     }
   },
+  mounted() {
+    this.type = this.until.getQueryString("type")
+      ? this.until.getQueryString("type")
+      : 1;
+    this.getList();
+  },
   methods: {
     getList() {
-      this.spinShow = true;
       let $q = new Promise((resolve, reject) => {
         let query = new this.Query();
-
-        //搜索功能函数,查询特定数据下的信息
-
-        if (this.sbCd) {
-          query.buildWhereClause("deviceCd", this.sbCd, "LK");
-        }
-        if (this.estateNm) {
-          query.buildWhereClause("estateNm", this.estateNm, "LK");
-        }
-        if (this.districtCd) {
-          query.buildWhereClause("deviceScatNm", this.districtCd, "LK");
-        }
-        if (this.billCode) {
-          query.buildWhereClause("billCode", this.billCode, "LK");
-        }
-        if (this.applyUnit) {
-          query.buildWhereClause("applicantUnitNm", this.applyUnit, "LK");
-        }
-        if (this.treatState) {
-          query.buildWhereClause("statCd", this.treatState, "LK");
-        }
-
+        // query.buildWhereClause('dealStatus',this.search.dealStatus,'LK');
+        // query.buildWhereClause('proLvNm',this.search.proLvNm,'LK');
+        // query.buildWhereClause('bmNm',this.search.bmNm,'LK');
         query.buildPageClause(this.pageNo, this.pageSize);
         let param = query.getParam();
-        this.until.get("/ph/deviceRepair/page", param).then(
+        this.until.get("/ph/dispatchSend/page", param).then(
           res => {
-            if (res.status == 200) {
-              this.spinShow = false;
+            this.spinShow = false;
+
+            if (res.status == 200 && res.data.items) {
+              this.listTotal.push(...res.data.items);
               this.total = res.page.total;
-              if (res.data.items) {
-                this.list.push(...res.data.items);
+              if (this.type == 1) {
+                res.data.items.forEach(item => {
+                  if (
+                    item.dealStatus == 0 ||
+                    item.dealStatus == 1 ||
+                    item.dealStatus == 2 ||
+                    item.dealStatus == 3
+                  ) {
+                    this.list.push(item);
+                  }
+                });
+              }
+              if (this.type == 2) {
+                res.data.items.forEach(item => {
+                  if (item.dealStatus == "0" || item.dealStatus == "3") {
+                    this.list.push(item);
+                  }
+                });
+              }
+              if (this.type == 3) {
+                res.data.items.forEach((item, index) => {
+                  if (item.dealStatus == 4 || item.dealStatus == 5) {
+                    console.log(index);
+                    this.list.push(item);
+                  }
+                });
+              }
+              if (
+                this.list.length < this.pageSize &&
+                this.listTotal.length < this.total
+              ) {
+                this.pageNo++;
+                this.getList();
               }
             }
             resolve("ok");
@@ -200,24 +200,60 @@ export default {
       });
       return $q;
     },
-
-    toDetail(repPk) {
-      let url = "detail.html?repPk=" + repPk;
+    toDetail(ipPk) {
+      //根据type选择的类型，跳转到不同的明细
+      let url = "detail.html?ipPk=" + ipPk;
       window.location.href = url;
+      // this.app.InterfaceName('h5_Jump',url)
+    },
+    change(val) {
+      this.type = val;
+      this.list = [];
+      this.listTotal = [];
+      this.pageNo = 1;
+      this.spinShow = true;
+      this.getList();
     },
     //到底部时触发
     handleReachBottom() {
       return new Promise(resolve => {
         setTimeout(() => {
-          if (this.list.length < this.total) {
+          if (this.listTotal.length < this.total) {
+            this.spinShow = true;
             this.pageNo++;
             this.getList();
-          } else {
-            this.noMore = true;
           }
           resolve();
         }, 2000);
       });
+    },
+    toEdit(ipPk, val) {
+      let url = "edit.html?type=" + val + "&ipPk=" + ipPk;
+      window.location.href = url;
+    }
+  },
+
+  filters: {
+    state(val) {
+      if (val == 0) {
+        val = "未确认";
+      }
+      if (val == 1) {
+        val = "已确认";
+      }
+      if (val == 2) {
+        val = "已接单";
+      }
+      if (val == 3) {
+        val = "已处理";
+      }
+      if (val == 4) {
+        val = "已回访";
+      }
+      if (val == 5) {
+        val = "完成";
+      }
+      return val;
     }
   }
 };

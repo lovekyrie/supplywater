@@ -98,7 +98,7 @@ body {
                 <Radio label="超高"></Radio>
                 <Radio label="高区"></Radio>
                 <Radio label="中区"></Radio>
-                <Radio label="地区"></Radio>
+                <Radio label="低区"></Radio>
               </RadioGroup>
           </tr>
           <tr>
@@ -355,12 +355,12 @@ body {
             <Col span="1">mω、</Col>
             <Col span="3" style="text-align:center;">相与地>=</Col>
             <Col span="8">
-              <Input v-model="formValidate.control15row1"></Input>
+              <Input v-model="formValidate.control15row2"></Input>
             </Col>
             <Col span="1">mω</Col>
           </Row>
         </FormItem>
-        <FormItem label="测量二次回路绝缘电阻" prop="control_row4">
+        <FormItem label="测量二次回路绝缘电阻" prop="control15row3">
           <Row>
             <Col span="3" style="text-align:center;">>=</Col>
             <Col span="20">
@@ -479,7 +479,7 @@ body {
             <Radio label="否"></Radio>
           </RadioGroup>
         </FormItem>
-        <FormItem label="机械密封" prop="pump20row2">
+        <FormItem label="机械密封" prop="pump20row3">
           <Row>
             <Col span="6">
               <RadioGroup v-model="formValidate.pump20row2">
@@ -488,7 +488,7 @@ body {
               </RadioGroup>
             </Col>
             <Col span="18">
-              <Input v-model="formValidate.pump20row2"></Input>
+              <Input v-model="formValidate.pump20row3"></Input>
             </Col>
           </Row>
         </FormItem>
@@ -684,8 +684,8 @@ body {
             </Col>
           </Row>
         </FormItem>
-        <FormItem label="y过滤器拆洗" prop="valve29row2">
-          <RadioGroup v-model="formValidate.valve29row2">
+        <FormItem label="y过滤器拆洗" prop="valve29row3">
+          <RadioGroup v-model="formValidate.valve29row3">
             <Radio label="完成"></Radio>
             <Radio label="未完成"></Radio>
           </RadioGroup>
