@@ -75,7 +75,7 @@ body {
 <template>
   <div id="container">
     <Spin size="large" fix v-if="spinShow"></Spin>
-    <myHeader :title="title" newCreated="true" search="true" appBack="true"></myHeader>
+    <myHeader :title="title" newCreated="true" search="true"></myHeader>
     <div class="menu">
       <p @click="change(1)" :class="{active:type==1}">已保养</p>
       <p @click="change(2)" :class="{active:type==2}">未保养</p>
@@ -83,26 +83,22 @@ body {
     </div>
     <scroll class="main" :on-reach-bottom="handleReachBottom">
       <Card dis-hover v-for="(item, index) in list" class="list" :key="index">
-        <div @click="toDetail(item.dispatchSendPk)">
+        <div @click="toDetail(item.maintTaskPk)">
           <p>
             <span>区域：</span>
-            {{item.deviceCd}}
+            {{item.districtNm}}
           </p>
           <p>
             <span>泵房名称：</span>
-            {{item.estateNm}}
+            {{item.phNm}}
           </p>
           <p>
             <span>保养计划时间：</span>
-            {{item.applicationTm | toDate}}
+            {{item.maintPlanTime | toDate}}
           </p>
           <p>
             <span>计划完成时间：</span>
-            {{item.applicationTm | toDate}}
-          </p>
-          <p>
-            <span>保养类型：</span>
-            {{item.statNm}}
+            {{item.maintPlanDoneTime | toDate}}
           </p>
           <img src="../components/img/toDetail.png">
         </div>
@@ -118,23 +114,19 @@ export default {
   data() {
     return {
       spinShow: false, //加载中
-      title: "任务派单管理",
+      title: "全部保养管理",
       type: 1, //tab类型
       list: [],
       listTotal: [],
       pageNo: 1,
       pageSize: 10,
-      total: ""
+      total: "",
+      taskExeStatus: ""
     };
   },
   components: {
     Loading,
     myHeader
-  },
-  filters: {
-    toDate(i) {
-      return i.split(" ")[0];
-    }
   },
   mounted() {
     this.type = this.until.getQueryString("type")
@@ -145,53 +137,38 @@ export default {
   methods: {
     getList() {
       let $q = new Promise((resolve, reject) => {
-        let query = new this.Query();
-        // query.buildWhereClause('dealStatus',this.search.dealStatus,'LK');
-        // query.buildWhereClause('proLvNm',this.search.proLvNm,'LK');
-        // query.buildWhereClause('bmNm',this.search.bmNm,'LK');
-        query.buildPageClause(this.pageNo, this.pageSize);
-        let param = query.getParam();
-        this.until.get("/ph/dispatchSend/page", param).then(
+        if (this.type === 1) {
+          this.taskExeStatus = "已保养";
+        } else if (this.type === 2) {
+          this.taskExeStatus = "待保养";
+        } else {
+          this.taskExeStatus = "待保养";
+        }
+
+        let param = {
+          taskExeStatus: this.taskExeStatus,
+          currentPage: 1,
+          showCount: 10,
+          token: this.until.loGet("appToken")
+        };
+        this.until.get("/inspect-api/maintTask/list", param).then(
           res => {
             this.spinShow = false;
 
-            if (res.status == 200 && res.data.items) {
-              this.listTotal.push(...res.data.items);
-              this.total = res.page.total;
-              if (this.type == 1) {
-                res.data.items.forEach(item => {
-                  if (
-                    item.dealStatus == 0 ||
-                    item.dealStatus == 1 ||
-                    item.dealStatus == 2 ||
-                    item.dealStatus == 3
-                  ) {
-                    this.list.push(item);
-                  }
-                });
-              }
-              if (this.type == 2) {
-                res.data.items.forEach(item => {
-                  if (item.dealStatus == "0" || item.dealStatus == "3") {
-                    this.list.push(item);
-                  }
-                });
-              }
-              if (this.type == 3) {
-                res.data.items.forEach((item, index) => {
-                  if (item.dealStatus == 4 || item.dealStatus == 5) {
-                    console.log(index);
-                    this.list.push(item);
-                  }
-                });
-              }
-              if (
-                this.list.length < this.pageSize &&
-                this.listTotal.length < this.total
-              ) {
-                this.pageNo++;
+            if (res.code === 0 && res.data.list) {
+              this.list.push(...res.data.list);
+              this.total = res.data.total;
+
+              /** 当total>this.currentpage*showCount*/
+              if (res.data.total > this.pageSize * this.showCount) {
+                this.currentPage++;
                 this.getList();
               }
+            } else if (res.code === 1000) {
+              this.$hero.msg.show({
+                text: `${res.message}`,
+                times: 1500
+              });
             }
             resolve("ok");
           },
@@ -202,15 +179,19 @@ export default {
     },
     toDetail(ipPk) {
       //根据type选择的类型，跳转到不同的明细
-      let url = "detail.html?ipPk=" + ipPk;
-      window.location.href = url;
+      if (this.type === 1) {
+        let url = "detail.html?maintTaskPk=" + ipPk;
+        window.location.href = url;
+      } else {
+        let url = "edit.html?maintTaskPk=" + ipPk;
+        window.location.href = url;
+      }
       // this.app.InterfaceName('h5_Jump',url)
     },
     change(val) {
       this.type = val;
       this.list = [];
-      this.listTotal = [];
-      this.pageNo = 1;
+      this.currentPage = 1;
       this.spinShow = true;
       this.getList();
     },
@@ -218,9 +199,9 @@ export default {
     handleReachBottom() {
       return new Promise(resolve => {
         setTimeout(() => {
-          if (this.listTotal.length < this.total) {
+          if (this.list.length < this.total) {
             this.spinShow = true;
-            this.pageNo++;
+            this.currentPage++;
             this.getList();
           }
           resolve();
@@ -254,6 +235,9 @@ export default {
         val = "完成";
       }
       return val;
+    },
+    toDate(i) {
+      return i.split(" ")[0];
     }
   }
 };

@@ -66,31 +66,27 @@ body {
 <template>
   <div id="container">
     <Spin size="large" fix v-if="spinShow"></Spin>
-    <myHeader :title="title" search="true" appBack="true"></myHeader>
+    <myHeader :title="title" search="true"></myHeader>
     <p style="text-align: center; line-height: .3rem" v-show="total==0">暂无数据</p>
 
     <scroll class="main" :on-reach-bottom="handleReachBottom">
       <Card dis-hover v-for="(item, index) in list" class="list" :key="index">
-        <div @click="toDetail(item.deviceRepairPk,item.devicePk)">
+        <div @click="toDetail(item.maintTaskPk)">
           <p>
             <span>区域：</span>
-            {{item.deviceCd}}
+            {{item.districtNm}}
           </p>
           <p>
             <span>泵房名称：</span>
-            {{item.estateNm}}
+            {{item.phNm}}
           </p>
           <p>
             <span>保养计划时间：</span>
-            {{item.applicationTm | toDate}}
+            {{item.maintPlanTime | toDate}}
           </p>
           <p>
             <span>计划完成时间：</span>
-            {{item.applicationTm | toDate}}
-          </p>
-          <p>
-            <span>保养类型：</span>
-            {{item.statNm}}
+            {{item.maintPlanDoneTime | toDate}}
           </p>
           <img src="../components/img/toDetail.png">
         </div>
@@ -129,26 +125,7 @@ export default {
     myHeader
   },
   mounted() {
-    let myData = JSON.parse(this.until.getQueryString("search"));
-    console.log(myData);
-    if (myData) {
-      this.sbCd = myData.sbCd;
-      this.estateNm = myData.estateNm;
-      this.districtCd = myData.districtCd;
-      this.billCode = myData.repairNo;
-      this.applyUnit = myData.applyUnit;
-      this.treatState = myData.treatState;
-    }
-
-    let cookieVal = this.until.getCookie("yui2-token");
-    if (!cookieVal) {
-      let promise = this.until.login();
-      promise.then(res => {
-        this.getList();
-      });
-    } else {
-      this.getList();
-    }
+    this.getList();
   },
   filters: {
     toDate(i) {
@@ -159,39 +136,25 @@ export default {
     getList() {
       this.spinShow = true;
       let $q = new Promise((resolve, reject) => {
-        let query = new this.Query();
-
-        //搜索功能函数,查询特定数据下的信息
-
-        if (this.sbCd) {
-          query.buildWhereClause("deviceCd", this.sbCd, "LK");
-        }
-        if (this.estateNm) {
-          query.buildWhereClause("estateNm", this.estateNm, "LK");
-        }
-        if (this.districtCd) {
-          query.buildWhereClause("deviceScatNm", this.districtCd, "LK");
-        }
-        if (this.billCode) {
-          query.buildWhereClause("billCode", this.billCode, "LK");
-        }
-        if (this.applyUnit) {
-          query.buildWhereClause("applicantUnitNm", this.applyUnit, "LK");
-        }
-        if (this.treatState) {
-          query.buildWhereClause("statCd", this.treatState, "LK");
-        }
-
-        query.buildPageClause(this.pageNo, this.pageSize);
-        let param = query.getParam();
-        this.until.get("/ph/deviceRepair/page", param).then(
+        let param = {
+          taskExeStatus: "待保养",
+          currentPage: 1,
+          showCount: 10,
+          token: this.until.loGet("appToken")
+        };
+        this.until.get("/inspect-api/maintTask/list", param).then(
           res => {
-            if (res.status == 200) {
+            if (res.code === 0) {
               this.spinShow = false;
-              this.total = res.page.total;
-              if (res.data.items) {
-                this.list.push(...res.data.items);
+              this.total = res.data.total;
+              if (res.data.list) {
+                this.list.push(...res.data.list);
               }
+            } else if (res.code === 1000) {
+              this.$hero.msg.show({
+                text: `${res.message}`,
+                times: 1500
+              });
             }
             resolve("ok");
           },
@@ -202,7 +165,7 @@ export default {
     },
 
     toDetail(repPk) {
-      let url = "detail.html?repPk=" + repPk;
+      let url = "edit.html?maintTaskPk=" + repPk;
       window.location.href = url;
     },
     //到底部时触发

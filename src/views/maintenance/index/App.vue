@@ -93,42 +93,27 @@ import Qs from "qs";
 import { log } from "util";
 export default {
   data() {
-    return {};
+    return {
+      title: "保养模块"
+    };
   },
   components: {},
+  created() {
+    //通过Android原生返回一个登录的token，供我们本地存储
+    var that = this;
+    console.log("112");
+    this.app.InterfaceName("h5_setTokenToHtml5", { test: 12 }).then(res => {
+      console.log("测试@@@=====>" + res);
+      this.until.loSave("appToken", res);
+    });
+  },
   mounted() {
-    this.login();
+    // this.login();
   },
   methods: {
-    login() {
-      let param = {};
-      const query = Qs.parse(location.hash.substring(3));
-      var user = query.user;
-      var pwd = query.pwd;
-      this.until
-        .post(
-          "/general/access/appLogin?username=" +
-            user +
-            "&password=" +
-            pwd +
-            "&rememberMe=true",
-          param
-        )
-        .then(
-          res => {
-            if (res.status == 200) {
-              this.until.loSave("JS_token", JSON.stringify(res.data));
-            } else {
-              this.Toast(res.message);
-            }
-          },
-          err => {}
-        );
-    },
-
     //全部保养
     toAllMaintenance() {
-      let url = "../clientrepair/list.html";
+      let url = "list.html";
       window.location.href = url;
     },
     //待保养

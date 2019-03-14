@@ -60,7 +60,18 @@ body {
     .ivu-date-picker {
       width: 100%;
     }
+    >div{
+      &:nth-last-of-type(2){
+        margin-bottom: 30px;
+      }
+      &:nth-last-of-type(1){
+        position: fixed;
+        bottom: 0;
+        left: 25%;
+      }
+    }
   }
+  
 }
 </style>
 
@@ -70,12 +81,10 @@ body {
     <div class="main">
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
         <FormItem label="小区名称" prop="estateNm">
-          <Select v-model="formValidate.estateNm">
-            <Option v-for="item in dispatchFromNm" :value="item.cd" :key="item.cd">{{item.nm}}</Option>
-          </Select>
+          <Input v-model="formValidate.estateNm" disabled></Input>
         </FormItem>
         <FormItem label="保养单位" prop="maintUnitNm">
-          <Input v-model="formValidate.maintUnitNm"></Input>
+          <Input v-model="formValidate.maintUnitNm" disabled></Input>
         </FormItem>
         <FormItem label="保养日期">
           <FormItem prop="maintTm">
@@ -84,21 +93,21 @@ body {
         </FormItem>
         <h3>泵房设施</h3>
         <FormItem label="供水方式" prop="waterSupplyMode">
-          <RadioGroup v-model="formValidate.waterSupplyMode">
-            <Radio label="无负压"></Radio>
-            <Radio label="箱式"></Radio>
-            <Radio label="水箱+变频"></Radio>
-            <Radio label="工频"></Radio>
-          </RadioGroup>
+          <CheckboxGroup v-model="beforeChangMode">
+            <Checkbox label="无负压" disabled></Checkbox>
+            <Checkbox label="箱式无负压" disabled></Checkbox>
+            <Checkbox label="水箱+变频" disabled></Checkbox>
+            <Checkbox label="工频" disabled></Checkbox>
+          </CheckboxGroup>
         </FormItem>
         <table>
           <tr>
             <td>供水分区</td>
-              <RadioGroup v-model="formValidate.waterSupplyMode">
-                <Radio label="超高"></Radio>
-                <Radio label="高区"></Radio>
-                <Radio label="中区"></Radio>
-                <Radio label="低区"></Radio>
+              <RadioGroup v-model="formValidate.waterSupplyArea">
+                <Radio label="超高" disabled></Radio>
+                <Radio label="高区" disabled></Radio>
+                <Radio label="中区" disabled></Radio>
+                <Radio label="低区" disabled></Radio>
               </RadioGroup>
           </tr>
           <tr>
@@ -329,9 +338,7 @@ body {
           </Row>
         </FormItem>
         <FormItem label="控制柜整体清灰" prop="control14row1">
-          <RadioGroup v-model="formValidate.control14row1">
-            <Radio label="必须完成项"></Radio>
-          </RadioGroup>
+            <Checkbox v-model="formValidate.control14row1">必须完成项</Checkbox>
         </FormItem>
         <FormItem label="检查主要元器件过热、烧损情况" prop="control14row3">
           <Row>
@@ -369,7 +376,8 @@ body {
             <Col span="1">mω</Col>
           </Row>
         </FormItem>
-        <FormItem label="空开校验" prop="control16row2">
+       
+        <FormItem label="空开校验" prop="control16row2" v-show="info.controlShow1">
           <Row>
             <Col span="6">
               <RadioGroup v-model="formValidate.control16row1">
@@ -382,7 +390,7 @@ body {
             </Col>
           </Row>
         </FormItem>
-        <FormItem label="热继电器校验后整定电流" prop="control16row3">
+        <FormItem label="热继电器校验后整定电流" prop="control16row3" v-show="info.controlShow1">
           <Row>
             <Col span="22">
               <Input v-model="formValidate.control16row3"></Input>
@@ -390,18 +398,16 @@ body {
             <Col span="2">a</Col>
           </Row>
         </FormItem>
-        <FormItem label="变频器冷却风道清理" prop="control16row4">
+        <FormItem label="变频器冷却风道清理" prop="control16row4" v-show="info.controlShow1">
           <RadioGroup v-model="formValidate.control16row4">
             <Radio label="清理"></Radio>
             <Radio label="未清理"></Radio>
           </RadioGroup>
         </FormItem>
-        <FormItem label="中间继电器更换" prop="control17row1">
+        <FormItem label="中间继电器更换" prop="control17row1" v-show="info.controlShow2">
           <Row>
             <Col span="6">
-              <CheckboxGroup v-model="formValidate.control17row1" @on-change="changeMidRelay">
-                <Checkbox label="必须完成项"></Checkbox>
-              </CheckboxGroup>
+                <Checkbox v-model="formValidate.control17row1" @on-change="changeControl">必须完成项</Checkbox>
             </Col>
             <Col span="3" style="text-align:center;" v-show="showMidRelay">新配件品牌</Col>
             <Col span="3" v-show="showMidRelay">
@@ -419,9 +425,7 @@ body {
         </FormItem>
         <h3>泵组</h3>
         <FormItem label="机泵外体清洗" prop="pump18row1">
-          <CheckboxGroup v-model="formValidate.pump18row1">
-            <Checkbox label="必须完成项"></Checkbox>
-          </CheckboxGroup>
+            <Checkbox v-model="formValidate.pump18row1">必须完成项</Checkbox>
         </FormItem>
         <FormItem label="泵体杂物堵塞情况" prop="pump18row3">
           <Row>
@@ -506,9 +510,7 @@ body {
           </Row>
         </FormItem>
         <FormItem label="补充轴承润滑油" prop="pump22row1">
-          <CheckboxGroup v-model="formValidate.pump22row1">
-            <Checkbox label="必须完成项"></Checkbox>
-          </CheckboxGroup>
+            <Checkbox v-model="formValidate.pump22row1">必须完成项</Checkbox>
         </FormItem>
         <FormItem label="检查引出线端烧伤程度" prop="pump22row3">
           <Row>
@@ -554,7 +556,7 @@ body {
             </Col>
           </Row>
         </FormItem>
-        <FormItem label="检查避震器（垫）避震效果" prop="pump24row2">
+        <FormItem label="检查避震器（垫）避震效果" prop="pump24row2" v-show="info.pumpShow1">
           <Row>
             <Col span="6">
               <RadioGroup v-model="formValidate.pump24row1">
@@ -567,7 +569,7 @@ body {
             </Col>
           </Row>
         </FormItem>
-        <FormItem label="泵组基础腐蚀情况" prop="pump24row4">
+        <FormItem label="泵组基础腐蚀情况" prop="pump24row4" v-show="info.pumpShow1">
           <Row>
             <Col span="6">
               <RadioGroup v-model="formValidate.pump24row3">
@@ -580,12 +582,10 @@ body {
             </Col>
           </Row>
         </FormItem>
-        <FormItem label="机械密封更换" prop="pump25row1">
+        <FormItem label="机械密封更换" prop="pump25row1" v-show="info.pumpShow2">
           <Row>
             <Col span="6">
-              <CheckboxGroup v-model="formValidate.pump25row1" @on-change="changePump">
-                <Checkbox label="必须完成项"></Checkbox>
-              </CheckboxGroup>
+                <Checkbox v-model="formValidate.pump25row1" @on-change="changePump">必须完成项</Checkbox>
             </Col>
             <Col span="3" style="text-align:center;" v-show="showChangePump">新配件品牌</Col>
             <Col span="3" v-show="showChangePump">
@@ -628,12 +628,10 @@ body {
             </Col>
           </Row>
         </FormItem>
-        <FormItem label="机械压力表更换" prop="controlmeter27row1">
+        <FormItem label="机械压力表更换" prop="controlmeter27row1" v-show="info.controlmeterShow1">
           <Row>
             <Col span="6">
-              <CheckboxGroup v-model="formValidate.controlmeter27row1" @on-change="changeMeter">
-                <Checkbox label="必须完成项"></Checkbox>
-              </CheckboxGroup>
+                <Checkbox v-model="formValidate.controlmeter27row1" @on-change="changeMeter">必须完成项</Checkbox>
             </Col>
             <Col span="3" style="text-align:center;" v-show="showChangePump1">新配件品牌</Col>
             <Col span="3" v-show="showChangePump1">
@@ -649,12 +647,10 @@ body {
             </Col>
           </Row>
         </FormItem>
-        <FormItem label="压力变送器更换" prop="controlmeter28row1">
+        <FormItem label="压力变送器更换" prop="controlmeter28row1" v-show="info.controlmeterShow1">
           <Row>
             <Col span="6">
-              <CheckboxGroup v-model="formValidate.controlmeter28row1" @on-change="changeMeterTwo">
-                <Checkbox label="必须完成项"></Checkbox>
-              </CheckboxGroup>
+                <Checkbox v-model="formValidate.controlmeter28row1" @on-change="changeMeterTwo">必须完成项</Checkbox>
             </Col>
             <Col span="3" style="text-align:center;" v-show="showChangePump2">新配件品牌</Col>
             <Col span="3" v-show="showChangePump2">
@@ -691,19 +687,13 @@ body {
           </RadioGroup>
         </FormItem>
         <FormItem label="无负压设备罐体排污" prop="valve30row1">
-          <CheckboxGroup v-model="formValidate.valve30row1">
-            <Checkbox label="必须完成项"></Checkbox>
-          </CheckboxGroup>
+            <Checkbox v-model="formValidate.valve30row1">必须完成项</Checkbox>
         </FormItem>
-        <FormItem label="阀门检修性操作、调整、更换漏水部件" prop="valve31row1">
-          <CheckboxGroup v-model="formValidate.valve31row1">
-            <Checkbox label="必须完成项"></Checkbox>
-          </CheckboxGroup>
+        <FormItem label="阀门检修性操作、调整、更换漏水部件" prop="valve31row1" v-show="info.valveShow1">
+            <Checkbox v-model="formValidate.valve31row1">必须完成项</Checkbox>
         </FormItem>
-        <FormItem label="管道加固支（托）架" prop="valve31row2">
-          <CheckboxGroup v-model="formValidate.valve31row2">
-            <Checkbox label="必须完成项"></Checkbox>
-          </CheckboxGroup>
+        <FormItem label="管道加固支（托）架" prop="valve31row2" v-show="info.valveShow1">
+            <Checkbox v-model="formValidate.valve31row2">必须完成项</Checkbox>
         </FormItem>
         <h3>水箱（池）</h3>
         <FormItem label="1、水箱（池）与水泵联动系统运转情况" prop="waterbox32row2">
@@ -735,7 +725,7 @@ body {
         <FormItem label="液位控制器使用情况" prop="waterbox33row4">
           <Row>
             <Col span="6">
-              <RadioGroup v-model="formValidate.waterbox33row2">
+              <RadioGroup v-model="formValidate.waterbox33row3">
                 <Radio label="正常"></Radio>
                 <Radio label="不正常"></Radio>
               </RadioGroup>
@@ -856,19 +846,13 @@ body {
           </Row>
         </FormItem>
         <FormItem label="泵体温度传感器校准" prop="safefence40row1">
-          <CheckboxGroup v-model="formValidate.safefence40row1">
-            <Checkbox label="必须完成项"></Checkbox>
-          </CheckboxGroup>
+            <Checkbox v-model="formValidate.safefence40row1">必须完成项</Checkbox>
         </FormItem>
         <FormItem label="水泵振动传感器校准" prop="safefence40row2">
-          <CheckboxGroup v-model="formValidate.safefence40row2">
-            <Checkbox label="必须完成项"></Checkbox>
-          </CheckboxGroup>
+            <Checkbox v-model="formValidate.safefence40row2">必须完成项</Checkbox>
         </FormItem>
         <FormItem label="超声波液位仪校准" prop="safefence41row1">
-          <CheckboxGroup v-model="formValidate.safefence41row1">
-            <Checkbox label="必须完成项"></Checkbox>
-          </CheckboxGroup>
+            <Checkbox v-model="formValidate.safefence41row1">必须完成项</Checkbox>
         </FormItem>
         <FormItem label="门禁系统使用情况：刷卡开门" prop="safefence41row3">
           <Row>
@@ -940,9 +924,7 @@ body {
         </FormItem>
         <h3>附属设施</h3>
         <FormItem label="场地清扫" prop="accessory45row1">
-          <CheckboxGroup v-model="formValidate.accessory45row1">
-            <Checkbox label="必须完成项"></Checkbox>
-          </CheckboxGroup>
+            <Checkbox v-model="formValidate.accessory45row1">必须完成项</Checkbox>
         </FormItem>
         <FormItem label="室内照明" prop="accessory45row3">
           <Row>
@@ -1021,13 +1003,18 @@ body {
         <FormItem prop="else48row1">
           <Input
             v-model="formValidate.else48row1"
+
             type="textarea"
             :autosize="{minRows: 2,maxRows: 5}"
           ></Input>
         </FormItem>
+        <FormItem label="保养人" prop="maintenance49row1">
+          <Input v-model="formValidate.maintenance49row1"></Input>
+        </FormItem>
         <FormItem>
+          <Button type="primary" @click="handleSave">保存</Button>
           <Button type="primary" @click="handleSubmit('formValidate')">提交</Button>
-          <Button @click="handleReset('formValidate')" style="margin-left: 8px">重置</Button>
+          <!-- <Button @click="handleReset('formValidate')" style="margin-left: 8px">重置</Button> -->
         </FormItem>
       </Form>
     </div>
@@ -1039,36 +1026,113 @@ import Loading from "../../../hero/components/loading";
 import myHeader from "../components/myHead";
 export default {
   data() {
+     const validateControl14row1 = (rule, value, callback) => {
+        if (value === false) {
+            callback(new Error('请选择控制柜整体清灰'));
+        } else {
+            callback();
+        }
+      };
+      const validateControl17row1 = (rule, value, callback) => {
+        if (this.info.controlShow2 && value === false) {
+            callback(new Error('请选择中间继电器更换'));
+        } else {
+            callback();
+        }
+      };
+       const validatePump18row1 = (rule, value, callback) => {
+        if (value === false) {
+            callback(new Error('请选择机泵外体清洗'));
+        } else {
+            callback();
+        }
+      };
+       const validatePump22row1 = (rule, value, callback) => {
+        if (value === false) {
+            callback(new Error('请选择补充轴承润滑油'));
+        } else {
+            callback();
+        }
+      };
+      const validatePump25row1 = (rule, value, callback) => {
+        if (this.info.pumpShow2 && value === false) {
+            callback(new Error('请选择机械密封更换'));
+        } else {
+            callback();
+        }
+      };
+       const validateControlmeter27row1 = (rule, value, callback) => {
+        if (this.info.controlmeterShow1 && value === false) {
+            callback(new Error('请选择机械压力表更换'));
+        } else {
+            callback();
+        }
+      };
+       const validateControlmeter28row1 = (rule, value, callback) => {
+        if (this.info.controlmeterShow1 &&  value === false) {
+            callback(new Error('请选择压力变送器更换'));
+        } else {
+            callback();
+        }
+      };
+       const validateValve30row1 = (rule, value, callback) => {
+        if (value === false) {
+            callback(new Error('请选择无负压设备罐体排污'));
+        } else {
+            callback();
+        }
+      };
+       const validateValve31row1 = (rule, value, callback) => {
+        if (this.info.valveShow1 && value === false) {
+            callback(new Error('请选择阀门检修性操作、调整、更换漏水部件'));
+        } else {
+            callback();
+        }
+      };
+       const validateValve31row2 = (rule, value, callback) => {
+        if (this.info.valveShow1 && value === false) {
+            callback(new Error('请选择管道加固支（托）架'));
+        } else {
+            callback();
+        }
+      };
+       const validateSafefence40row1 = (rule, value, callback) => {
+        if (value === false) {
+            callback(new Error('请选择泵体温度传感器校准'));
+        } else {
+            callback();
+        }
+      };
+       const validateSafefence40row2 = (rule, value, callback) => {
+        if (value === false) {
+            callback(new Error('请选择水泵振动传感器校准'));
+        } else {
+            callback();
+        }
+      };
+       const validateSafefence41row1 = (rule, value, callback) => {
+        if (value === false) {
+            callback(new Error('请选择超声波液位仪校准'));
+        } else {
+            callback();
+        }
+      };
+       const validateAccessory45row1 = (rule, value, callback) => {
+        if (value === false) {
+            callback(new Error('请选择场地清扫'));
+        } else {
+            callback();
+        }
+      };
     return {
-      title: "新建工单",
+      title: "待保养工单",
+      maintTaskPk:'',
       showChangePump: false,
       showChangePump1: false,
       showChangePump2: false,
       showMidRelay: false,
-      dispatchFromNm: [
-        {
-          cd: "gd120.01",
-          nm: "96390清泉热线"
-        },
-        {
-          cd: "gd120.02",
-          nm: "安全检查（巡检）"
-        },
-        {
-          cd: "gd120.03",
-          nm: "物业社区"
-        },
-        {
-          cd: "gd120.04",
-          nm: "属地分公司"
-        },
-        {
-          cd: "gd120.05",
-          nm: "系统报警"
-        }
-      ], //工单来源
-      proLvNm: [], //故障现象
-      districtNm: [], //行政区域
+      info:{},
+      beforeChangMode:[],
       formValidate: {
         estateNm: "",
         maintUnitNm: "",
@@ -1118,7 +1182,7 @@ export default {
         control12row4: "",
         control13row1: "",
         control13row2: "",
-        control14row1: "",
+        control14row1: false,
         control14row2: "",
         control14row3: "",
         control15row1: "",
@@ -1127,9 +1191,9 @@ export default {
         control16row1: "",
         control16row2: "",
         control16row3: "",
-        control17row1: [],
+        control17row1: false,
         control17row2: "",
-        pump18row1: [],
+        pump18row1: false,
         pump18row2: "",
         pump18row3: "",
         pump19row1: "",
@@ -1142,7 +1206,7 @@ export default {
         pump20row3: "",
         pump21row1: "",
         pump21row2: "",
-        pump22row1: [],
+        pump22row1: false,
         pump22row2: "",
         pump22row3: "",
         pump23row1: "",
@@ -1153,22 +1217,22 @@ export default {
         pump24row2: "",
         pump24row3: "",
         pump24row4: "",
-        pump25row1: [],
+        pump25row1: false,
         pump25row2: "",
         controlmeter26row1: "",
         controlmeter26row2: "",
         controlmeter26row3: "",
         controlmeter26row4: "",
-        controlmeter27row1: [],
+        controlmeter27row1: false,
         controlmeter27row2: "",
-        controlmeter28row1: [],
+        controlmeter28row1: false,
         controlmeter28row2: "",
         valve29row1: "",
         valve29row2: "",
         valve29row3: "",
-        valve30row1: [],
-        valve31row1: [],
-        valve31row2: [],
+        valve30row1: false,
+        valve31row1: false,
+        valve31row2: false,
         waterbox32row1: "",
         waterbox32row2: "",
         waterbox33row1: "",
@@ -1191,9 +1255,9 @@ export default {
         safefence39row3: "",
         safefence39row4: "",
         safefence39row5: "",
-        safefence40row1: [],
-        safefence40row2: [],
-        safefence41row1: [],
+        safefence40row1: false,
+        safefence40row2: false,
+        safefence41row1: false,
         safefence41row2: "",
         safefence41row3: "",
         safefence42row1: "",
@@ -1204,7 +1268,7 @@ export default {
         watermeter44row2: "",
         watermeter44row3: "",
         watermeter44row4: "",
-        accessory45row1: [],
+        accessory45row1: false,
         accessory45row2: "",
         accessory45row3: "",
         accessory45row4: "",
@@ -1216,53 +1280,24 @@ export default {
         accessory47row2: "",
         accessory47row3: "",
         accessory47row4: "",
-        else48row1: ""
+        else48row1: "",
+        maintenance49row1:""
       },
       ruleValidate: {
-        dispatchFromNm: [
-          { required: true, message: "请选择工单来源", trigger: "change" }
-        ],
-        date: [
-          {
-            required: true,
-            type: "date",
-            message: "请选择派单间日期",
-            trigger: "change"
-          }
-        ],
-        time: [
-          {
-            required: true,
-            type: "string",
-            message: "请选择派单时间",
-            trigger: "change"
-          }
-        ],
-        dealLimit: [
-          { required: true, message: "请输入处理时限", trigger: "blur" }
-        ],
-        reportMan: [
-          { required: true, message: "请输入反映人", trigger: "blur" }
-        ],
-        reportPhone: [
-          { required: true, message: "请输入反映人电话号码", trigger: "blur" }
-        ],
-        proLvNm: [
-          { required: true, message: "请选择故障现象", trigger: "change" }
-        ],
-        districtNm: [
-          { required: true, message: "请选择行政区域", trigger: "change" }
-        ],
-        address: [
-          { required: true, message: "请输入泵房地址", trigger: "blur" }
-        ],
-        proContent: [
-          { required: true, message: "请输入问题详情", trigger: "blur" }
-          // { type: 'string', min: 20, message: 'Introduce no less than 20 words', trigger: 'blur' }
-        ],
-        receiveMsg: [
-          { required: true, message: "请输入接单备注", trigger: "blur" }
-        ]
+        control14row1:{required:true,validator:validateControl14row1, trigger: 'change'},
+        control17row1:{required:true,validator:validateControl17row1, trigger: 'change'},
+        pump18row1:{required:true,validator:validatePump18row1, trigger: 'change'},
+        pump22row1:{required:true,validator:validatePump22row1, trigger: 'change'},
+        pump25row1:{required:true,validator:validatePump25row1, trigger: 'change'},
+        controlmeter27row1:{required:true,validator:validateControlmeter27row1, trigger: 'change'},
+        controlmeter28row1:{required:true,validator:validateControlmeter28row1, trigger: 'change'},
+        valve30row1:{required:true,validator:validateValve30row1, trigger: 'change'},
+        valve31row1:{required:true,validator:validateValve31row1, trigger: 'change'},
+        valve31row2:{required:true,validator:validateValve31row2, trigger: 'change'},
+        safefence40row1:{required:true,validator:validateSafefence40row1, trigger: 'change'},
+        safefence40row2:{required:true,validator:validateSafefence40row2, trigger: 'change'},
+        safefence41row1:{required:true,validator:validateSafefence41row1, trigger: 'change'},
+        accessory45row1:{required:true,validator:validateAccessory45row1, trigger: 'change'},
       }
     };
   },
@@ -1271,82 +1306,138 @@ export default {
     myHeader
   },
   mounted() {
-    this.getSelect();
+
+    this.maintTaskPk=this.until.getQueryString('maintTaskPk')
+    this.getInfo()
   },
   methods: {
-    changeMidRelay(arr) {
-      this.showMidRelay = arr.length > 0 ? true : false;
+    getInfo(){
+       let param = {
+        maintTaskPk: this.maintTaskPk,
+        token:this.until.loGet('appToken')
+      };
+      this.until.get("/inspect-api/maintReport/info", param).then(res => {
+        if (res.message === "请求成功") {
+          //  Object.assign(this.formValidate,res.data.maintReport);
+          Object.assign(this.info,res.data)
+          Object.assign(this.formValidate,res.data.maintReport)
+          this.beforeChangMode=this.formValidate.waterSupplyMode
+          
+          if(this.formValidate.waterSupplyMode){
+            if(this.formValidate.waterSupplyMode.indexOf(',')>0){
+            
+              this.beforeChangMode=[...this.formValidate.waterSupplyMode.split(',')].map(item=>item.replace(/\d/,''))
+              
+              if(this.formValidate.waterSupplyMode.indexOf('箱式')>0){
+                this.beforeChangMode.push('箱式无负压')
+              }
+              //数组去重
+              this.beforeChangMode=[...new Set(this.beforeChangMode)]
+            }
+            else{
+              if(this.formValidate.waterSupplyMode.indexOf('箱式')>0){
+                this.beforeChangMode.push('箱式无负压')
+              }
+              else{
+                this.beforeChangMode.push(this.formValidate.waterSupplyMode.replace(/\d/,''))
+              }
+            }
+          }
+          //重新渲染true,false
+          let arr=['control14row1','control17row1','pump18row1', 'pump22row1',
+          'pump25row1','controlmeter27row1','controlmeter28row1','valve30row1',
+          'valve31row1','valve31row2','safefence40row1','safefence40row2',
+          'safefence41row1','accessory45row1']
+          arr.forEach(item=>{
+            this.formValidate[item]=this.formValidate[item]==='true'?true:false
+          })
+        }
+      });
     },
-    changePump(arr) {
-      this.showChangePump = arr.length > 0 ? true : false;
+    changeControl(){
+      this.showMidRelay=this.formValidate.control17row1; 
     },
-    changeMeter(arr) {
-      this.showChangePump1 = arr.length > 0 ? true : false;
+    changePump() {
+      this.showChangePump = this.formValidate.pump25row1;
     },
-    changeMeterTwo(arr) {
-      this.showChangePump2 = arr.length > 0 ? true : false;
+    changeMeter() {
+      this.showChangePump1 = this.formValidate.controlmeter27row1;
+    },
+    changeMeterTwo() {
+      this.showChangePump2 = this.formValidate.controlmeter28row1;
     },
     //提交
     handleSubmit(name) {
-      alert(this.formValidate.control9row1);
-      alert(this.formValidate.control9row2);
-      // this.$refs[name].validate(valid => {
-      //   if (valid) {
-      //     let myDate = this.until.formatDate(this.formValidate.date);
-      //     this.formValidate.sendTm =
-      //       myDate.year +
-      //       "-" +
-      //       myDate.month +
-      //       "-" +
-      //       myDate.day +
-      //       " " +
-      //       this.formValidate.time;
-      //     this.until
-      //       .postData(
-      //         "/ph/dispatchSend/edit",
-      //         JSON.stringify(this.formValidate)
-      //       )
-      //       .then(res => {
-      //         if (res.status == 200) {
-      //           this.$Message.success("提交成功!");
-      //           setTimeout(() => {
-      //             window.location.href = "list.html";
-      //           }, 1500);
-      //         } else {
-      //           this.$Message.error(res.message);
-      //         }
-      //       });
-      //   } else {
-      //     this.$Message.error("请填写完整信息！");
-      //   }
-      // });
+      this.$refs[name].validate(valid => {
+        if (valid) {
+           let time=this.until.formatDate(this.formValidate.maintTm)
+          this.formValidate.maintTm =time.year+'-'+time.month+'-'+time.day+' '+time.hour+':'+time.minite+':'+time.second
+          let param=this.formValidate;
+           delete this.formValidate.catCd;
+          delete this.formValidate.catNm;
+          delete this.formValidate.statCd;
+          delete this.formValidate.statNm;
+          delete this.formValidate.crtTm;
+          delete this.formValidate.crtBy;
+          delete this.formValidate.updTm;
+          delete this.formValidate.updBy;
+          delete this.formValidate.editFlag;
+          param.token= this.until.loGet('appToken')
+          param.type=1
+          this.until.post("/inspect-api/maintReport/edit",param)
+            .then(res => {
+              if (res.code===0) {
+                this.$Message.success("提交成功!");
+                setTimeout(() => {
+                  window.location.href = "list.html";
+                }, 1500);
+              } else {
+                this.$Message.error(res.message);
+              }
+            });
+        } else {
+          this.$Message.error("请填写完整信息！");
+        }
+      });
+    },
+    handleSave () {
+      if(this.formValidate.maintTm){
+        let time=this.until.formatDate(this.formValidate.maintTm)
+        this.formValidate.maintTm =time.year+'-'+time.month+'-'+time.day+' '+time.hour+':'+time.minite+':'+time.second
+      }
+      else{
+        this.$Message.error("请填写保养日期！"); 
+        return;
+      }
+      delete this.formValidate.catCd;
+      delete this.formValidate.catNm;
+      delete this.formValidate.statCd;
+      delete this.formValidate.statNm;
+      delete this.formValidate.crtTm;
+      delete this.formValidate.crtBy;
+      delete this.formValidate.updTm;
+      delete this.formValidate.updBy;
+      delete this.formValidate.editFlag;
+      let param=this.formValidate;
+      param.token= this.until.loGet('appToken')
+      param.type=0
+      this.until.post("/inspect-api/maintReport/edit",param)
+        .then(res => {
+          if (res.message === '请求成功') {
+            this.$Message.success("保存成功!");
+            setTimeout(() => {
+              window.history.go(-1);
+            }, 1500);
+          } else {
+            this.$Message.error(res.message);
+          }
+        });   
     },
     //取消
     handleReset(name) {
       this.$refs[name].resetFields();
     },
-    //获取选项数据
-    getSelect() {
-      //工单来源
-      this.until.get("/general/cat/listByPrntCd?prntCd=gz120").then(res => {
-        if (res.data.items) {
-          this.dispatchFromNm = res.data.items;
-        }
-      });
-      //故障
-      this.until.get("/general/cat/listByPrntCd?prntCd=gzxx140").then(res => {
-        this.proLvNm = res.data.items;
-      });
-      this.until
-        .get("/general/cat/listByPrntCd?prntCd=30010.200.110")
-        .then(res => {
-          this.bmNm.push(...res.data.items);
-        });
-      //行政区域
-      this.until.get("/general/cat/listByPrntCd?prntCd=70000").then(res => {
-        this.districtNm = res.data.items;
-      });
-    }
+    
   }
 };
 </script>

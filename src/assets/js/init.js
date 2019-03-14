@@ -56,7 +56,6 @@ export default {
   install(Vue) {
     Vue.use(iView)
     // Vue.use(YDUI)
-
     Vue.prototype.axios = axios;
     Vue.prototype.until = new until();
     Vue.prototype.reg = new reg();
@@ -67,6 +66,7 @@ export default {
     Vue.prototype.lunar = Lunar;
 
     Vue.use(LoadingPlugin);
+    Vue.use(msg)
     // Vue.use(VueTouch, {name: 'v-touch'})
     Vue.prototype.$dialog = {
       // confirm: Confirm,
