@@ -337,10 +337,10 @@ body {
             </Col>
           </Row>
         </FormItem>
-        <FormItem label="控制柜整体清灰" prop="control14row1">
+        <FormItem label="控制柜整体清灰" prop="control14row1" v-show="info.controlShow1">
             <Checkbox v-model="formValidate.control14row1">必须完成项</Checkbox>
         </FormItem>
-        <FormItem label="检查主要元器件过热、烧损情况" prop="control14row3">
+        <FormItem label="检查主要元器件过热、烧损情况" prop="control14row3" v-show="info.controlShow1">
           <Row>
             <Col span="6">
               <RadioGroup v-model="formValidate.control14row2">
@@ -353,7 +353,7 @@ body {
             </Col>
           </Row>
         </FormItem>
-        <FormItem label="测量柜内主电路绝缘电阻" prop="control_row4">
+        <FormItem label="测量柜内主电路绝缘电阻" prop="control_row4" v-show="info.controlShow1">
           <Row>
             <Col span="3" style="text-align:center;">相与相>=</Col>
             <Col span="8">
@@ -367,7 +367,7 @@ body {
             <Col span="1">mω</Col>
           </Row>
         </FormItem>
-        <FormItem label="测量二次回路绝缘电阻" prop="control15row3">
+        <FormItem label="测量二次回路绝缘电阻" prop="control15row3" v-show="info.controlShow1">
           <Row>
             <Col span="3" style="text-align:center;">>=</Col>
             <Col span="20">
@@ -792,7 +792,7 @@ body {
             </Col>
           </Row>
         </FormItem>
-        <FormItem label="6、检查电动蝶阀远程启闭功能完好情况" prop="waterbox38row2">
+        <FormItem label="6、检查电动蝶阀远程启闭功能完好情况" prop="waterbox38row2" v-show="info.waterboxShow1">
           <Row>
             <Col span="6">
               <RadioGroup v-model="formValidate.waterbox38row1">
