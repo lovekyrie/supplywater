@@ -177,7 +177,7 @@ class until {
     });
     return promise;
   }
-  postData(url, data) {
+  postData(url, data, tokenval) {
     let promise = new Promise((resolve, reject) => {
       $.ajax({
         type: 'POST',
@@ -187,7 +187,9 @@ class until {
         cache: false,
         contentType: 'application/json;charset=UTF-8',
         dataType: 'json',
-
+        beforeSend: function (XMLHttpRequest) {
+          XMLHttpRequest.setRequestHeader("token", tokenval);
+        },
         success(data) {
           resolve(data);
         },
@@ -364,7 +366,7 @@ class until {
     };
   }
   formatDay(fmt, tm = '') {
-    let times = tm ? new Date(tm.replace(/(-)/g, '/')) : new Date();
+    let times = tm ? new Date(tm) : new Date();
     var o = {
       "M+": times.getMonth() + 1, //月份
       "d+": times.getDate(), //日

@@ -127,8 +127,8 @@ body {
 
 .demo-upload-list {
   display: inline-block;
-  width: 60px;
-  height: 60px;
+  width: 100px;
+  height: 100px;
   text-align: center;
   line-height: 60px;
   border: 1px solid transparent;
@@ -169,16 +169,7 @@ body {
     <div class="main">
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
         <FormItem label="泵房名称" prop="waterBoxNm">
-          <Select
-            placeholder="请输入关键字"
-            v-model="formValidate.waterBoxNm"
-            filterable
-            remote
-            :remote-method="remotePhQuery"
-            @on-change="remoteQuery()"
-          >
-            <Option v-for="item in phList" :value="item.estateNm" :key="item.phCd">{{item.estateNm}}</Option>
-          </Select>
+          <Input v-model="formValidate.waterBoxNm"></Input>
         </FormItem>
         <FormItem label="泵房编号" prop="waterBoxCd">
           <Input v-model="formValidate.waterBoxCd"></Input>
@@ -186,36 +177,34 @@ body {
         <FormItem label="清洗容积(吨)" prop="volume">
           <Input v-model="formValidate.volume"></Input>
         </FormItem>
-        <FormItem label="清洗时间">
-          <Row>
-            <Col span="6">
-              <FormItem prop="cleanoutTm1">
-                <DatePicker type="date" v-model="formValidate.cleanoutTm1"></DatePicker>
-              </FormItem>
-            </Col>
-            <Col span="6">
-              <FormItem prop="cleanoutTm2">
-                <TimePicker format="HH:mm" type="time" v-model="formValidate.cleanoutTm2"></TimePicker>
-              </FormItem>
-            </Col>
-          </Row>
+        <FormItem label="清洗时间" prop="cleanoutTm">
+          <DatePicker type="datetime" format="yyyy-MM-dd HH:mm" v-model="formValidate.cleanoutTm"></DatePicker>
         </FormItem>
         <FormItem label="清洗人员" prop="cleanoutOperator">
           <Select v-model="formValidate.cleanoutOperator" filterable>
-            <Option v-for="item in applyUnitList" :value="item.cd" :key="item.sysCatPk">{{item.nm}}</Option>
+            <Option
+              v-for="(item,index) in regionUserList"
+              :value="item.nkNm"
+              :key="index"
+            >{{item.nkNm}}</Option>
           </Select>
         </FormItem>
         <FormItem label="水箱排水时间">
           <Row>
             <Col span="6">
               <FormItem prop="drainOffFromTm">
-                <TimePicker type="time" v-model="formValidate.drainOffFromTm"></TimePicker>
+                <DatePicker type="datetime" format="HH:mm" v-model="formValidate.drainOffFromTm"></DatePicker>
               </FormItem>
             </Col>
             <Col span="3" style="text-align:center;">起，到</Col>
             <Col span="6">
               <FormItem prop="drainOffToTm">
-                <TimePicker type="time" v-model="formValidate.drainOffToTm"></TimePicker>
+                <DatePicker
+                  type="datetime"
+                  format="HH:mm"
+                  @on-ok="confirmDrainOffToTm"
+                  v-model="formValidate.drainOffToTm"
+                ></DatePicker>
               </FormItem>
             </Col>
             <Col span="3" style="text-align:center;">止，共</Col>
@@ -230,13 +219,18 @@ body {
           <Row>
             <Col span="6">
               <FormItem prop="cleanoutFormTm">
-                <TimePicker type="time" v-model="formValidate.cleanoutFormTm"></TimePicker>
+                <DatePicker type="datetime" format="HH:mm" v-model="formValidate.cleanoutFormTm"></DatePicker>
               </FormItem>
             </Col>
             <Col span="3" style="text-align:center;">起，到</Col>
             <Col span="6">
               <FormItem prop="cleanoutToTm">
-                <TimePicker type="time" v-model="formValidate.cleanoutToTm"></TimePicker>
+                <DatePicker
+                  type="datetime"
+                  format="HH:mm"
+                  @on-ok="confirmCleanoutToTm"
+                  v-model="formValidate.cleanoutToTm"
+                ></DatePicker>
               </FormItem>
             </Col>
             <Col span="3" style="text-align:center;">止，共</Col>
@@ -255,12 +249,20 @@ body {
         </FormItem>
         <FormItem label="配置人员" prop="preparationer">
           <Select v-model="formValidate.preparationer" filterable>
-            <Option v-for="item in applyUnitList" :value="item.cd" :key="item.sysCatPk">{{item.nm}}</Option>
+            <Option
+              v-for="(item,index) in regionUserList"
+              :value="item.nkNm"
+              :key="index"
+            >{{item.nkNm}}</Option>
           </Select>
         </FormItem>
         <FormItem label="监督人员" prop="supervisor">
           <Select v-model="formValidate.supervisor" filterable>
-            <Option v-for="item in applyUnitList" :value="item.cd" :key="item.sysCatPk">{{item.nm}}</Option>
+            <Option
+              v-for="(item,index) in regionUserList"
+              :value="item.nkNm"
+              :key="index"
+            >{{item.nkNm}}</Option>
           </Select>
         </FormItem>
         <FormItem label="浊度（NTU）" prop="turbidity">
@@ -273,13 +275,22 @@ body {
           <Row>
             <Col span="6">
               <FormItem prop="waterInjectionFromTm">
-                <TimePicker type="time" v-model="formValidate.waterInjectionFromTm"></TimePicker>
+                <DatePicker
+                  type="datetime"
+                  format="HH:mm"
+                  v-model="formValidate.waterInjectionFromTm"
+                ></DatePicker>
               </FormItem>
             </Col>
             <Col span="3" style="text-align:center;">起，到</Col>
             <Col span="6">
               <FormItem prop="waterInjectionToTm">
-                <TimePicker type="time" v-model="formValidate.waterInjectionToTm"></TimePicker>
+                <DatePicker
+                  type="datetime"
+                  format="HH:mm"
+                  v-model="formValidate.waterInjectionToTm"
+                  @on-ok="confirmWaterInjectionToTm"
+                ></DatePicker>
               </FormItem>
             </Col>
             <Col span="3" style="text-align:center;">止，共</Col>
@@ -290,19 +301,8 @@ body {
             </Col>
           </Row>
         </FormItem>
-        <FormItem label="完成时间">
-          <Row>
-            <Col span="6">
-              <FormItem prop="checkTime1">
-                <DatePicker type="date" v-model="formValidate.checkTime1"></DatePicker>
-              </FormItem>
-            </Col>
-            <Col span="6">
-              <FormItem prop="checkTime2">
-                <TimePicker type="time" v-model="formValidate.checkTime2"></TimePicker>
-              </FormItem>
-            </Col>
-          </Row>
+        <FormItem label="完成时间" prop="checkTime">
+          <DatePicker type="datetime" v-model="formValidate.checkTime"></DatePicker>
         </FormItem>
 
         <FormItem label="清洗前照片">
@@ -328,10 +328,10 @@ body {
             :before-upload="handleBeforeUpload"
             multiple
             type="drag"
-            action="//jsonplaceholder.typicode.com/posts/"
-            style="display: inline-block;width:58px;"
+            action="/general/file/uploadLocal"
+            style="display: inline-block;width:95px;"
           >
-            <div style="width: 58px;height:58px;line-height: 58px;">
+            <div style="width: 95px;height:95px;line-height: 95px;">
               <Icon type="ios-camera" size="20"></Icon>
             </div>
           </Upload>
@@ -341,7 +341,7 @@ body {
             <template v-if="item.status === 'finished'">
               <img :src="item.url">
               <div class="demo-upload-list-cover">
-                <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                <Icon type="ios-trash-outline" @click.native="afterRemove(item)"></Icon>
               </div>
             </template>
             <template v-else>
@@ -349,9 +349,9 @@ body {
             </template>
           </div>
           <Upload
-            ref="upload"
+            ref="afterupload"
             :show-upload-list="false"
-            :on-success="handleSuccess"
+            :on-success="afterSuccess"
             :format="['jpg','jpeg','png']"
             :max-size="2048"
             :on-format-error="handleFormatError"
@@ -360,9 +360,9 @@ body {
             multiple
             type="drag"
             action="//jsonplaceholder.typicode.com/posts/"
-            style="display: inline-block;width:58px;"
+            style="display: inline-block;width:95px;"
           >
-            <div style="width: 58px;height:58px;line-height: 58px;">
+            <div style="width: 95px;height:95px;line-height: 95px;">
               <Icon type="ios-camera" size="20"></Icon>
             </div>
           </Upload>
@@ -377,13 +377,17 @@ body {
         </FormItem>
         <FormItem label="记录人" prop="recorder">
           <Select v-model="formValidate.recorder" filterable>
-            <Option v-for="item in applyUnitList" :value="item.cd" :key="item.sysCatPk">{{item.nm}}</Option>
+            <Option
+              v-for="(item,index) in regionUserList"
+              :value="item.nkNm"
+              :key="index"
+            >{{item.nkNm}}</Option>
           </Select>
         </FormItem>
         <FormItem label="项目负责人" prop="principal">
           <Input v-model="formValidate.principal"></Input>
         </FormItem>
-        <FormItem v-show="type==='edit'">
+        <FormItem>
           <!-- <Button  type="primary" f  @click="handleSubmit('formValidate')" >提交</Button> -->
           <Button type="primary" @click="add()">提交</Button>
         </FormItem>
@@ -405,11 +409,15 @@ export default {
       visible: false,
       uploadList: [],
       afterUploadList: [],
-      type: "",
+      cleanoutjobPk: "",
       loading: false,
       loading1: false,
       phList: [],
-      applyUnitList: [],
+      regionUserList: [],
+      firstSave: true,
+      clearImgPreList: [],
+      clearImgPostList: [],
+      token: `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmbGR5bGYiLCJpYXQiOjE1NTMxNTYxNzUsInN1YiI6IjIwNTc4MWIxNTY0YzQxYzViNDIxY2YzZjI1ZWZkNGNmIiwiZXhwIjoxNTUzMjQyNTc1fQ.MfmXiw-g24mxEzrQHVtX5KVXWycj8nqX-Ik7Mf5fyCI`,
       formValidate: {
         waterBoxCd: "", //泵房名称
         waterBoxNm: "",
@@ -477,10 +485,14 @@ export default {
     myHeader
   },
   mounted() {
-    this.type = this.until.getQueryString("type");
+    this.cleanoutjobPk = this.until.getQueryString("cleanoutjobPk");
     this.uploadList = this.$refs.upload.fileList;
+    this.afterUploadList = this.$refs.afterupload.fileList;
     this.getSelect();
-    this.getDeviceBigList();
+    //得到审核表数据信息
+    this.getCleanOutApprovalInfo();
+    //得到清洗报表数据
+    this.getCleanOutReport();
   },
   methods: {
     handleView(name) {
@@ -491,10 +503,17 @@ export default {
       const fileList = this.$refs.upload.fileList;
       this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
     },
+    afterRemove(file) {
+      const fileList = this.$refs.afterupload.fileList;
+      this.$refs.afterupload.fileList.splice(fileList.indexOf(file), 1);
+    },
     handleSuccess(res, file) {
-      file.url =
-        "https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar";
-      file.name = "7eb99afb9d5f317c912f08b5212fd69a";
+      file.url = res.data;
+      file.name = "1223";
+    },
+    afterSuccess(res, file) {
+      file.url = res.data;
+      file.name = "1223";
     },
     handleFormatError(file) {
       this.$Notice.warning({
@@ -520,60 +539,7 @@ export default {
       }
       return check;
     },
-    addRow() {},
 
-    remotePhQuery(val) {
-      if (val) {
-        this.loading1 = true;
-        let query = new this.Query();
-        query.buildWhereClause("phNm", val, "LK");
-        let param = query.getParam();
-        setTimeout(() => {
-          this.until.get("/ph/pumph/list", param).then(res => {
-            if (res.status === "200") {
-              this.phList = res.data.items;
-            } else {
-              this.phList = [];
-            }
-          });
-        }, 200);
-      } else {
-        this.phList = [];
-      }
-    },
-    remoteQuery(val) {
-      this.loading1 = true;
-      let query = new this.Query();
-      if (val) {
-        query.buildWhereClause("deviceCd", val, "LK");
-      } else {
-        if (this.formValidate.estateNm) {
-          query.buildWhereClause("estateNm", this.formValidate.estateNm, "EQ");
-        }
-        if (this.deviceBigPk) {
-          query.buildWhereClause("deviceBcatCd", this.deviceBigPk, "EQ");
-        }
-        if (this.deviceSmallPk) {
-          query.buildWhereClause("deviceScatCd", this.deviceSmallPk, "EQ");
-        }
-        if (this.deviceDPk) {
-          query.buildWhereClause("deviceDcatCd", this.deviceDPk, "EQ");
-        }
-        if (this.deviceNm) {
-          query.buildWhereClause("deviceNm", this.deviceNm, "EQ");
-        }
-      }
-      let param = query.getParam();
-      setTimeout(() => {
-        this.until.get("/ph/device/list", param).then(res => {
-          if (res.status === "200") {
-            this.equipmentList = res.data.items;
-          } else {
-            this.equipmentList = [];
-          }
-        });
-      }, 200);
-    },
     //提交
     // handleSubmit(name) {
     //   this.$refs[name].validate(valid => {
@@ -606,49 +572,39 @@ export default {
     // },
 
     add() {
-      var a = {
-        applicantUnitCd: this.formValidate.applicantUnitCd, //申请单位
-        applicationTm: this.formValidate.applicationTm, //申请时间
-        proposer: this.formValidate.proposer, //申请人
-        mob: this.formValidate.mob, //联系电话
-        repairUnitCd: this.formValidate.repairUnitCd, //维修单位
-        phNm: this.formValidate.estateNm, //泵房
-        deviceCd: this.formValidate.devicePk, //设备主键~
-        deviceNm: this.deviceNm, //设备名称~
-        diagnosis: this.formValidate.diagnosis, //故障描述
-        estimatedCost: this.formValidate.estimatedCost, //预算费用
-        replaceFittingCd: this.formValidate.replaceFittingCd, //是否更换配件
-        stockId: this.part.stockManagePk, //配件id
-        stockNm: this.part.deviceNm, //配件名称
-        stockSpec: this.part.deviceSpec, //配件规格
-        stockBrand: this.part.deviceBrand //配件品牌
-      };
-      this.listData.push(a);
+      if (this.firstSave) {
+        this.formValidate.cleanoutReportPk = null;
+        this.formValidate.cleanoutjobPk = this.cleanoutjobPk;
+      }
+
+      this.uploadList.forEach(item => {
+        this.clearImgPreList.push(item.url);
+      });
+      this.afterUploadList.forEach(item => {
+        this.clearImgPostList.push(item.url);
+      });
+      this.formValidate.clearImgPre = this.clearImgPreList.join(",");
+      this.formValidate.clearImgPost = this.clearImgPostList.join(",");
+      console.log(this.formValidate.drainOffFromTm);
       this.until
-        .postData("/ph/deviceRepair/edit", JSON.stringify(this.listData))
+        .postData(
+          "/inspect-api/cleanoutReport/submit",
+          JSON.stringify(this.formValidate),
+          this.token
+        )
         .then(res => {
-          if (res.status == 200) {
+          if (res.code === 0) {
             //this.$Message.success("提交成功!");
             this.$Modal.confirm({
               title: "提交成功",
               content: "是否继续添加维修申请？",
               onOk: () => {
-                (this.listData = []),
-                  (this.deviceBigPk = ""),
-                  (this.deviceSmallPk = ""),
-                  (this.deviceDPk = ""),
-                  (this.deviceNm = ""),
-                  (this.formValidate.devicePk = ""),
-                  (this.formValidate.diagnosis = ""),
-                  (this.formValidate.estimatedCost = ""),
-                  (this.formValidate.replaceFittingCd = "10000.160"),
-                  (this.part = []),
-                  this.formValidate.deviceCd,
-                  this.$Message.info("提交成功继续添加");
+                this.$Message.info("提交成功");
+                window.location.href = "pengdinglist.html";
               },
               onCancel: () => {
                 // this.$Message.info('Clicked cancel');
-                window.location.href = "list.html";
+                window.location.href = "pengdinglist.html";
               }
             });
 
@@ -664,75 +620,76 @@ export default {
 
     //获取选项数据
     getSelect() {
+      let param = {
+        token: this.token
+      };
+      this.until.get("/inspect-api/user/getUsersByDept", param).then(res => {
+        if (res.code === 0) {
+          this.regionUserList = res.data;
+        }
+      });
+    },
+    getCleanOutApprovalInfo() {
+      let param = {
+        cleanoutjobPk: this.cleanoutjobPk,
+        token: this.token
+      };
+
       this.until
-        .get("/general/cat/listByPrntCd", { prntCd: "30010.400" })
+        .get("/inspect-api/cleanoutReport/getCleanOutApproval", param)
         .then(res => {
-          if (res.status === "200") {
-            this.applyUnitList = res.data.items;
+          if (res.code === 0) {
+            this.formValidate.waterBoxNm = res.data.estateNm;
+            this.formValidate.waterBoxCd = res.data.estateCd;
           }
         });
-      //配件编号
-      this.until.get("/ph/stockManage/list").then(res => {
-        if (res.status === "200") {
-          this.replaceList = res.data.items;
-        }
-      });
     },
-    selectOpt(e) {
-      console.log(e);
-      this.device = e;
-    },
-    selectPh(e) {
-      this.remoteQuery();
-    },
-    selectBig(e) {
-      this.until.get("/general/cat/listByPrntCd", { prntCd: e }).then(res => {
-        if (res.status === "200") {
-          this.deviceSmallList = res.data.items;
-        }
-      });
-      this.remoteQuery();
-    },
-    //选择设备小类 赋值设备子类
-    selectSamll(e) {
-      this.until.get("/general/cat/listByPrntCd", { prntCd: e }).then(res => {
-        if (res.status === "200") {
-          this.deviceDList = res.data.items;
-        }
-      });
-      this.remoteQuery();
-    },
-    //选择设备子类 赋值设备名称
-    selectDcat(e) {
-      this.until.get("/general/cat/listByPrntCd", { prntCd: e }).then(res => {
-        if (res.status === "200") {
-          this.deviceNms = res.data.items;
-        }
-      });
-      this.remoteQuery();
-    },
-    //获取设备大类
-    getDeviceBigList() {
-      this.until.get("/general/cat/listByPrntCd", { prntCd: 500.1 }).then(
-        res => {
-          if (res.status === "200") {
-            this.deviceBigList = res.data.items;
+    getCleanOutReport() {
+      let param = {
+        cleanoutjobPk: this.cleanoutjobPk,
+        token: this.token
+      };
+
+      this.until
+        .get("/inspect-api/cleanoutReport/getCleanOutReport", param)
+        .then(res => {
+          if (res.code === 0) {
+            if (res.data.cleanoutReportPk) {
+              this.firstSave = false;
+              Object.assign(this.formValidate, res.data);
+            } else {
+              this.firstSave = true;
+            }
           } else {
-            this.deviceBigList = [];
+            this.firstSave = true;
           }
-        },
-        err => {
-          this.deviceBigList = [];
-        }
+        });
+    },
+    confirmCleanoutToTm() {
+      this.formValidate.cleanoutAmtTm = this.calDistanceTime(
+        this.formValidate.cleanoutFormTm,
+        this.formValidate.cleanoutToTm
       );
     },
-    getRepairStock(e) {
-      this.until.get("/ph/stockManage/info/" + e).then(res => {
-        if (res.status === "200") {
-          this.part = res.data;
-        }
-      });
-      console.log(this.part);
+    confirmDrainOffToTm() {
+      this.formValidate.drainOffAmtTm = this.calDistanceTime(
+        this.formValidate.drainOffFromTm,
+        this.formValidate.drainOffToTm
+      );
+    },
+    confirmWaterInjectionToTm() {
+      this.formValidate.waterInjectionAmtTm = this.calDistanceTime(
+        this.formValidate.waterInjectionFromTm,
+        this.formValidate.waterInjectionToTm
+      );
+    },
+    calDistanceTime(fr, to) {
+      let offset = to.getTime() - fr.getTime();
+      //算时间
+      let hour = Math.floor(offset / 1000 / 60 / 60);
+      let timeRemain = offset % (1000 * 60 * 60);
+      let mint = Math.floor(timeRemain / 1000 / 60);
+      return hour + "时" + mint + "分";
     }
   }
 };

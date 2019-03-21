@@ -83,7 +83,7 @@ body {
     </div>
     <scroll class="main" :on-reach-bottom="handleReachBottom">
       <Card dis-hover v-for="(item, index) in list" class="list" :key="index">
-        <div @click="toDetail(item.maintTaskPk)">
+        <div @click="toDetail(item.cleanoutjobPk)">
           <p>
             <span>区域：</span>
             {{item.districtNm}}
@@ -179,8 +179,12 @@ export default {
       });
       return $q;
     },
-    toDetail(ipPk, type) {
-      let url = "edit.html?maintTaskPk=" + ipPk + "&type=" + type;
+    toDetail(ipPk) {
+      let url = "detail.html?cleanoutjobPk=" + ipPk + "&type=" + type;
+      window.location.href = url;
+    },
+    toEditDetail(ipPk) {
+      let url = "edit.html?cleanoutjobPk=" + ipPk;
       window.location.href = url;
     },
     change(val) {

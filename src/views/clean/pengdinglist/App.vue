@@ -142,7 +142,7 @@ export default {
       this.spinShow = true;
       let $q = new Promise((resolve, reject) => {
         let param = {
-          token: `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmbGR5bGYiLCJpYXQiOjE1NTMwNjIxMjMsInN1YiI6IjZhZWQxNWEzY2MyYjQxMGZiZTNmODdlYmM4Y2M0MmNmIiwiZXhwIjoxNTUzMTQ4NTIzfQ.B1DbIWXk4GwRFqCcl0-Vc6LaMnJ6O1IkubPGVsoOf0g`
+          token: `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmbGR5bGYiLCJpYXQiOjE1NTMxMzcxNzYsInN1YiI6ImJjYzQ4MmEwODgyMDRkYzI4MmI5MDQyN2ZmZTZjNTUxIiwiZXhwIjoxNTUzMjIzNTc2fQ.Vj_Fx9UF7gKzrBDTzJSeIVl4LFnOS0nruqHafjYQSmE`
         };
         this.until.get("/inspect-api/cleanout/pagelist", param).then(
           res => {

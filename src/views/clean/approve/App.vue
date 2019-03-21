@@ -73,9 +73,7 @@ body {
           <Input v-model="formValidate.estateNm" disabled></Input>
         </FormItem>
         <FormItem label="施工单位" prop="constructionCompanyName">
-          <Select v-model="formValidate.constructionCompanyName" filterable>
-            <Option v-for="item in applyUnitList" :value="item.cd" :key="item.sysCatPk">{{item.nm}}</Option>
-          </Select>
+          <Input v-model="formValidate.constructionCompanyName" disabled></Input>
         </FormItem>
         <FormItem label="单位" prop="companyName">
           <Input v-model="formValidate.companyName" disabled></Input>
@@ -116,19 +114,8 @@ body {
             >{{item.nkNm}}</Option>
           </Select>
         </FormItem>
-        <FormItem label="开工时间">
-          <Row>
-            <Col span="6">
-              <FormItem prop="workTime">
-                <DatePicker type="date" v-model="formValidate.workTime1"></DatePicker>
-              </FormItem>
-            </Col>
-            <Col span="6">
-              <FormItem prop="workTime">
-                <TimePicker format="HH:mm" type="time" v-model="formValidate.workTime2"></TimePicker>
-              </FormItem>
-            </Col>
-          </Row>
+        <FormItem label="开工时间" prop="workTime">
+          <DatePicker type="datetime" format="yyyy-MM-dd HH:mm" v-model="formValidate.workTime"></DatePicker>
         </FormItem>
         <h3>主要安全措施</h3>
         <FormItem label="1" prop="safetyMeasure1">
@@ -234,19 +221,12 @@ body {
             :editable="false"
           ></DatePicker>
         </FormItem>
-        <FormItem label="完工确认">
-          <Row>
-            <Col span="6">
-              <FormItem prop="finishWorkDate1">
-                <DatePicker type="date" v-model="formValidate.finishWorkDate1"></DatePicker>
-              </FormItem>
-            </Col>
-            <Col span="6">
-              <FormItem prop="finishWorkDate2">
-                <TimePicker format="HH:mm" type="time" v-model="formValidate.finishWorkDate2"></TimePicker>
-              </FormItem>
-            </Col>
-          </Row>
+        <FormItem label="完工确认" prop="finishWorkDate">
+          <DatePicker
+            type="datetime"
+            format="yyyy-MM-dd HH:mm"
+            v-model="formValidate.finishWorkDate"
+          ></DatePicker>
         </FormItem>
         <FormItem label="确认人签名：">
           <div>
@@ -271,7 +251,7 @@ import sign from "@/components/signature";
 export default {
   data() {
     return {
-      title: "设备维修申请",
+      title: "受限空间作业审批表",
       signShow: false, // 签名显示与否
       imgName: "",
       visible: false,
@@ -283,6 +263,8 @@ export default {
       applyUnitList: [],
       cleanoutjobPk: "",
       cleanoutObj: {},
+      firstSave: true,
+      token: `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmbGR5bGYiLCJpYXQiOjE1NTMxNTYxNzUsInN1YiI6IjIwNTc4MWIxNTY0YzQxYzViNDIxY2YzZjI1ZWZkNGNmIiwiZXhwIjoxNTUzMjQyNTc1fQ.MfmXiw-g24mxEzrQHVtX5KVXWycj8nqX-Ik7Mf5fyCI`,
       formValidate: {
         estateNm: "", //泵房名称
         estateCd: "",
@@ -309,45 +291,14 @@ export default {
         safetyMeasure12: false,
         safetyFireEquipment: false,
         safetyLifeLine: false,
-        control14row1: false,
         workPresonSign: "",
         workPresonSignDate: "",
         departmentPresonSign: "",
         departmentPresonSignDate: "",
-        finishWorkSign: ""
+        finishWorkSign: "",
+        finishWorkDate: ""
       },
-      ruleValidate: {
-        billCode: [
-          { required: true, message: "请输入维修单号", trigger: "blur" }
-        ],
-        finishWorkDate: [
-          {
-            required: true,
-            type: "date",
-            message: "请选择申请时间",
-            trigger: "change"
-          }
-        ],
-        applicantUnitCd: [
-          { required: true, message: "请选择申请单位", trigger: "change" }
-        ],
-        proposer: [
-          { required: true, message: "请输入申请人", trigger: "blur" }
-        ],
-        mob: [{ required: true, message: "请输入联系电话", trigger: "blur" }],
-        repairUnitCd: [
-          { required: true, message: "请选择维修单位", trigger: "change" }
-        ],
-        estimatedCost: [
-          { required: true, message: "请输入预算费用", trigger: "blur" }
-        ],
-        diagnosis: [
-          { required: true, message: "请输入故障描述", trigger: "blur" }
-        ],
-        replaceFittingCd: [
-          { required: true, message: "请选择是否更换配件", trigger: "change" }
-        ]
-      }
+      ruleValidate: {}
     };
   },
   components: {
@@ -357,29 +308,13 @@ export default {
   },
   mounted() {
     this.cleanoutjobPk = this.until.getQueryString("cleanoutjobPk");
+    //获取审批表信息
+    this.getApproveInfo();
+    //如果之前无踢球，是新增，提交过，是修改
     this.getSelect();
     this.getCleanOutJob();
   },
   methods: {
-    remotePhQuery(val) {
-      if (val) {
-        this.loading1 = true;
-        let query = new this.Query();
-        query.buildWhereClause("phNm", val, "LK");
-        let param = query.getParam();
-        setTimeout(() => {
-          this.until.get("/ph/pumph/list", param).then(res => {
-            if (res.status === "200") {
-              this.phList = res.data.items;
-            } else {
-              this.phList = [];
-            }
-          });
-        }, 200);
-      } else {
-        this.phList = [];
-      }
-    },
     //签名弹出
     getSign(type) {
       this.type = type;
@@ -431,49 +366,53 @@ export default {
     // },
 
     add() {
-      var a = {
-        applicantUnitCd: this.formValidate.applicantUnitCd, //申请单位
-        finishWorkDate1: this.formValidate.finishWorkDate, //申请时间
-        proposer: this.formValidate.proposer, //申请人
-        mob: this.formValidate.mob, //联系电话
-        repairUnitCd: this.formValidate.repairUnitCd, //维修单位
-        phNm: this.formValidate.estateNm, //泵房
-        deviceCd: this.formValidate.devicePk, //设备主键~
-        deviceNm: this.deviceNm, //设备名称~
-        diagnosis: this.formValidate.diagnosis, //故障描述
-        estimatedCost: this.formValidate.estimatedCost, //预算费用
-        replaceFittingCd: this.formValidate.replaceFittingCd, //是否更换配件
-        stockId: this.part.stockManagePk, //配件id
-        stockNm: this.part.deviceNm, //配件名称
-        stockSpec: this.part.deviceSpec, //配件规格
-        stockBrand: this.part.deviceBrand //配件品牌
-      };
-      this.listData.push(a);
+      //处理false
+      Object.keys(this.formValidate).forEach(item => {
+        let regex = /\d/g;
+        if (item.match(regex)) {
+          this.formValidate[item] = this.formValidate[item] ? 1 : 0;
+        }
+      });
+      this.formValidate.safetyFireEquipment = this.formValidate
+        .safetyFireEquipment
+        ? 1
+        : 0;
+      this.formValidate.safetyLifeLine = this.formValidate.safetyLifeLine
+        ? 1
+        : 0;
+
+      this.formValidate.workPersonnel =
+        this.formValidate.workPersonnel &&
+        this.formValidate.workPersonnel.join(",");
+
+      //第一次提交处理
+      if (this.firstSave) {
+        this.formValidate.cleanoutjobPk = this.cleanoutjobPk;
+        this.formValidate.id = null;
+      }
+      // this.formValidate.token = this.token;
       this.until
-        .postData("/ph/deviceRepair/edit", JSON.stringify(this.listData))
+        .postData(
+          "/inspect-api/cleanoutReport/saveApproval",
+          JSON.stringify(this.formValidate),
+          this.token
+        )
         .then(res => {
-          if (res.status == 200) {
+          if (res.code === 0) {
             //this.$Message.success("提交成功!");
             this.$Modal.confirm({
               title: "提交成功",
-              content: "是否继续添加维修申请？",
+              content: "是否继续填写水池（箱）清洗消毒记录表？",
               onOk: () => {
-                (this.listData = []),
-                  (this.deviceBigPk = ""),
-                  (this.deviceSmallPk = ""),
-                  (this.deviceDPk = ""),
-                  (this.deviceNm = ""),
-                  (this.formValidate.devicePk = ""),
-                  (this.formValidate.diagnosis = ""),
-                  (this.formValidate.estimatedCost = ""),
-                  (this.formValidate.replaceFittingCd = "10000.160"),
-                  (this.part = []),
-                  this.formValidate.deviceCd,
-                  this.$Message.info("提交成功继续添加");
+                // this.$Message.info("提交成功继续添加");
+                window.location.href =
+                  "edit.html?cleanoutjobPk=" +
+                  this.cleanoutjobPk +
+                  "&type=edit";
               },
               onCancel: () => {
                 // this.$Message.info('Clicked cancel');
-                window.location.href = "list.html";
+                window.location.href = "pendinglist.html";
               }
             });
 
@@ -490,7 +429,7 @@ export default {
     //获取选项数据
     getSelect() {
       let param = {
-        token: `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmbGR5bGYiLCJpYXQiOjE1NTMwNjIxMjMsInN1YiI6IjZhZWQxNWEzY2MyYjQxMGZiZTNmODdlYmM4Y2M0MmNmIiwiZXhwIjoxNTUzMTQ4NTIzfQ.B1DbIWXk4GwRFqCcl0-Vc6LaMnJ6O1IkubPGVsoOf0g`
+        token: this.token
       };
       this.until.get("/inspect-api/user/getUsersByDept", param).then(res => {
         if (res.code === 0) {
@@ -498,21 +437,21 @@ export default {
         }
       });
     },
-    selectOpt(e) {
-      console.log(e);
-      this.device = e;
-    },
 
     //获取清洗信息
     getCleanOutJob() {
       let param = {
         cleanoutjobPk: this.cleanoutjobPk,
-        token: `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmbGR5bGYiLCJpYXQiOjE1NTMwNjIxMjMsInN1YiI6IjZhZWQxNWEzY2MyYjQxMGZiZTNmODdlYmM4Y2M0MmNmIiwiZXhwIjoxNTUzMTQ4NTIzfQ.B1DbIWXk4GwRFqCcl0-Vc6LaMnJ6O1IkubPGVsoOf0g`
+        token: this.token
       };
       this.until.get("/inspect-api/cleanout/getCleanJob", param).then(
         res => {
-          if (res.status === 0) {
-            this.cleanoutObj = res.data.items;
+          if (res.code === 0) {
+            // this.cleanoutObj = res.data;
+            this.formValidate.estateNm = res.data.estateNm;
+            this.formValidate.constructionCompanyName = res.data.cleanoutUnit;
+            this.formValidate.keepPersonnel = res.data.loginUser;
+            this.formValidate.writePersonnel = res.data.loginUser;
           }
         },
         err => {
@@ -520,13 +459,60 @@ export default {
         }
       );
     },
-    getRepairStock(e) {
-      this.until.get("/ph/stockManage/info/" + e).then(res => {
-        if (res.status === "200") {
-          this.part = res.data;
-        }
-      });
-      console.log(this.part);
+    getApproveInfo() {
+      let param = {
+        cleanoutjobPk: this.cleanoutjobPk,
+        token: this.token
+      };
+      this.until
+        .get("/inspect-api/cleanoutReport/getCleanOutApproval", param)
+        .then(res => {
+          if (res.code === 0) {
+            //如果有数据，则赋值给this.formValidate
+            if (res.data.id) {
+              this.firstSave = false;
+              Object.assign(this.formValidate, res.data);
+              //保存的值操作
+              this.formValidate.workPersonnel = this.formValidate.workPersonnel.split(
+                ","
+              );
+              //处理false
+              Object.keys(this.formValidate).forEach(item => {
+                let regex = /\d/g;
+                if (item.match(regex)) {
+                  this.formValidate[item] =
+                    this.formValidate[item] === 1 ? true : false;
+                }
+              });
+              this.formValidate.safetyFireEquipment =
+                this.formValidate.safetyFireEquipment === 1 ? true : false;
+              this.formValidate.safetyLifeLine =
+                this.formValidate.safetyLifeLine === 1 ? true : false;
+              //时间戳处理
+              this.formValidate.workTime = this.until.formatDay(
+                "yyyy-MM-dd hh:mm",
+                this.formValidate.workTime
+              );
+              this.formValidate.finishWorkDate = this.until.formatDay(
+                "yyyy-MM-dd hh:mm",
+                this.formValidate.finishWorkDate
+              );
+              this.formValidate.workPresonSignDate = this.until.formatDay(
+                "yyyy-MM-dd",
+                this.formValidate.workPresonSignDate
+              );
+              this.formValidate.departmentPresonSignDate = this.until.formatDay(
+                "yyyy-MM-dd",
+                this.formValidate.departmentPresonSignDate
+              );
+            } else {
+              this.firstSave = true;
+            }
+          } else {
+            //第一次提交
+            this.firstSave = true;
+          }
+        });
     }
   }
 };
