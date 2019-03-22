@@ -35,10 +35,20 @@ body {
       width: 100%;
     }
     .ivu-form-item {
+      width: 100%;
       .signBtn {
         width: 100%;
         height: 0.2rem;
         line-height: 0.2rem;
+      }
+      .ivu-form-item-content {
+        img {
+          max-width: 100%;
+          max-height: 100%;
+          width: auto;
+          height: auto;
+          vertical-align: middle;
+        }
       }
     }
   }
@@ -264,7 +274,7 @@ export default {
       cleanoutjobPk: "",
       cleanoutObj: {},
       firstSave: true,
-      token: `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmbGR5bGYiLCJpYXQiOjE1NTMxNTYxNzUsInN1YiI6IjIwNTc4MWIxNTY0YzQxYzViNDIxY2YzZjI1ZWZkNGNmIiwiZXhwIjoxNTUzMjQyNTc1fQ.MfmXiw-g24mxEzrQHVtX5KVXWycj8nqX-Ik7Mf5fyCI`,
+      token: ``,
       formValidate: {
         estateNm: "", //泵房名称
         estateCd: "",
@@ -307,6 +317,7 @@ export default {
     sign
   },
   mounted() {
+    this.token = this.until.loGet("appToken");
     this.cleanoutjobPk = this.until.getQueryString("cleanoutjobPk");
     //获取审批表信息
     this.getApproveInfo();
@@ -366,6 +377,7 @@ export default {
     // },
 
     add() {
+      debugger;
       //处理false
       Object.keys(this.formValidate).forEach(item => {
         let regex = /\d/g;
@@ -381,6 +393,7 @@ export default {
         ? 1
         : 0;
 
+      this.formValidate.harmIdentify = this.formValidate.harmIdentify ? 1 : 0;
       this.formValidate.workPersonnel =
         this.formValidate.workPersonnel &&
         this.formValidate.workPersonnel.join(",");
@@ -488,6 +501,8 @@ export default {
                 this.formValidate.safetyFireEquipment === 1 ? true : false;
               this.formValidate.safetyLifeLine =
                 this.formValidate.safetyLifeLine === 1 ? true : false;
+              this.formValidate.harmIdentify =
+                this.formValidate.harmIdentify === 1 ? true : false;
               //时间戳处理
               this.formValidate.workTime = this.until.formatDay(
                 "yyyy-MM-dd hh:mm",

@@ -302,7 +302,7 @@ body {
           </Row>
         </FormItem>
         <FormItem label="完成时间" prop="checkTime">
-          <DatePicker type="datetime" v-model="formValidate.checkTime"></DatePicker>
+          <DatePicker type="datetime" format="yyyy-MM-dd HH:mm" v-model="formValidate.checkTime"></DatePicker>
         </FormItem>
 
         <FormItem label="清洗前照片">
@@ -322,7 +322,7 @@ body {
             :show-upload-list="false"
             :on-success="handleSuccess"
             :format="['jpg','jpeg','png']"
-            :max-size="2048"
+            :max-size="10240"
             :on-format-error="handleFormatError"
             :on-exceeded-size="handleMaxSize"
             :before-upload="handleBeforeUpload"
@@ -353,13 +353,13 @@ body {
             :show-upload-list="false"
             :on-success="afterSuccess"
             :format="['jpg','jpeg','png']"
-            :max-size="2048"
+            :max-size="10240"
             :on-format-error="handleFormatError"
             :on-exceeded-size="handleMaxSize"
             :before-upload="handleBeforeUpload"
             multiple
             type="drag"
-            action="//jsonplaceholder.typicode.com/posts/"
+            action="/general/file/uploadLocal"
             style="display: inline-block;width:95px;"
           >
             <div style="width: 95px;height:95px;line-height: 95px;">
@@ -417,7 +417,7 @@ export default {
       firstSave: true,
       clearImgPreList: [],
       clearImgPostList: [],
-      token: `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmbGR5bGYiLCJpYXQiOjE1NTMxNTYxNzUsInN1YiI6IjIwNTc4MWIxNTY0YzQxYzViNDIxY2YzZjI1ZWZkNGNmIiwiZXhwIjoxNTUzMjQyNTc1fQ.MfmXiw-g24mxEzrQHVtX5KVXWycj8nqX-Ik7Mf5fyCI`,
+      token: "",
       formValidate: {
         waterBoxCd: "", //泵房名称
         waterBoxNm: "",
@@ -485,12 +485,13 @@ export default {
     myHeader
   },
   mounted() {
+    this.token = this.until.loGet("appToken");
     this.cleanoutjobPk = this.until.getQueryString("cleanoutjobPk");
     this.uploadList = this.$refs.upload.fileList;
     this.afterUploadList = this.$refs.afterupload.fileList;
     this.getSelect();
     //得到审核表数据信息
-    this.getCleanOutApprovalInfo();
+    this.getCleanOutJob();
     //得到清洗报表数据
     this.getCleanOutReport();
   },
@@ -600,7 +601,7 @@ export default {
               content: "是否继续添加维修申请？",
               onOk: () => {
                 this.$Message.info("提交成功");
-                window.location.href = "pengdinglist.html";
+                window.location.href = "list.html";
               },
               onCancel: () => {
                 // this.$Message.info('Clicked cancel');
@@ -629,20 +630,18 @@ export default {
         }
       });
     },
-    getCleanOutApprovalInfo() {
+    getCleanOutJob() {
       let param = {
         cleanoutjobPk: this.cleanoutjobPk,
         token: this.token
       };
 
-      this.until
-        .get("/inspect-api/cleanoutReport/getCleanOutApproval", param)
-        .then(res => {
-          if (res.code === 0) {
-            this.formValidate.waterBoxNm = res.data.estateNm;
-            this.formValidate.waterBoxCd = res.data.estateCd;
-          }
-        });
+      this.until.get("/inspect-api/cleanout/getCleanJob", param).then(res => {
+        if (res.code === 0) {
+          this.formValidate.waterBoxNm = res.data.waterBoxNm;
+          this.formValidate.waterBoxCd = res.data.waterBoxCd;
+        }
+      });
     },
     getCleanOutReport() {
       let param = {

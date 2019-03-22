@@ -65,7 +65,7 @@
 <script>
 export default {
   name: "App",
-  props: ["title", "search", "appBack"],
+  props: ["title", "search", "appBack", "newCreated"],
   mounted() {
     // this.abc();
   },
@@ -79,7 +79,7 @@ export default {
     },
 
     goSearch() {
-      let url = "search.html";
+      let url = "search.html?type=" + this.newCreated;
       window.location.href = url;
       // this.app.InterfaceName('h5_Jump',url)
     }

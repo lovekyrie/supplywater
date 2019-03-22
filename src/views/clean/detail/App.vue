@@ -27,9 +27,25 @@ body {
     height: 0.4rem;
     line-height: 0.4rem;
   }
-  div {
+  > div {
     padding: 10px 15px;
     line-height: 0.3rem;
+    > div {
+      display: flex;
+      width: 30%;
+      height: 2rem;
+      justify-content: space-between;
+      &:nth-of-type(n + 4) {
+        margin-top: 0.3rem;
+      }
+      > img {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        vertical-align: middle;
+      }
+    }
   }
 }
 </style>
@@ -54,16 +70,14 @@ body {
         <p>余氯（mg/l）：{{info.residualChlorine}}</p>
         <p>水箱注水时间：{{info.waterInjectionFromTm}}-{{info.waterInjectionToTm}},共计：{{info.waterInjectionAmtTm}}</p>
         <p>完成时间：{{info.checkTime}}</p>
-        <p>清洗前照片：
-          <div v-for="(item, index) in info.clearImgPre" :key="index">
-            <img :src="item" alt="">
-          </div>
-        </p>
-        <p> 清洗前照片：
-            <div v-for="(item, index) in info.clearImgPost" :key="index">
-            <img :src="item" alt="">
-          </div>
-        </p>
+        <p>清洗前照片：</p>
+        <div v-for="(item, index) in info.clearImgPre" :key="index">
+          <img :src="item" alt>
+        </div>
+        <p>清洗前照片：</p>
+        <div v-for="(item, index) in info.clearImgPost" :key="index">
+          <img :src="item" alt>
+        </div>
       </div>
 
       <h3>水箱清洗工作建议与评估</h3>
@@ -85,7 +99,7 @@ export default {
       title: "水池（箱）清洗消毒记录表",
       cleanoutjobPk: "",
       info: {},
-      token: `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmbGR5bGYiLCJpYXQiOjE1NTMxNTYxNzUsInN1YiI6IjIwNTc4MWIxNTY0YzQxYzViNDIxY2YzZjI1ZWZkNGNmIiwiZXhwIjoxNTUzMjQyNTc1fQ.MfmXiw-g24mxEzrQHVtX5KVXWycj8nqX-Ik7Mf5fyCI`
+      token: ``
     };
   },
   components: {
@@ -93,6 +107,7 @@ export default {
     myHeader
   },
   mounted() {
+    this.token = this.until.loGet("appToken");
     this.cleanoutjobPk = this.until.getQueryString("cleanoutjobPk");
     this.getCleanOutReport();
   },
@@ -109,6 +124,7 @@ export default {
           if (res.code === 0) {
             if (res.data.cleanoutReportPk) {
               this.info = res.data;
+              console.log(JSON.stringify(res.data));
               //时间戳处理
               this.info.drainOffFromTm = this.until.formatDay(
                 "hh:mm",
@@ -134,9 +150,16 @@ export default {
                 "hh:mm",
                 this.info.waterInjectionToTm
               );
-
-              this.info.clearImgPost=this.info.clearImgPost.split(',')
-              this.info.clearImgPre=this.info.clearImgPre.split(',')
+              this.info.cleanoutTm = this.until.formatDay(
+                "yyyy-MM-dd hh:mm",
+                this.info.cleanoutTm
+              );
+              this.info.checkTime = this.until.formatDay(
+                "yyyy-MM-dd hh:mm",
+                this.info.checkTime
+              );
+              this.info.clearImgPost = this.info.clearImgPost.split(",");
+              this.info.clearImgPre = this.info.clearImgPre.split(",");
             }
           } else {
             this.$Message.info(res.message);

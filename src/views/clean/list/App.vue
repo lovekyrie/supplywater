@@ -76,31 +76,35 @@ body {
   <div id="container">
     <Spin size="large" fix v-if="spinShow"></Spin>
     <myHeader :title="title" newCreated="true" search="true"></myHeader>
-    <div class="menu">
-      <p @click="change(1)" :class="{active:type==1}">全部</p>
-      <p @click="change(2)" :class="{active:type==2}">已上传</p>
-      <p @click="change(3)" :class="{active:type==3}">未上传</p>
-    </div>
+
     <scroll class="main" :on-reach-bottom="handleReachBottom">
       <Card dis-hover v-for="(item, index) in list" class="list" :key="index">
         <div @click="toDetail(item.cleanoutjobPk)">
           <p>
-            <span>区域：</span>
-            {{item.districtNm}}
+            <span>小区编号：</span>
+            {{item.estateCd}}
           </p>
           <p>
-            <span>泵房名称：</span>
-            {{item.phNm}}
+            <span>小区名称：</span>
+            {{item.estateNm}}
           </p>
           <p>
-            <span>保养计划时间：</span>
-            {{item.maintPlanTime | toDate}}
+            <span>计划计划时间：</span>
+            {{item.frTm }}
           </p>
           <p>
             <span>计划完成时间：</span>
-            {{item.maintPlanDoneTime | toDate}}
+            {{item.toTm }}
           </p>
-          <span v-show="type===3" class="btn" @click.stop="toDetail(item.maintTaskPk,'edit')">修改报表</span>
+          <p>
+            <span>水箱编号：</span>
+            {{item.waterBoxCd}}
+          </p>
+          <p>
+            <span>水箱容量：</span>
+            {{item.volume}}
+          </p>
+          <!-- <span v-show="type===3" class="btn" @click.stop="toDetail(item.maintTaskPk,'edit')">修改报表</span> -->
           <img :src="toDetailPng">
         </div>
       </Card>
@@ -124,7 +128,8 @@ export default {
       pageSize: 10,
       total: "",
       taskExeStatus: "",
-      toDetailPng
+      toDetailPng,
+      token: ""
     };
   },
   components: {
@@ -132,6 +137,7 @@ export default {
     myHeader
   },
   mounted() {
+    this.token = this.until.loGet("appToken");
     this.type = this.until.getQueryString("type")
       ? this.until.getQueryString("type")
       : 1;
@@ -140,59 +146,57 @@ export default {
   methods: {
     getList() {
       let $q = new Promise((resolve, reject) => {
-        if (this.type === 1) {
-          this.taskExeStatus = "已保养";
-        } else if (this.type === 2) {
-          this.taskExeStatus = "待保养";
-        } else {
-          this.taskExeStatus = "待保养";
-        }
-
         let param = {
-          currentPage: 1,
-          showCount: 10,
-          token: `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJzbDAwMiIsImlhdCI6MTU1Mjk3NDg2MCwic3ViIjoiYTg0MmIzYTA5ZTgxNGFiMmI0ZTZiNjZiMzc4NzkxYWMiLCJleHAiOjE1NTMwNjEyNjB9.sYd_Xd6d1z8ZqlaWxNB2tGHGNS4OCn00SDl8rPRNEcg`
+          pageNum: this.pageNo,
+          pageSize: this.pageSize
         };
-        this.until.get("/inspect-api/maintTask/list", param).then(
-          res => {
-            this.spinShow = false;
+        this.until
+          .postData(
+            "/inspect-api/cleanoutReport/getCleanOutReportList",
+            JSON.stringify(param),
+            this.token
+          )
+          .then(
+            res => {
+              this.spinShow = false;
 
-            if (res.code === 0 && res.data.list) {
-              this.list.push(...res.data.list);
-              this.total = res.data.total;
+              if (res.code === 0 && res.data.result) {
+                res.data.result.forEach(item => {
+                  let bgTm = this.until.formatDate(item.frTm);
+                  let enTm = this.until.formatDate(item.toTm);
+                  item.frTm =
+                    bgTm.year + "年" + bgTm.month + "月" + bgTm.day + "日";
+                  item.toTm =
+                    enTm.year + "年" + enTm.month + "月" + enTm.day + "日";
+                });
+                this.list.push(...res.data.result);
+                this.total = res.data.total;
 
-              /** 当total>this.currentpage*showCount*/
-              if (res.data.total > this.pageSize * this.showCount) {
-                this.currentPage++;
-                this.getList();
+                /** 当total>this.currentpage*showCount*/
+                if (res.data.total > this.pageSize * this.showCount) {
+                  this.currentPage++;
+                  this.getList();
+                }
+              } else {
+                this.$hero.msg.show({
+                  text: `${res.message}`,
+                  times: 1500
+                });
               }
-            } else if (res.code === 1000) {
-              this.$hero.msg.show({
-                text: `${res.message}`,
-                times: 1500
-              });
-            }
-            resolve("ok");
-          },
-          err => {}
-        );
+              resolve("ok");
+            },
+            err => {}
+          );
       });
       return $q;
     },
     toDetail(ipPk) {
-      let url = "detail.html?cleanoutjobPk=" + ipPk + "&type=" + type;
+      let url = "detail.html?cleanoutjobPk=" + ipPk;
       window.location.href = url;
     },
     toEditDetail(ipPk) {
       let url = "edit.html?cleanoutjobPk=" + ipPk;
       window.location.href = url;
-    },
-    change(val) {
-      this.type = val;
-      this.list = [];
-      this.currentPage = 1;
-      this.spinShow = true;
-      this.getList();
     },
     //到底部时触发
     handleReachBottom() {

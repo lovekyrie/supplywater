@@ -120,13 +120,7 @@ export default {
       list: [],
       toDetailPng,
       //搜索字段
-      sbCd: "", //设备编号
-      districtCd: "", //设备名称
-      estateNm: "", //小区名称
-      billCode: "", //维修单号
-      applyTime: "", //申请时间
-      applyUnit: "", //申请单位
-      treatState: "" //处理状态
+      searchKey: ""
     };
   },
   components: {
@@ -141,35 +135,47 @@ export default {
     getList() {
       this.spinShow = true;
       let $q = new Promise((resolve, reject) => {
+        this.searchKey = this.until.getQueryString("search");
         let param = {
-          token: `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmbGR5bGYiLCJpYXQiOjE1NTMxMzcxNzYsInN1YiI6ImJjYzQ4MmEwODgyMDRkYzI4MmI5MDQyN2ZmZTZjNTUxIiwiZXhwIjoxNTUzMjIzNTc2fQ.Vj_Fx9UF7gKzrBDTzJSeIVl4LFnOS0nruqHafjYQSmE`
+          pageNum: this.pageNo,
+          pageSize: this.pageSize,
+          queryParam: {
+            estateNm: this.searchKey
+          }
         };
-        this.until.get("/inspect-api/cleanout/pagelist", param).then(
-          res => {
-            if (res.code === 0) {
-              this.spinShow = false;
-              this.total = res.data.total;
-              if (res.data.result) {
-                res.data.result.forEach(item => {
-                  let bgTm = this.until.formatDate(item.frTm);
-                  let enTm = this.until.formatDate(item.toTm);
-                  item.frTm =
-                    bgTm.year + "年" + bgTm.month + "月" + bgTm.day + "日";
-                  item.toTm =
-                    enTm.year + "年" + enTm.month + "月" + enTm.day + "日";
+        console.log(JSON.stringify(param));
+        this.until
+          .postData(
+            "/inspect-api/cleanout/pagelist",
+            JSON.stringify(param),
+            this.until.loGet("appToken")
+          )
+          .then(
+            res => {
+              if (res.code === 0) {
+                this.spinShow = false;
+                this.total = res.data.total;
+                if (res.data.result) {
+                  res.data.result.forEach(item => {
+                    let bgTm = this.until.formatDate(item.frTm);
+                    let enTm = this.until.formatDate(item.toTm);
+                    item.frTm =
+                      bgTm.year + "年" + bgTm.month + "月" + bgTm.day + "日";
+                    item.toTm =
+                      enTm.year + "年" + enTm.month + "月" + enTm.day + "日";
+                  });
+                  this.list.push(...res.data.result);
+                }
+              } else if (res.code === 1000) {
+                this.$hero.msg.show({
+                  text: `${res.message}`,
+                  times: 1500
                 });
-                this.list.push(...res.data.result);
               }
-            } else if (res.code === 1000) {
-              this.$hero.msg.show({
-                text: `${res.message}`,
-                times: 1500
-              });
-            }
-            resolve("ok");
-          },
-          err => {}
-        );
+              resolve("ok");
+            },
+            err => {}
+          );
       });
       return $q;
     },

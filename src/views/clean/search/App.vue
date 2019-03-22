@@ -32,7 +32,7 @@ body {
     <myHeader :title="title"></myHeader>
     <Form :label-width="80" class="search">
       <FormItem label>
-        <Input v-model="keyword" placeholder="请输入搜索关键字"></Input>
+        <Input v-model="keyword" placeholder="请输入小区名称"></Input>
       </FormItem>
 
       <FormItem>
@@ -60,7 +60,11 @@ export default {
   methods: {
     toSearch() {
       // console.log(this.search)
-      window.location.href = "list.html?search=" + this.keyword;
+      if (this.type === true) {
+        window.location.href = "list.html?search=" + this.keyword;
+      } else {
+        window.location.href = "pendinglist.html?search=" + this.keyword;
+      }
     }
   }
 };

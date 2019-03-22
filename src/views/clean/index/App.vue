@@ -105,17 +105,18 @@ export default {
     };
   },
   components: {},
-  created() {
+  created() {},
+  mounted() {
     //通过Android原生返回一个登录的token，供我们本地存储
-    var that = this;
-    console.log("112");
+
     this.app.InterfaceName("h5_setTokenToHtml5", { test: 12 }).then(res => {
       console.log("测试@@@=====>" + res);
       this.until.loSave("appToken", res);
     });
-  },
-  mounted() {
-    // this.login();
+    // this.until.loSave(
+    //   "appToken",
+    //   `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmbGR5bGYiLCJpYXQiOjE1NTMyNDIwOTUsInN1YiI6IjE5YmQyNDVhZTNiZDQyMDJiNWY1NWIzNThmMzcxMGE1IiwiZXhwIjoxNTUzMzI4NDk1fQ.BJI-fDtUWdKQzVi5-Ee6AHPdMWq9RzpWgt3wfwvszfk`
+    // );
   },
   methods: {
     //全部保养
