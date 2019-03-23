@@ -191,7 +191,7 @@ export default {
       return $q;
     },
     toDetail(ipPk) {
-      let url = "detail.html?cleanoutjobPk=" + ipPk;
+      let url = "detailpre.html?cleanoutjobPk=" + ipPk;
       window.location.href = url;
     },
     toEditDetail(ipPk) {

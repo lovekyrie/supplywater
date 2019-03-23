@@ -113,9 +113,9 @@ export default {
       console.log("测试@@@=====>" + res);
       this.until.loSave("appToken", res);
     });
-    /* this.until.loSave(
+    /*   this.until.loSave(
       "appToken",
-      `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmbGR5bGYiLCJpYXQiOjE1NTMzMjM0MDksInN1YiI6ImFjZWEyNzg4MDZjYzQzZmE4OTM3MWJiZDM1ODY2ZmQ0IiwiZXhwIjoxNTUzNDA5ODA5fQ.ItzUAteSLMttyLmoBT3DkZL5ujvSWVSiXt9C9lvscII`
+      `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmbGR5bGYiLCJpYXQiOjE1NTMzNDU0MTgsInN1YiI6IjI1ODUwODEwZmExZjQyZGI4MzBkZTIyZmVmM2ZjNzYyIiwiZXhwIjoxNTUzNDMxODE4fQ.cHgtW4uvw7bNS8N3XIXW3TRnRGM3pGtdP5B-Krgj3pA`
     ); */
   },
   methods: {
