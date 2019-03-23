@@ -598,7 +598,6 @@ export default {
             //this.$Message.success("提交成功!");
             this.$Modal.confirm({
               title: "提交成功",
-              content: "是否继续添加维修申请？",
               onOk: () => {
                 this.$Message.info("提交成功");
                 window.location.href = "list.html";
@@ -640,6 +639,7 @@ export default {
         if (res.code === 0) {
           this.formValidate.waterBoxNm = res.data.waterBoxNm;
           this.formValidate.waterBoxCd = res.data.waterBoxCd;
+          this.formValidate.volume = res.data.volume;
         }
       });
     },

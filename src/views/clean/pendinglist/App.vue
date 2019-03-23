@@ -73,12 +73,12 @@ body {
       <Card dis-hover v-for="(item, index) in list" class="list" :key="index">
         <div @click="toDetail(item.cleanoutjobPk)">
           <p>
-            <span>小区编号：</span>
-            {{item.estateCd}}
+            <span>泵房编号：</span>
+            {{item.waterBoxCd}}
           </p>
           <p>
-            <span>小区名称：</span>
-            {{item.estateNm}}
+            <span>泵房名称：</span>
+            {{item.waterBoxNm}}
           </p>
           <p>
             <span>计划计划时间：</span>

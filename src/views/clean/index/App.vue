@@ -113,10 +113,10 @@ export default {
       console.log("测试@@@=====>" + res);
       this.until.loSave("appToken", res);
     });
-    // this.until.loSave(
-    //   "appToken",
-    //   `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmbGR5bGYiLCJpYXQiOjE1NTMyNDIwOTUsInN1YiI6IjE5YmQyNDVhZTNiZDQyMDJiNWY1NWIzNThmMzcxMGE1IiwiZXhwIjoxNTUzMzI4NDk1fQ.BJI-fDtUWdKQzVi5-Ee6AHPdMWq9RzpWgt3wfwvszfk`
-    // );
+    /* this.until.loSave(
+      "appToken",
+      `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmbGR5bGYiLCJpYXQiOjE1NTMzMjM0MDksInN1YiI6ImFjZWEyNzg4MDZjYzQzZmE4OTM3MWJiZDM1ODY2ZmQ0IiwiZXhwIjoxNTUzNDA5ODA5fQ.ItzUAteSLMttyLmoBT3DkZL5ujvSWVSiXt9C9lvscII`
+    ); */
   },
   methods: {
     //全部保养
