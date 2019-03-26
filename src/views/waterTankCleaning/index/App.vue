@@ -81,6 +81,20 @@ body {
       </p>
       <img src="../components/img/toDetail.png">
     </div>
+    <div @click="toWaitConfirm()">
+      <p>
+        <img src="./img/reprot.png">
+        待确认清洗报表
+      </p>
+      <img src="../components/img/toDetail.png">
+    </div>
+    <div @click="toAfterConfirm()">
+      <p>
+        <img src="./img/reprot.png">
+        已确认清洗报表
+      </p>
+      <img src="../components/img/toDetail.png">
+    </div>
   </div>
 </template>
 
@@ -93,7 +107,12 @@ export default {
   components: {
     myHeader
   },
-  mounted() {},
+  mounted() {
+    this.until.loSave(
+      "appToken",
+      `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmbGR5bGYiLCJpYXQiOjE1NTM1NzU0ODUsInN1YiI6IjcxNjk1YjcyODkxOTRjOGNhMzM3ZjBmMzk0ZGI2MGY2IiwiZXhwIjoxNTUzNjYxODg1fQ.tyTHQRtYpX8S0L2SLlxgXncBUQOyOMWVYCdCQ4add3Y`
+    );
+  },
   methods: {
     toPlan() {
       let url = "planList.html";
@@ -102,6 +121,12 @@ export default {
     toReport() {
       let url = "reportList.html";
       window.location.href = url;
+    },
+    toWaitConfirm() {
+      window.location.href = "waitConfirm.html";
+    },
+    toAfterConfirm() {
+      window.location.href = "afterConfirm.html";
     },
     back() {
       this.app.InterfaceName("h5_historyBack", {});

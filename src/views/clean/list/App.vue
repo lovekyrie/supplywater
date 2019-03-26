@@ -129,7 +129,9 @@ export default {
       total: "",
       taskExeStatus: "",
       toDetailPng,
-      token: ""
+      token: "",
+      //搜索字段
+      searchKey: ""
     };
   },
   components: {
@@ -146,9 +148,13 @@ export default {
   methods: {
     getList() {
       let $q = new Promise((resolve, reject) => {
+        this.searchKey = this.until.getQueryString("search");
         let param = {
           pageNum: this.pageNo,
-          pageSize: this.pageSize
+          pageSize: this.pageSize,
+          queryParam: {
+            waterBoxNm: this.searchKey
+          }
         };
         this.until
           .postData(

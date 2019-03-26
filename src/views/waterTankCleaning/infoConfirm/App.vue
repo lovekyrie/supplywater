@@ -38,13 +38,13 @@ body {
       &:nth-of-type(n + 4) {
         margin-top: 0.3rem;
       }
-    }
-    > img {
-      max-width: 100%;
-      max-height: 100%;
-      width: auto;
-      height: auto;
-      vertical-align: middle;
+      > img {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        vertical-align: middle;
+      }
     }
   }
 }
@@ -146,6 +146,20 @@ body {
         <p>签名日期：{{info.workPresonSignDate}}</p>
       </div>
       <div>
+        <p>单位（部门）现场负责人：</p>
+        <img :src="info.departmentPresonSign">
+      </div>
+      <div>
+        <p>签名日期：{{info.departmentPresonSignDate}}</p>
+      </div>
+      <div>
+        <p>签名日期：{{info.finishWorkDate}}</p>
+      </div>
+      <div>
+        <p>确认人签名：</p>
+        <img :src="info.finishWorkSign">
+      </div>
+      <div>
         <p>
           <Button type="primary" @click="toDetail()">下一步</Button>
         </p>
@@ -192,6 +206,8 @@ export default {
             if (res.data.id) {
               this.info = res.data;
               //保存的值操作
+              this.info.workPersonnel =
+                this.info.workPersonnel && this.info.workPersonnel.split(",");
               //处理false
               Object.keys(this.info).forEach(item => {
                 let regex = /\d/g;
@@ -205,6 +221,23 @@ export default {
                 this.info.safetyLifeLine === 1 ? true : false;
               this.info.harmIdentify =
                 this.info.harmIdentify === 1 ? true : false;
+              //时间戳处理
+              this.info.workTime = this.until.formatDay(
+                "yyyy-MM-dd hh:mm",
+                this.info.workTime
+              );
+              this.info.finishWorkDate = this.until.formatDay(
+                "yyyy-MM-dd hh:mm",
+                this.info.finishWorkDate
+              );
+              this.info.workPresonSignDate = this.until.formatDay(
+                "yyyy-MM-dd",
+                this.info.workPresonSignDate
+              );
+              this.info.departmentPresonSignDate = this.until.formatDay(
+                "yyyy-MM-dd",
+                this.info.departmentPresonSignDate
+              );
             }
           } else {
             this.$Message.info(res.message);

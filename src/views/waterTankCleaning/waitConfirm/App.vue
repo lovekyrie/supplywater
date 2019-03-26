@@ -140,7 +140,7 @@ export default {
           pageNum: this.pageNo,
           pageSize: this.pageSize,
           queryParam: {
-            waterBoxNm: this.searchKey
+            cleanState: 1
           }
         };
         console.log(JSON.stringify(param));
@@ -181,7 +181,7 @@ export default {
     },
 
     toDetail(repPk) {
-      let url = "approve.html?cleanoutjobPk=" + repPk;
+      let url = "editConfirm.html?cleanoutjobPk=" + repPk;
       window.location.href = url;
     },
     //到底部时触发

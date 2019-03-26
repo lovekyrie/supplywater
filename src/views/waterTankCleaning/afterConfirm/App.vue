@@ -111,7 +111,7 @@ import toDetailPng from "@/components/img/toDetail.png";
 export default {
   data() {
     return {
-      title: "待清洗记录",
+      title: "已确认清洗记录",
       spinShow: false,
       noMore: false,
       pageNo: 1,
@@ -140,7 +140,7 @@ export default {
           pageNum: this.pageNo,
           pageSize: this.pageSize,
           queryParam: {
-            waterBoxNm: this.searchKey
+            cleanState: 2
           }
         };
         console.log(JSON.stringify(param));
@@ -159,8 +159,7 @@ export default {
                   res.data.result.forEach(item => {
                     let bgTm = this.until.formatDate(item.frTm);
                     let enTm = this.until.formatDate(item.toTm);
-                    item.frTm =
-                      bgTm.year + "年" + bgTm.month + "月" + bgTm.day + "日";
+                    item.frTm = `${bgTm.year}年${bgTm.month}月${bgTm.day}日`;
                     item.toTm =
                       enTm.year + "年" + enTm.month + "月" + enTm.day + "日";
                   });
@@ -181,7 +180,7 @@ export default {
     },
 
     toDetail(repPk) {
-      let url = "approve.html?cleanoutjobPk=" + repPk;
+      let url = "infoConfirm.html?cleanoutjobPk=" + repPk;
       window.location.href = url;
     },
     //到底部时触发

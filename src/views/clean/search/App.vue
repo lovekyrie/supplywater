@@ -32,7 +32,7 @@ body {
     <myHeader :title="title"></myHeader>
     <Form :label-width="80" class="search">
       <FormItem label>
-        <Input v-model="keyword" placeholder="请输入小区名称"></Input>
+        <Input v-model="keyword" placeholder="请输入水箱名称"></Input>
       </FormItem>
 
       <FormItem>

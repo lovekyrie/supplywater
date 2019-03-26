@@ -411,6 +411,24 @@ class until {
       s
     };
   }
+  formatNumberToStr(n) {
+    let str = n.toString()
+    return str[1] ? str : `0${str}`
+  }
+  formatTime(date) {
+    const year = date.getFullYear()
+    const month = date.getMonth() + 1
+    const day = date.getDate()
+
+    const hour = date.getHours()
+    const minite = date.getMinutes()
+    const second = date.getSeconds()
+
+    const t1 = [year, month, day].map(this.formatNumberToStr).join('-')
+    const t2 = [hour, minite, second].map(this.formatNumberToStr).join(':')
+
+    return `${t1} ${t2}`
+  }
   TimeStep(times) {
     let start = new Date(times);
     let end = new Date();
