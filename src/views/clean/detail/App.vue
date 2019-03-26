@@ -86,6 +86,11 @@ body {
         <p>记录人：{{info.recorder}}</p>
         <p>项目负责人：{{info.principal}}</p>
       </div>
+      <div>
+        <p>
+          <Button v-show="showBtn" type="primary" @click="toNext(info.cleanoutjobPk)">下一步</Button>
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -99,7 +104,8 @@ export default {
       title: "水池（箱）清洗消毒记录表",
       cleanoutjobPk: "",
       info: {},
-      token: ``
+      token: ``,
+      showBtn: false
     };
   },
   components: {
@@ -109,6 +115,7 @@ export default {
   mounted() {
     this.token = this.until.loGet("appToken");
     this.cleanoutjobPk = this.until.getQueryString("cleanoutjobPk");
+    this.showBtn = this.until.getQueryString("type");
     this.getCleanOutReport();
   },
   methods: {
@@ -124,7 +131,6 @@ export default {
           if (res.code === 0) {
             if (res.data.cleanoutReportPk) {
               this.info = res.data;
-              console.log(JSON.stringify(res.data));
               //时间戳处理
               this.info.drainOffFromTm = this.until.formatDay(
                 "hh:mm",
@@ -158,13 +164,22 @@ export default {
                 "yyyy-MM-dd hh:mm",
                 this.info.checkTime
               );
-              this.info.clearImgPost = this.info.clearImgPost.split(",");
-              this.info.clearImgPre = this.info.clearImgPre.split(",");
+              this.info.clearImgPost =
+                this.info.clearImgPost && this.info.clearImgPost.split(",");
+              this.info.clearImgPre =
+                this.info.clearImgPre && this.info.clearImgPre.split(",");
             }
           } else {
             this.$Message.info(res.message);
           }
         });
+    },
+    toNext(pk) {
+      if (this.showBtn === "full") {
+        window.location.href = `../waterTankCleaning/infoConfirm.html?cleanoutjobPk=${pk}`;
+      } else {
+        window.location.href = `../waterTankCleaning/editConfirm.html?cleanoutjobPk=${pk}`;
+      }
     }
   }
 };

@@ -38,13 +38,13 @@ body {
       &:nth-of-type(n + 4) {
         margin-top: 0.3rem;
       }
-      > img {
-        max-width: 100%;
-        max-height: 100%;
-        width: auto;
-        height: auto;
-        vertical-align: middle;
-      }
+    }
+    > img {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      vertical-align: middle;
     }
   }
 }
@@ -159,11 +159,6 @@ body {
         <p>确认人签名：</p>
         <img :src="info.finishWorkSign">
       </div>
-      <div>
-        <p>
-          <Button type="primary" @click="toDetail()">下一步</Button>
-        </p>
-      </div>
     </div>
   </div>
 </template>
@@ -190,9 +185,6 @@ export default {
     this.getCleanOutApprove();
   },
   methods: {
-    toDetail() {
-      window.location.href = "detail.html?cleanoutjobPk=" + this.cleanoutjobPk;
-    },
     getCleanOutApprove() {
       let param = {
         cleanoutjobPk: this.cleanoutjobPk,

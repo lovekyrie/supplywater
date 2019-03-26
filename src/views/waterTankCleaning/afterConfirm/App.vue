@@ -180,7 +180,7 @@ export default {
     },
 
     toDetail(repPk) {
-      let url = "infoConfirm.html?cleanoutjobPk=" + repPk;
+      let url = `../clean/detail.html?cleanoutjobPk=${repPk}&type=full`;
       window.location.href = url;
     },
     //到底部时触发

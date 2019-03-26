@@ -181,7 +181,7 @@ export default {
     },
 
     toDetail(repPk) {
-      let url = "editConfirm.html?cleanoutjobPk=" + repPk;
+      let url = `../clean/detail.html?cleanoutjobPk=${repPk}&type=part`;
       window.location.href = url;
     },
     //到底部时触发

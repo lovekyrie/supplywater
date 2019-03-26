@@ -251,7 +251,7 @@ body {
         </FormItem>
         <FormItem>
           <!-- <Button  type="primary" f  @click="handleSubmit('formValidate')" >提交</Button> -->
-          <Button type="primary" @click="add()">下一步</Button>
+          <Button type="primary" @click="add()">提交</Button>
         </FormItem>
       </Form>
     </div>
@@ -335,15 +335,15 @@ export default {
     add() {
       this.entity.id = this.formValidate.id;
       this.entity.cleanoutjobPk = this.cleanoutjobPk;
-      this.entity.finishWorkDate = this.until.formatTime(
-        this.entity.finishWorkDate
-      );
-      this.entity.departmentPresonSignDate = this.until.formatTime(
-        this.entity.departmentPresonSignDate
-      );
+      this.entity.finishWorkDate =
+        this.entity.finishWorkDate &&
+        this.until.formatTime(this.entity.finishWorkDate);
+      this.entity.departmentPresonSignDate =
+        this.entity.departmentPresonSignDate &&
+        this.until.formatTime(this.entity.departmentPresonSignDate);
       this.until
         .postData(
-          "/inspect-api/cleanoutReport/saveApproval",
+          "/inspect-api/cleanout/affirmCleanJob",
           JSON.stringify(this.entity),
           this.token
         )
