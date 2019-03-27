@@ -349,22 +349,15 @@ export default {
         )
         .then(res => {
           if (res.code === 0) {
-            //this.$Message.success("提交成功!");
             this.$Modal.confirm({
               title: "提交成功",
               onOk: () => {
-                // this.$Message.info("提交成功继续添加");
                 window.location.href = "afterConfirm.html";
               },
               onCancel: () => {
-                // this.$Message.info('Clicked cancel');
                 window.location.href = "waitConfirm.html";
               }
             });
-
-            // setTimeout(() => {
-            //   window.location.href = "list.html";
-            // }, 1500);
           } else {
             this.$Message.error(res.message);
           }

@@ -213,23 +213,6 @@ export default {
                 this.info.safetyLifeLine === 1 ? true : false;
               this.info.harmIdentify =
                 this.info.harmIdentify === 1 ? true : false;
-              //时间戳处理
-              this.info.workTime = this.until.formatDay(
-                "yyyy-MM-dd hh:mm",
-                this.info.workTime
-              );
-              this.info.finishWorkDate = this.until.formatDay(
-                "yyyy-MM-dd hh:mm",
-                this.info.finishWorkDate
-              );
-              this.info.workPresonSignDate = this.until.formatDay(
-                "yyyy-MM-dd",
-                this.info.workPresonSignDate
-              );
-              this.info.departmentPresonSignDate = this.until.formatDay(
-                "yyyy-MM-dd",
-                this.info.departmentPresonSignDate
-              );
             }
           } else {
             this.$Message.info(res.message);
