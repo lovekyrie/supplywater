@@ -177,7 +177,7 @@ export default {
   },
   methods: {
     toDetail() {
-      window.location.href = "detail.html?cleanoutjobPk=" + this.cleanoutjobPk;
+      window.location.href = `detail.html?cleanoutjobPk=${this.cleanoutjobPk}`;
     },
     getCleanOutApprove() {
       let param = {

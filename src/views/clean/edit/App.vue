@@ -541,37 +541,6 @@ export default {
       return check;
     },
 
-    //提交
-    // handleSubmit(name) {
-    //   this.$refs[name].validate(valid => {
-    //     if (valid) {
-    //       let myDate = this.until.formatDate(this.formValidate.applicationTm);
-    //       this.formValidate.applicationTm =
-    //         myDate.year + "-" + myDate.month + "-" + myDate.day;
-
-    //       this.formValidate.repairStockRoList = this.repairStockRoList;
-    //       //维修单号 后端生成
-    //       this.until
-    //         .postData(
-    //           "/ph/deviceRepair/edit",
-    //           JSON.stringify(this.formValidate)
-    //         )
-    //         .then(res => {
-    //           if (res.status == 200) {
-    //             this.$Message.success("提交成功!");
-    //             setTimeout(() => {
-    //               window.location.href = "list.html";
-    //             }, 1500);
-    //           } else {
-    //             this.$Message.error(res.message);
-    //           }
-    //         });
-    //     } else {
-    //       this.$Message.error("请填写完整信息！");
-    //     }
-    //   });
-    // },
-
     add() {
       if (this.firstSave) {
         this.formValidate.cleanoutReportPk = null;
@@ -595,7 +564,6 @@ export default {
         )
         .then(res => {
           if (res.code === 0) {
-            //this.$Message.success("提交成功!");
             this.$Modal.confirm({
               title: "提交成功",
               onOk: () => {
@@ -603,14 +571,9 @@ export default {
                 window.location.href = "list.html";
               },
               onCancel: () => {
-                // this.$Message.info('Clicked cancel');
                 window.location.href = "pengdinglist.html";
               }
             });
-
-            // setTimeout(() => {
-            //   window.location.href = "list.html";
-            // }, 1500);
           } else {
             this.$Message.error(res.message);
           }
@@ -688,7 +651,7 @@ export default {
       let hour = Math.floor(offset / 1000 / 60 / 60);
       let timeRemain = offset % (1000 * 60 * 60);
       let mint = Math.floor(timeRemain / 1000 / 60);
-      return hour + "时" + mint + "分";
+      return `${hour}时${mint}分`;
     }
   }
 };

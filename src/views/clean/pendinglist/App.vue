@@ -157,12 +157,14 @@ export default {
                 this.total = res.data.total;
                 if (res.data.result) {
                   res.data.result.forEach(item => {
-                    let bgTm = this.until.formatDate(item.frTm);
-                    let enTm = this.until.formatDate(item.toTm);
-                    item.frTm =
-                      bgTm.year + "年" + bgTm.month + "月" + bgTm.day + "日";
-                    item.toTm =
-                      enTm.year + "年" + enTm.month + "月" + enTm.day + "日";
+                    item.frTm = this.until.formatDay(
+                      "yyyy年mm月dd日",
+                      this.frTm
+                    );
+                    item.toTm = this.until.formatDay(
+                      "yyyy年mm月dd日",
+                      this.toTm
+                    );
                   });
                   this.list.push(...res.data.result);
                 }
@@ -181,7 +183,7 @@ export default {
     },
 
     toDetail(repPk) {
-      let url = "approve.html?cleanoutjobPk=" + repPk;
+      let url = `approve.html?cleanoutjobPk=${repPk}`;
       window.location.href = url;
     },
     //到底部时触发

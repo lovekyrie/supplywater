@@ -131,31 +131,21 @@ export default {
           if (res.code === 0) {
             if (res.data.cleanoutReportPk) {
               this.info = res.data;
-              //时间戳处理
-              this.info.drainOffFromTm = this.until.formatDay(
-                "hh:mm",
-                this.info.drainOffFromTm
-              );
-              this.info.drainOffToTm = this.until.formatDay(
-                "hh:mm",
-                this.info.drainOffToTm
-              );
-              this.info.cleanoutFormTm = this.until.formatDay(
-                "hh:mm",
-                this.info.cleanoutFormTm
-              );
-              this.info.cleanoutToTm = this.until.formatDay(
-                "hh:mm",
-                this.info.cleanoutToTm
-              );
-              this.info.waterInjectionFromTm = this.until.formatDay(
-                "hh:mm",
-                this.info.waterInjectionFromTm
-              );
-              this.info.waterInjectionToTm = this.until.formatDay(
-                "hh:mm",
-                this.info.waterInjectionToTm
-              );
+              let arr = [
+                "drainOffFromTm",
+                "drainOffToTm",
+                "cleanoutFormTm",
+                "cleanoutToTm",
+                "waterInjectionFromTm",
+                "waterInjectionToTm"
+              ];
+
+              const unary = fn => val => fn("hh:mm", this.info[val]);
+              let newArr = arr.map(unary(this.until.formatDay));
+              arr.forEach((item, index) => {
+                this.info[item] = newArr[index];
+              });
+
               this.info.cleanoutTm = this.until.formatDay(
                 "yyyy-MM-dd hh:mm",
                 this.info.cleanoutTm

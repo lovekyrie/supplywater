@@ -61,9 +61,9 @@ export default {
     toSearch() {
       // console.log(this.search)
       if (this.type === true) {
-        window.location.href = "list.html?search=" + this.keyword;
+        window.location.href = `list.html?search=${this.keyword}`;
       } else {
-        window.location.href = "pendinglist.html?search=" + this.keyword;
+        window.location.href = `pendinglist.html?search=${this.keyword}`;
       }
     }
   }

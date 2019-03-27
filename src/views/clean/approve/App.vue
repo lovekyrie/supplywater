@@ -307,36 +307,6 @@ export default {
         this.formValidate.workPresonSign = img;
       }
     },
-    //提交
-    // handleSubmit(name) {
-    //   this.$refs[name].validate(valid => {
-    //     if (valid) {
-    //       let myDate = this.until.formatDate(this.formValidate.applicationTm);
-    //       this.formValidate.applicationTm =
-    //         myDate.year + "-" + myDate.month + "-" + myDate.day;
-
-    //       this.formValidate.repairStockRoList = this.repairStockRoList;
-    //       //维修单号 后端生成
-    //       this.until
-    //         .postData(
-    //           "/ph/deviceRepair/edit",
-    //           JSON.stringify(this.formValidate)
-    //         )
-    //         .then(res => {
-    //           if (res.status == 200) {
-    //             this.$Message.success("提交成功!");
-    //             setTimeout(() => {
-    //               window.location.href = "list.html";
-    //             }, 1500);
-    //           } else {
-    //             this.$Message.error(res.message);
-    //           }
-    //         });
-    //     } else {
-    //       this.$Message.error("请填写完整信息！");
-    //     }
-    //   });
-    // },
 
     add() {
       //处理false
@@ -358,13 +328,13 @@ export default {
       this.formValidate.workPersonnel =
         this.formValidate.workPersonnel &&
         this.formValidate.workPersonnel.join(",");
-      debugger;
+
       this.formValidate.workTime = this.until.formatTime(
-        new Date(this.formValidate.workTime)
+        this.formValidate.workTime
       );
 
       this.formValidate.workPresonSignDate = this.until.formatTime(
-        new Date(this.formValidate.workPresonSignDate)
+        this.formValidate.workPresonSignDate
       );
 
       //第一次提交处理
@@ -388,20 +358,15 @@ export default {
                 content: "是否继续填写水池（箱）清洗消毒记录表？",
                 onOk: () => {
                   // this.$Message.info("提交成功继续添加");
-                  window.location.href =
-                    "edit.html?cleanoutjobPk=" +
-                    this.cleanoutjobPk +
-                    "&type=edit";
+                  window.location.href = `edit.html?cleanoutjobPk=${
+                    this.cleanoutjobPk
+                  }&type=edit`;
                 },
                 onCancel: () => {
                   // this.$Message.info('Clicked cancel');
                   window.location.href = "pendinglist.html";
                 }
               });
-
-              // setTimeout(() => {
-              //   window.location.href = "list.html";
-              // }, 1500);
             } else {
               this.$Message.error(res.message);
             }
