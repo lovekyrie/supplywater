@@ -547,9 +547,12 @@ export default {
         this.formValidate.cleanoutjobPk = this.cleanoutjobPk;
       }
 
+      this.clearImgPreList = [];
       this.uploadList.forEach(item => {
         this.clearImgPreList.push(item.url);
       });
+
+      this.clearImgPostList = [];
       this.afterUploadList.forEach(item => {
         this.clearImgPostList.push(item.url);
       });
@@ -571,7 +574,7 @@ export default {
                 window.location.href = "list.html";
               },
               onCancel: () => {
-                window.location.href = "pengdinglist.html";
+                window.location.href = "pendinglist.html";
               }
             });
           } else {
