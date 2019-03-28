@@ -134,22 +134,25 @@ body {
         </FormItem>
         <h3>主要安全措施</h3>
         <FormItem label="1" prop="safetyMeasure1">
-          <Checkbox disabled v-model="formValidate.safetyMeasure1">作业前对进入受限空间危险性进行分析，并进行操作前安全交底及培训。</Checkbox>
+          <Checkbox
+            disabled
+            v-model="formValidate.safetyMeasure1"
+          >作业前对进入受限空间危险性进行分析，并进行操作前安全交底及培训，确认作业人员的身体状况，有无感冒、发烧、咳嗽、拉肚子等症状，发现有碍饮水卫生病症的应立即脱离工作岗位。</Checkbox>
         </FormItem>
         <FormItem label="2" prop="safetyMeasure2">
           <Checkbox disabled v-model="formValidate.safetyMeasure2">清洗人员确认受限空间内存在的其他危害因素，如内部附件、龙骨等。</Checkbox>
         </FormItem>
         <FormItem label="3" prop="safetyMeasure3">
-          <Checkbox disabled v-model="formValidate.safetyMeasure3">
-            打开通分孔进行自然通风，必要时采用强制通风或佩戴空气呼吸器，如空间内缺氧时，严禁用通氧气
-            的方法补充氧气
-          </Checkbox>
+          <Checkbox
+            disabled
+            v-model="formValidate.safetyMeasure3"
+          >打开水箱人孔口，用手提鼓风机进行强制通风或佩戴空气呼吸器，吹风2小时以上，使受限空间内部空气流通。</Checkbox>
         </FormItem>
         <FormItem label="4" prop="safetyMeasure4">
           <Checkbox
             disabled
             v-model="formValidate.safetyMeasure4"
-          >检查受限空间内部是否具备作业条件：检测受限空间内空气质量，未经检测，严禁入内。</Checkbox>
+          >检查受限空间内部是否具备作业条件：检测受限空间内空气质量，未经检测或检测不格，任何人员严禁入内。</Checkbox>
         </FormItem>
         <FormItem label="5" prop="safetyMeasure5">
           <Checkbox disabled v-model="formValidate.safetyMeasure5">检查高压水枪电源线，保证性能良好，线路无破损、无漏电。</Checkbox>
@@ -163,17 +166,20 @@ body {
         <FormItem label="8" prop="safetyMeasure8">
           <Checkbox disabled v-model="formValidate.safetyMeasure8">
             清洗人员必须穿戴防护作用的口罩、眼镜、安全帽、防割手套、穿长袖长裤工作服、
-            防滑雨靴、呆头灯。
+            防滑雨靴、戴头灯，无关物品不得带入受限空间内部。
           </Checkbox>
         </FormItem>
         <FormItem label="9" prop="safetyMeasure9">
           <Checkbox disabled v-model="formValidate.safetyMeasure9">
-            检查受限空间进出口，水箱人孔处需有1人监管，并与受限空间内人员
+            检查受限空间进出口，水箱人孔处须有1人监管，并与受限空间内人员
             保持通话。
           </Checkbox>
         </FormItem>
         <FormItem label="10" prop="safetyMeasure10">
-          <Checkbox disabled v-model="formValidate.safetyMeasure10">开启水箱进水阀之前须检查水箱内人员是否全部撤离。</Checkbox>
+          <Checkbox
+            disabled
+            v-model="formValidate.safetyMeasure10"
+          >清洗结束后，开启水箱进水阀之前须检查水箱内人员是否全部撤离，核对并清点工具，是否有遗漏物品。</Checkbox>
         </FormItem>
         <FormItem label="11" prop="safetyMeasure11">
           <Row>

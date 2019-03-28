@@ -69,19 +69,20 @@ body {
       <h3>主要安全措施</h3>
       <div>
         <p>
-          <Checkbox v-model="info.safetyMeasure1">1.作业前对进入受限空间危险性进行分析，并进行操作前安全交底及培训。</Checkbox>
+          <Checkbox
+            v-model="info.safetyMeasure1"
+          >1.作业前对进入受限空间危险性进行分析，并进行操作前安全交底及培训，确认作业人员的身体状况，有无感冒、发烧、咳嗽、拉肚子等症状，发现有碍饮水卫生病症的应立即脱离工作岗位。</Checkbox>
         </p>
         <p>
           <Checkbox v-model="info.safetyMeasure2">2.清洗人员确认受限空间内存在的其他危害因素，如内部附件、龙骨等。</Checkbox>
         </p>
         <p>
-          <Checkbox v-model="info.safetyMeasure3">
-            3.打开通分孔进行自然通风，必要时采用强制通风或佩戴空气呼吸器，如空间内缺氧时，严禁用通氧气
-            的方法补充氧气
-          </Checkbox>
+          <Checkbox
+            v-model="info.safetyMeasure3"
+          >3.打开水箱人孔口，用手提鼓风机进行强制通风或佩戴空气呼吸器，吹风2小时以上，使受限空间内部空气流通。</Checkbox>
         </p>
         <p>
-          <Checkbox v-model="info.safetyMeasure4">4.检查受限空间内部是否具备作业条件：检测受限空间内空气质量，未经检测，严禁入内。</Checkbox>
+          <Checkbox v-model="info.safetyMeasure4">4.检查受限空间内部是否具备作业条件：检测受限空间内空气质量，未经检测或检测不格，任何人员严禁入内。</Checkbox>
         </p>
         <p>
           <Checkbox v-model="info.safetyMeasure5">5.检查高压水枪电源线，保证性能良好，线路无破损、无漏电。</Checkbox>
@@ -95,17 +96,17 @@ body {
         <p>
           <Checkbox v-model="info.safetyMeasure8">
             8.清洗人员必须穿戴防护作用的口罩、眼镜、安全帽、防割手套、穿长袖长裤工作服、
-            防滑雨靴、呆头灯。
+            防滑雨靴、戴头灯，无关物品不得带入受限空间内部。
           </Checkbox>
         </p>
         <p>
           <Checkbox v-model="info.safetyMeasure9">
-            9.检查受限空间进出口，水箱人孔处需有1人监管，并与受限空间内人员
+            9.检查受限空间进出口，水箱人孔处须有1人监管，并与受限空间内人员
             保持通话。
           </Checkbox>
         </p>
         <p>
-          <Checkbox v-model="info.safetyMeasure10">10.开启水箱进水阀之前须检查水箱内人员是否全部撤离。</Checkbox>
+          <Checkbox v-model="info.safetyMeasure10">10.清洗结束后，开启水箱进水阀之前须检查水箱内人员是否全部撤离，核对并清点工具，是否有遗漏物品。</Checkbox>
         </p>
         <p>
           <Row>
@@ -198,8 +199,6 @@ export default {
             if (res.data.id) {
               this.info = res.data;
               //保存的值操作
-              this.info.workPersonnel =
-                this.info.workPersonnel && this.info.workPersonnel.split(",");
               //处理false
               Object.keys(this.info).forEach(item => {
                 let regex = /\d/g;

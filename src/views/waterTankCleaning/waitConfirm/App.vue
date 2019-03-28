@@ -111,7 +111,7 @@ import toDetailPng from "@/components/img/toDetail.png";
 export default {
   data() {
     return {
-      title: "待清洗记录",
+      title: "待确认清洗记录",
       spinShow: false,
       noMore: false,
       pageNo: 1,
