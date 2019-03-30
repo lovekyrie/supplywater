@@ -217,33 +217,6 @@ export default {
       let url = "edit.html?type=" + val + "&ipPk=" + ipPk;
       window.location.href = url;
     }
-  },
-
-  filters: {
-    state(val) {
-      if (val == 0) {
-        val = "未确认";
-      }
-      if (val == 1) {
-        val = "已确认";
-      }
-      if (val == 2) {
-        val = "已接单";
-      }
-      if (val == 3) {
-        val = "已处理";
-      }
-      if (val == 4) {
-        val = "已回访";
-      }
-      if (val == 5) {
-        val = "完成";
-      }
-      return val;
-    },
-    toDate(i) {
-      return i.split(" ")[0];
-    }
   }
 };
 </script>

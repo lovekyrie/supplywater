@@ -139,6 +139,7 @@ export default {
         let param = {
           pageNum: this.pageNo,
           pageSize: this.pageSize,
+          otherFlag: 1,
           queryParam: {
             cleanState: 2
           }

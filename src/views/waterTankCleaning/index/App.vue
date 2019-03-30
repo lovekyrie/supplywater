@@ -108,14 +108,14 @@ export default {
     myHeader
   },
   mounted() {
-    this.app.InterfaceName("h5_setTokenToHtml5", { test: 12 }).then(res => {
+    /* this.app.InterfaceName("h5_setTokenToHtml5", { test: 12 }).then(res => {
       console.log("测试@@@=====>" + res);
       this.until.loSave("appToken", res);
-    });
-    /*  this.until.loSave(
+    }); */
+    this.until.loSave(
       "appToken",
-      `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmbGR5bGYiLCJpYXQiOjE1NTM2NTY1NTksInN1YiI6Ijg1MTM0MzQ2Y2M5MjQ5YmJhYTJlY2U0Y2RkNTFiOTQyIiwiZXhwIjoxNTUzNzQyOTU5fQ.c-BjIcJg6q1UW9i9zNj71ONi298w-iACmDzBUQZtibU`
-    ); */
+      `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmbGR5bGYiLCJpYXQiOjE1NTM5NDYxMDQsInN1YiI6ImU2NTY3YTVlM2NkYTRhZTVhZjFmODIzMDk2ZjVhMjdkIiwiZXhwIjoxNTU0MDMyNTA0fQ.85fOVNv5a2UmvEBFOEsIO-EBgLk2x4BSHC4Dty24qHE`
+    );
   },
   methods: {
     toPlan() {

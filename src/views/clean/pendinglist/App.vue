@@ -158,11 +158,11 @@ export default {
                 if (res.data.result) {
                   res.data.result.forEach(item => {
                     item.frTm = this.until.formatDay(
-                      "yyyy年mm月dd日",
+                      "yyyy年MM月dd日",
                       this.frTm
                     );
                     item.toTm = this.until.formatDay(
-                      "yyyy年mm月dd日",
+                      "yyyy年MM月dd日",
                       this.toTm
                     );
                   });

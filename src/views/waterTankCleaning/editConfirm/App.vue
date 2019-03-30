@@ -238,16 +238,10 @@ body {
           </div>
         </FormItem>
         <FormItem label="签字日期">
-          <DatePicker
-            type="date"
-            placeholder
-            format="yyyy年MM月dd日"
-            v-model="entity.departmentPresonSignDate"
-            :editable="false"
-          ></DatePicker>
+          <datetime v-model="formValidate.departmentPresonSignDate" format="YYYY-MM-DD"></datetime>
         </FormItem>
         <FormItem label="完工确认" prop="finishWorkDate">
-          <DatePicker type="datetime" format="yyyy-MM-dd HH:mm" v-model="entity.finishWorkDate"></DatePicker>
+          <datetime v-model="formValidate.finishWorkDate" format="YYYY-MM-DD HH:mm"></datetime>
         </FormItem>
         <FormItem label="确认人签名：">
           <div>
@@ -269,6 +263,7 @@ import Vue from "vue";
 import Loading from "../../../hero/components/loading";
 import myHeader from "@/components/myHead";
 import sign from "@/components/signature";
+import { Datetime } from "vux";
 export default {
   data() {
     return {
@@ -299,7 +294,8 @@ export default {
   components: {
     Loading,
     myHeader,
-    sign
+    sign,
+    DateTime
   },
   mounted() {
     this.token = this.until.loGet("appToken");
@@ -343,10 +339,10 @@ export default {
       this.entity.cleanoutjobPk = this.cleanoutjobPk;
       this.entity.finishWorkDate =
         this.entity.finishWorkDate &&
-        this.until.formatTime(this.entity.finishWorkDate);
+        this.until.formatTime(new Date(this.entity.finishWorkDate));
       this.entity.departmentPresonSignDate =
         this.entity.departmentPresonSignDate &&
-        this.until.formatTime(this.entity.departmentPresonSignDate);
+        this.until.formatTime(new Date(this.entity.departmentPresonSignDate));
       this.until
         .postData(
           "/inspect-api/cleanout/affirmCleanJob",

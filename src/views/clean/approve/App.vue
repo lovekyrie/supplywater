@@ -125,7 +125,7 @@ body {
           </Select>
         </FormItem>
         <FormItem label="开工时间" prop="workTime">
-          <DatePicker type="datetime" format="yyyy-MM-dd HH:mm" v-model="formValidate.workTime"></DatePicker>
+          <datetime v-model="formValidate.workTime" format="YYYY-MM-DD HH:mm"></datetime>
         </FormItem>
         <h3>主要安全措施</h3>
         <FormItem label="1" prop="safetyMeasure1">
@@ -177,12 +177,10 @@ body {
             <Col span="2">
               <Checkbox v-model="formValidate.safetyMeasure11"></Checkbox>
             </Col>
-            <Col span="11">
-              <Checkbox v-model="formValidate.safetyFireEquipment">作业监护措施：效仿器材</Checkbox>
-            </Col>
-            <Col span="11">
-              <Checkbox v-model="formValidate.safetyLifeLine">救生绳</Checkbox>
-            </Col>
+
+            <Checkbox v-model="formValidate.safetyFireEquipment">作业监护措施：效仿器材</Checkbox>
+
+            <Checkbox v-model="formValidate.safetyLifeLine">救生绳</Checkbox>
           </Row>
         </FormItem>
         <FormItem label="12" prop="safetyMeasure12">
@@ -190,8 +188,8 @@ body {
             <Col span="2">
               <Checkbox v-model="formValidate.safetyMeasure12"></Checkbox>
             </Col>
-            <Col span="4">其他补救措施：</Col>
-            <Col span="18">
+            <Col>其他补救措施：</Col>
+            <Col>
               <Input v-model="formValidate.safetyMeasure12Content"></Input>
             </Col>
           </Row>
@@ -213,13 +211,7 @@ body {
           </div>
         </FormItem>
         <FormItem label="签字日期">
-          <DatePicker
-            type="date"
-            placeholder
-            format="yyyy年MM月dd日"
-            v-model="formValidate.workPresonSignDate"
-            :editable="false"
-          ></DatePicker>
+          <datetime v-model="formValidate.workPresonSignDate" format="YYYY-MM-DD"></datetime>
         </FormItem>
         <FormItem>
           <!-- <Button  type="primary" f  @click="handleSubmit('formValidate')" >提交</Button> -->
@@ -235,6 +227,7 @@ import Vue from "vue";
 import Loading from "../../../hero/components/loading";
 import myHeader from "@/components/myHead";
 import sign from "@/components/signature";
+import { Picker, Datetime } from "vux";
 export default {
   data() {
     return {
@@ -287,7 +280,8 @@ export default {
   components: {
     Loading,
     myHeader,
-    sign
+    sign,
+    Datetime
   },
   mounted() {
     this.token = this.until.loGet("appToken");
@@ -335,11 +329,11 @@ export default {
         this.formValidate.workPersonnel.join(",");
 
       this.formValidate.workTime = this.until.formatTime(
-        this.formValidate.workTime
+        new Date(this.formValidate.workTime)
       );
 
       this.formValidate.workPresonSignDate = this.until.formatTime(
-        this.formValidate.workPresonSignDate
+        new Date(this.formValidate.workPresonSignDate)
       );
 
       //第一次提交处理

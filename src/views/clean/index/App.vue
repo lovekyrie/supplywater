@@ -54,6 +54,10 @@ body {
           margin-right: 30px;
         }
       }
+      span {
+        margin-right: 40px;
+        color: #f00;
+      }
       > img {
         margin-right: 40px;
         width: 0.3rem;
@@ -76,6 +80,7 @@ body {
         <img src="./img/mission.png">
         全部清洗记录
       </p>
+      <span>{{listTotal}}条</span>
       <img :src="toDetail">
     </div>
     <div @click="toWaitMaintenance()">
@@ -83,6 +88,7 @@ body {
         <img src="./img/xunjianbaobiao.png">
         待清洗列表
       </p>
+      <span>{{pendingTotal}}条</span>
       <img :src="toDetail">
     </div>
   </div>
@@ -101,12 +107,16 @@ export default {
       title: "保养模块",
       toDetail,
       headBack,
-      backWhite
+      backWhite,
+      listTotal: 0,
+      pendingTotal: 0,
+      pageNo: 1,
+      pageSize: 10
     };
   },
   components: {},
   created() {},
-  mounted() {
+  async mounted() {
     //通过Android原生返回一个登录的token，供我们本地存储
 
     this.app.InterfaceName("h5_setTokenToHtml5", { test: 12 }).then(res => {
@@ -117,6 +127,8 @@ export default {
       "appToken",
       `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmbGR5bGYiLCJpYXQiOjE1NTMzNDU0MTgsInN1YiI6IjI1ODUwODEwZmExZjQyZGI4MzBkZTIyZmVmM2ZjNzYyIiwiZXhwIjoxNTUzNDMxODE4fQ.cHgtW4uvw7bNS8N3XIXW3TRnRGM3pGtdP5B-Krgj3pA`
     ); */
+    this.listTotal = await this.getList();
+    this.pendingTotal = await this.getPendingList();
   },
   methods: {
     //全部保养
@@ -131,6 +143,54 @@ export default {
     },
     back() {
       this.app.InterfaceName("h5_historyBack", {});
+    },
+    getList() {
+      let $q = new Promise((resolve, reject) => {
+        this.token = this.until.loGet("appToken");
+        let param = {
+          pageNum: this.pageNo,
+          pageSize: this.pageSize
+        };
+        this.until
+          .postData(
+            "/inspect-api/cleanoutReport/getCleanOutReportList",
+            JSON.stringify(param),
+            this.token
+          )
+          .then(
+            res => {
+              if (res.code === 0 && res.data.result) {
+                resolve(res.data.total);
+              }
+            },
+            err => {}
+          );
+      });
+      return $q;
+    },
+    getPendingList() {
+      let $q = new Promise((resolve, reject) => {
+        this.token = this.until.loGet("appToken");
+        let param = {
+          pageNum: this.pageNo,
+          pageSize: this.pageSize
+        };
+        this.until
+          .postData(
+            "/inspect-api/cleanout/pagelist",
+            JSON.stringify(param),
+            this.token
+          )
+          .then(
+            res => {
+              if (res.code === 0 && res.data.result) {
+                resolve(res.data.total);
+              }
+            },
+            err => {}
+          );
+      });
+      return $q;
     }
   }
 };

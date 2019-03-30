@@ -167,7 +167,7 @@ body {
   <div id="container">
     <myHeader :title="title"></myHeader>
     <div class="main">
-      <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
+      <Form ref="formValidate" :model="formValidate" :label-width="100">
         <FormItem label="泵房名称" prop="waterBoxNm">
           <Input v-model="formValidate.waterBoxNm"></Input>
         </FormItem>
@@ -178,7 +178,7 @@ body {
           <Input v-model="formValidate.volume"></Input>
         </FormItem>
         <FormItem label="清洗时间" prop="cleanoutTm">
-          <DatePicker type="datetime" format="yyyy-MM-dd HH:mm" v-model="formValidate.cleanoutTm"></DatePicker>
+          <datetime v-model="formValidate.cleanoutTm" format="YYYY-MM-DD HH:mm"></datetime>
         </FormItem>
         <FormItem label="清洗人员" prop="cleanoutOperator">
           <Select v-model="formValidate.cleanoutOperator" filterable>
@@ -193,18 +193,17 @@ body {
           <Row>
             <Col span="6">
               <FormItem prop="drainOffFromTm">
-                <DatePicker type="datetime" format="HH:mm" v-model="formValidate.drainOffFromTm"></DatePicker>
+                <datetime v-model="formValidate.drainOffFromTm" format="YYYY-MM-DD HH:mm"></datetime>
               </FormItem>
             </Col>
             <Col span="3" style="text-align:center;">起，到</Col>
             <Col span="6">
               <FormItem prop="drainOffToTm">
-                <DatePicker
-                  type="datetime"
-                  format="HH:mm"
-                  @on-ok="confirmDrainOffToTm"
+                <datetime
+                  @on-confirm="confirmDrainOffToTm"
                   v-model="formValidate.drainOffToTm"
-                ></DatePicker>
+                  format="YYYY-MM-DD HH:mm"
+                ></datetime>
               </FormItem>
             </Col>
             <Col span="3" style="text-align:center;">止，共</Col>
@@ -219,18 +218,17 @@ body {
           <Row>
             <Col span="6">
               <FormItem prop="cleanoutFormTm">
-                <DatePicker type="datetime" format="HH:mm" v-model="formValidate.cleanoutFormTm"></DatePicker>
+                <datetime v-model="formValidate.cleanoutFormTm" format="YYYY-MM-DD HH:mm"></datetime>
               </FormItem>
             </Col>
             <Col span="3" style="text-align:center;">起，到</Col>
             <Col span="6">
               <FormItem prop="cleanoutToTm">
-                <DatePicker
-                  type="datetime"
-                  format="HH:mm"
-                  @on-ok="confirmCleanoutToTm"
+                <datetime
+                  @on-confirm="confirmCleanoutToTm"
                   v-model="formValidate.cleanoutToTm"
-                ></DatePicker>
+                  format="YYYY-MM-DD HH:mm"
+                ></datetime>
               </FormItem>
             </Col>
             <Col span="3" style="text-align:center;">止，共</Col>
@@ -275,22 +273,17 @@ body {
           <Row>
             <Col span="6">
               <FormItem prop="waterInjectionFromTm">
-                <DatePicker
-                  type="datetime"
-                  format="HH:mm"
-                  v-model="formValidate.waterInjectionFromTm"
-                ></DatePicker>
+                <datetime v-model="formValidate.waterInjectionFromTm" format="YYYY-MM-DD HH:mm"></datetime>
               </FormItem>
             </Col>
             <Col span="3" style="text-align:center;">起，到</Col>
             <Col span="6">
               <FormItem prop="waterInjectionToTm">
-                <DatePicker
-                  type="datetime"
-                  format="HH:mm"
-                  v-model="formValidate.waterInjectionToTm"
-                  @on-ok="confirmWaterInjectionToTm"
-                ></DatePicker>
+                <datetime
+                  @on-confirm="confirmWaterInjectionToTm"
+                  v-model="formValidate.cleanoutToTm"
+                  format="YYYY-MM-DD HH:mm"
+                ></datetime>
               </FormItem>
             </Col>
             <Col span="3" style="text-align:center;">止，共</Col>
@@ -302,7 +295,7 @@ body {
           </Row>
         </FormItem>
         <FormItem label="完成时间" prop="checkTime">
-          <DatePicker type="datetime" format="yyyy-MM-dd HH:mm" v-model="formValidate.checkTime"></DatePicker>
+          <datetime v-model="formValidate.checkTime" format="YYYY-MM-DD HH:mm"></datetime>
         </FormItem>
 
         <FormItem label="清洗前照片">
@@ -398,7 +391,7 @@ body {
 
 <script>
 import Vue from "vue";
-import { XButton, Popup, Search, Picker, Datetime } from "vux";
+import { Datetime } from "vux";
 import Loading from "../../../hero/components/loading";
 import myHeader from "@/components/myHead";
 export default {
@@ -445,44 +438,13 @@ export default {
         adviseAssess: "",
         recorder: "",
         principal: ""
-      },
-      ruleValidate: {
-        billCode: [
-          { required: true, message: "请输入维修单号", trigger: "blur" }
-        ],
-        applicationTm: [
-          {
-            required: true,
-            type: "date",
-            message: "请选择申请时间",
-            trigger: "change"
-          }
-        ],
-        applicantUnitCd: [
-          { required: true, message: "请选择申请单位", trigger: "change" }
-        ],
-        proposer: [
-          { required: true, message: "请输入申请人", trigger: "blur" }
-        ],
-        mob: [{ required: true, message: "请输入联系电话", trigger: "blur" }],
-        repairUnitCd: [
-          { required: true, message: "请选择维修单位", trigger: "change" }
-        ],
-        estimatedCost: [
-          { required: true, message: "请输入预算费用", trigger: "blur" }
-        ],
-        diagnosis: [
-          { required: true, message: "请输入故障描述", trigger: "blur" }
-        ],
-        replaceFittingCd: [
-          { required: true, message: "请选择是否更换配件", trigger: "change" }
-        ]
       }
     };
   },
   components: {
     Loading,
-    myHeader
+    myHeader,
+    Datetime
   },
   mounted() {
     this.token = this.until.loGet("appToken");
@@ -547,6 +509,22 @@ export default {
         this.formValidate.cleanoutjobPk = this.cleanoutjobPk;
       }
 
+      //deal with datetime
+      let timeArr = [
+        "cleanoutTm",
+        "drainOffFromTm",
+        "drainOffToTm",
+        "cleanoutFormTm",
+        "cleanoutToTm",
+        "waterInjectionFromTm",
+        "waterInjectionToTm",
+        "checkTime"
+      ];
+
+      time.timeArr.forEach(item => {
+        this.formValidate[item] =
+          this.formValidate[item] && new Date(this.formValidate[item]);
+      });
       this.clearImgPreList = [];
       this.uploadList.forEach(item => {
         this.clearImgPreList.push(item.url);
@@ -649,7 +627,7 @@ export default {
       );
     },
     calDistanceTime(fr, to) {
-      let offset = to.getTime() - fr.getTime();
+      let offset = new Date(to).getTime() - new Date(fr).getTime();
       //算时间
       let hour = Math.floor(offset / 1000 / 60 / 60);
       let timeRemain = offset % (1000 * 60 * 60);
