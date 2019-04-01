@@ -169,7 +169,7 @@ export default {
                   });
                   this.list.push(...res.data.result);
                 }
-              } else if (res.code === 1000) {
+              } else {
                 this.$hero.msg.show({
                   text: `${res.message}`,
                   times: 1500

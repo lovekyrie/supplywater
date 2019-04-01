@@ -181,13 +181,14 @@ body {
           <datetime v-model="formValidate.cleanoutTm" format="YYYY-MM-DD HH:mm"></datetime>
         </FormItem>
         <FormItem label="清洗人员" prop="cleanoutOperator">
-          <Select v-model="formValidate.cleanoutOperator" filterable>
-            <Option
-              v-for="(item,index) in regionUserList"
+          <el-select v-model="formValidate.cleanoutOperator" placeholder="请选择">
+            <el-option
+              v-for="item in regionUserList"
+              :key="item.nkNm"
+              :label="item.nkNm"
               :value="item.nkNm"
-              :key="index"
-            >{{item.nkNm}}</Option>
-          </Select>
+            ></el-option>
+          </el-select>
         </FormItem>
         <FormItem label="水箱排水时间">
           <Row>
@@ -246,22 +247,24 @@ body {
           <Input v-model="formValidate.liquorStrength"></Input>
         </FormItem>
         <FormItem label="配置人员" prop="preparationer">
-          <Select v-model="formValidate.preparationer" filterable>
-            <Option
-              v-for="(item,index) in regionUserList"
+          <el-select v-model="formValidate.preparationer" placeholder="请选择">
+            <el-option
+              v-for="item in regionUserList"
+              :key="item.nkNm"
+              :label="item.nkNm"
               :value="item.nkNm"
-              :key="index"
-            >{{item.nkNm}}</Option>
-          </Select>
+            ></el-option>
+          </el-select>
         </FormItem>
         <FormItem label="监督人员" prop="supervisor">
-          <Select v-model="formValidate.supervisor" filterable>
-            <Option
-              v-for="(item,index) in regionUserList"
+          <el-select v-model="formValidate.supervisor" placeholder="请选择">
+            <el-option
+              v-for="item in regionUserList"
+              :key="item.nkNm"
+              :label="item.nkNm"
               :value="item.nkNm"
-              :key="index"
-            >{{item.nkNm}}</Option>
-          </Select>
+            ></el-option>
+          </el-select>
         </FormItem>
         <FormItem label="浊度（NTU）" prop="turbidity">
           <Input v-model="formValidate.turbidity"></Input>
@@ -281,7 +284,7 @@ body {
               <FormItem prop="waterInjectionToTm">
                 <datetime
                   @on-confirm="confirmWaterInjectionToTm"
-                  v-model="formValidate.cleanoutToTm"
+                  v-model="formValidate.waterInjectionToTm"
                   format="YYYY-MM-DD HH:mm"
                 ></datetime>
               </FormItem>
@@ -369,13 +372,14 @@ body {
           ></Input>
         </FormItem>
         <FormItem label="记录人" prop="recorder">
-          <Select v-model="formValidate.recorder" filterable>
-            <Option
-              v-for="(item,index) in regionUserList"
+          <el-select v-model="formValidate.recorder" placeholder="请选择">
+            <el-option
+              v-for="item in regionUserList"
+              :key="item.nkNm"
+              :label="item.nkNm"
               :value="item.nkNm"
-              :key="index"
-            >{{item.nkNm}}</Option>
-          </Select>
+            ></el-option>
+          </el-select>
         </FormItem>
         <FormItem label="项目负责人" prop="principal">
           <Input v-model="formValidate.principal"></Input>
@@ -521,9 +525,10 @@ export default {
         "checkTime"
       ];
 
-      time.timeArr.forEach(item => {
-        this.formValidate[item] =
-          this.formValidate[item] && new Date(this.formValidate[item]);
+      timeArr.forEach(item => {
+        this.formValidate[item] = this.formValidate[item]
+          ? new Date(this.formValidate[item])
+          : "";
       });
       this.clearImgPreList = [];
       this.uploadList.forEach(item => {

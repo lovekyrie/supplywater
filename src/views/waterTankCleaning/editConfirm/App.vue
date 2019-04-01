@@ -183,15 +183,9 @@ body {
         </FormItem>
         <FormItem label="11" prop="safetyMeasure11">
           <Row>
-            <Col span="2">
-              <Checkbox disabled v-model="formValidate.safetyMeasure11"></Checkbox>
-            </Col>
-            <Col span="11">
-              <Checkbox disabled v-model="formValidate.safetyFireEquipment">作业监护措施：效仿器材</Checkbox>
-            </Col>
-            <Col span="11">
-              <Checkbox disabled v-model="formValidate.safetyLifeLine">救生绳</Checkbox>
-            </Col>
+            <Checkbox disabled v-model="formValidate.safetyMeasure11">准确的作业监护措施：消防器材</Checkbox>
+            <Checkbox disabled v-model="formValidate.safetyFireEquipment">救生绳</Checkbox>
+            <Checkbox disabled v-model="formValidate.safetyLifeLine">急救箱</Checkbox>
           </Row>
         </FormItem>
         <FormItem label="12" prop="safetyMeasure12">
@@ -295,7 +289,7 @@ export default {
     Loading,
     myHeader,
     sign,
-    DateTime
+    Datetime
   },
   mounted() {
     this.token = this.until.loGet("appToken");
@@ -337,12 +331,13 @@ export default {
     add() {
       this.entity.id = this.formValidate.id;
       this.entity.cleanoutjobPk = this.cleanoutjobPk;
-      this.entity.finishWorkDate =
-        this.entity.finishWorkDate &&
-        this.until.formatTime(new Date(this.entity.finishWorkDate));
-      this.entity.departmentPresonSignDate =
-        this.entity.departmentPresonSignDate &&
-        this.until.formatTime(new Date(this.entity.departmentPresonSignDate));
+      this.entity.finishWorkDate = this.entity.finishWorkDate
+        ? this.until.formatTime(new Date(this.entity.finishWorkDate))
+        : "";
+      this.entity.departmentPresonSignDate = this.entity
+        .departmentPresonSignDate
+        ? this.until.formatTime(new Date(this.entity.departmentPresonSignDate))
+        : "";
       this.until
         .postData(
           "/inspect-api/cleanout/affirmCleanJob",

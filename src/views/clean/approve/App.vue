@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="less" scoped]>
 html,
 body {
   width: 100%;
@@ -69,6 +69,13 @@ body {
   width: 70% !important;
   margin: auto;
 }
+.demo1-item {
+  border: 1px solid #ececec;
+  padding: 5px 15px;
+}
+.demo1-item-selected {
+  border: 1px solid green;
+}
 </style>
 
 <template>
@@ -97,32 +104,36 @@ body {
         <FormItem label="主要危险因素" prop="mainRiskFactors">
           <Input v-model="formValidate.mainRiskFactors" disabled></Input>
         </FormItem>
-        <FormItem label="监护人" prop="keepPersonnel">
-          <Select v-model="formValidate.keepPersonnel" filterable>
-            <Option
-              v-for="(item,index) in regionUserList"
+
+        <FormItem label="监护人">
+          <el-select v-model="formValidate.keepPersonnel" placeholder="请选择">
+            <el-option
+              v-for="item in regionUserList"
+              :key="item.nkNm"
+              :label="item.nkNm"
               :value="item.nkNm"
-              :key="index"
-            >{{item.nkNm}}</Option>
-          </Select>
+            ></el-option>
+          </el-select>
         </FormItem>
-        <FormItem label="填写人" prop="writePersonnel">
-          <Select v-model="formValidate.writePersonnel" filterable>
-            <Option
-              v-for="(item,index) in regionUserList"
+        <FormItem label="填写人">
+          <el-select v-model="formValidate.writePersonnel" placeholder="请选择">
+            <el-option
+              v-for="item in regionUserList"
+              :key="item.nkNm"
+              :label="item.nkNm"
               :value="item.nkNm"
-              :key="index"
-            >{{item.nkNm}}</Option>
-          </Select>
+            ></el-option>
+          </el-select>
         </FormItem>
-        <FormItem label="作业人" prop="workPersonnel">
-          <Select multiple v-model="formValidate.workPersonnel" filterable>
-            <Option
-              v-for="(item,index) in regionUserList"
+        <FormItem label="作业人">
+          <el-select multiple v-model="formValidate.workPersonnel" placeholder="请选择">
+            <el-option
+              v-for="item in regionUserList"
+              :key="item.nkNm"
+              :label="item.nkNm"
               :value="item.nkNm"
-              :key="index"
-            >{{item.nkNm}}</Option>
-          </Select>
+            ></el-option>
+          </el-select>
         </FormItem>
         <FormItem label="开工时间" prop="workTime">
           <datetime v-model="formValidate.workTime" format="YYYY-MM-DD HH:mm"></datetime>
@@ -174,13 +185,11 @@ body {
         </FormItem>
         <FormItem label="11" prop="safetyMeasure11">
           <Row>
-            <Col span="2">
-              <Checkbox v-model="formValidate.safetyMeasure11"></Checkbox>
-            </Col>
+            <Checkbox v-model="formValidate.safetyMeasure11">准确的作业监护措施：消防器材</Checkbox>
 
-            <Checkbox v-model="formValidate.safetyFireEquipment">作业监护措施：效仿器材</Checkbox>
+            <Checkbox v-model="formValidate.safetyFireEquipment">救生绳</Checkbox>
 
-            <Checkbox v-model="formValidate.safetyLifeLine">救生绳</Checkbox>
+            <Checkbox v-model="formValidate.safetyLifeLine">急救箱</Checkbox>
           </Row>
         </FormItem>
         <FormItem label="12" prop="safetyMeasure12">
@@ -227,7 +236,7 @@ import Vue from "vue";
 import Loading from "../../../hero/components/loading";
 import myHeader from "@/components/myHead";
 import sign from "@/components/signature";
-import { Picker, Datetime } from "vux";
+import { Datetime } from "vux";
 export default {
   data() {
     return {
@@ -293,6 +302,9 @@ export default {
     this.getCleanOutJob();
   },
   methods: {
+    changeWritePersonnel(val) {
+      this.formValidate.writePersonnel = val;
+    },
     //签名弹出
     getSign(type) {
       this.type = type;

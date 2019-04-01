@@ -127,8 +127,9 @@ export default {
       "appToken",
       `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmbGR5bGYiLCJpYXQiOjE1NTMzNDU0MTgsInN1YiI6IjI1ODUwODEwZmExZjQyZGI4MzBkZTIyZmVmM2ZjNzYyIiwiZXhwIjoxNTUzNDMxODE4fQ.cHgtW4uvw7bNS8N3XIXW3TRnRGM3pGtdP5B-Krgj3pA`
     ); */
-    this.listTotal = await this.getList();
-    this.pendingTotal = await this.getPendingList();
+    let data = await this.getList();
+    this.listTotal = data.hasCount;
+    this.pendingTotal = data.noCount;
   },
   methods: {
     //全部保养
@@ -148,47 +149,16 @@ export default {
       let $q = new Promise((resolve, reject) => {
         this.token = this.until.loGet("appToken");
         let param = {
-          pageNum: this.pageNo,
-          pageSize: this.pageSize
+          token: this.token
         };
-        this.until
-          .postData(
-            "/inspect-api/cleanoutReport/getCleanOutReportList",
-            JSON.stringify(param),
-            this.token
-          )
-          .then(
-            res => {
-              if (res.code === 0 && res.data.result) {
-                resolve(res.data.total);
-              }
-            },
-            err => {}
-          );
-      });
-      return $q;
-    },
-    getPendingList() {
-      let $q = new Promise((resolve, reject) => {
-        this.token = this.until.loGet("appToken");
-        let param = {
-          pageNum: this.pageNo,
-          pageSize: this.pageSize
-        };
-        this.until
-          .postData(
-            "/inspect-api/cleanout/pagelist",
-            JSON.stringify(param),
-            this.token
-          )
-          .then(
-            res => {
-              if (res.code === 0 && res.data.result) {
-                resolve(res.data.total);
-              }
-            },
-            err => {}
-          );
+        this.until.get("/inspect-api/cleanout/getRecordsCount", param).then(
+          res => {
+            if (res.code === 0 && res.data) {
+              resolve(res.data);
+            }
+          },
+          err => {}
+        );
       });
       return $q;
     }

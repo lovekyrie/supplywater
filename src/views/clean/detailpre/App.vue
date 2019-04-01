@@ -110,15 +110,9 @@ body {
         </p>
         <p>
           <Row>
-            <Col span="2">
-              <Checkbox v-model="info.safetyMeasure11">11.</Checkbox>
-            </Col>
-            <Col span="11">
-              <Checkbox v-model="info.safetyFireEquipment">作业监护措施：效仿器材</Checkbox>
-            </Col>
-            <Col span="11">
-              <Checkbox v-model="info.safetyLifeLine">救生绳</Checkbox>
-            </Col>
+            <Checkbox v-model="info.safetyMeasure11">11.准确的作业监护措施：消防器材</Checkbox>
+            <Checkbox v-model="info.safetyFireEquipment">救生绳</Checkbox>
+            <Checkbox v-model="info.safetyLifeLine">急救箱</Checkbox>
           </Row>
         </p>
         <p>

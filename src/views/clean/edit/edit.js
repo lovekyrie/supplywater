@@ -1,6 +1,14 @@
 import Vue from 'vue';
 import init from 'assets/js/init.js'
+import "element-ui/lib/theme-chalk/index.css";
+import {
+  Select,
+  Option,
+}
+from 'element-ui';
 Vue.use(init);
+Vue.use(Select);
+Vue.use(Option);
 import App from './App';
 
 new Vue({

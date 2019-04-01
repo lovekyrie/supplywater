@@ -135,6 +135,7 @@ export default {
       ipPk: "",
       type: "", //编辑类型，确认还是回访
       type2: "", //初次确认还是最终确认
+      token: "",
       myDate: {
         date: "",
         time: ""
@@ -215,6 +216,7 @@ export default {
   mounted() {
     this.type = this.until.getQueryString("type");
     this.ipPk = this.until.getQueryString("ipPk");
+    this.token = this.until.loGet("appToken");
     this.getInfo();
     console.log(this.until.getToken());
   },
@@ -227,7 +229,8 @@ export default {
           this.until
             .postData(
               "/ph/dispatchSend/edit",
-              JSON.stringify(this.formValidate)
+              JSON.stringify(this.formValidate),
+              this.tokens
             )
             .then(res => {
               if (res.status == 200) {
@@ -243,7 +246,9 @@ export default {
       });
     },
     handleSubmit2() {
-      this.formValidate.dealStatus = this.formValidate.dealStatus == 0 ? 1 : 5;
+      this.formValidate.dealStatus = this.formValidate.dealStatus == 0 ? 1 : 6;
+
+      console.log(JSON.stringify(this.formValidate));
       this.until
         .postData("/ph/dispatchSend/edit", JSON.stringify(this.formValidate))
         .then(res => {

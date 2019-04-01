@@ -141,6 +141,16 @@ export default {
     Loading,
     myHeader
   },
+  created() {
+    this.app.InterfaceName("h5_setTokenToHtml5", { test: 12 }).then(res => {
+      console.log("测试@@@=====>" + res);
+      this.until.loSave("appToken", res);
+    });
+    /*   this.until.loSave(
+      "appToken",
+      `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmbGR5bGYiLCJpYXQiOjE1NTQxMDQ2NDgsInN1YiI6Ijc1Y2RlZmUyZDg4MTQ3MjFhMWQxZGExN2MzMmVmNDc4IiwiZXhwIjoxNTU0MTkxMDQ4fQ.R7RRoYO6eA44yFirEGCAXLQALiDKmkt8sTVuKhA8JIM`
+    ); */
+  },
   mounted() {
     this.type = this.until.getQueryString("type")
       ? this.until.getQueryString("type")

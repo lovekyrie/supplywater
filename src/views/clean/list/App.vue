@@ -89,12 +89,12 @@ body {
             {{item.waterBoxNm}}
           </p>
           <p>
-            <span>计划计划时间：</span>
-            {{item.frTm }}
+            <span>清洗时间：</span>
+            {{item.cleanoutTm }}
           </p>
           <p>
-            <span>计划完成时间：</span>
-            {{item.toTm }}
+            <span>完成时间：</span>
+            {{item.checkTime }}
           </p>
           <p>
             <span>水箱编号：</span>
@@ -168,8 +168,14 @@ export default {
 
               if (res.code === 0 && res.data.result) {
                 res.data.result.forEach(item => {
-                  item.frTm = this.until.formatDay("yyyy年mm月dd日", item.frTm);
-                  item.toTm = this.until.formatDay("yyyy年mm月dd日", item.toTm);
+                  item.cleanoutTm = this.until.formatDay(
+                    "yyyy年MM月dd日",
+                    item.cleanoutTm
+                  );
+                  item.checkTime = this.until.formatDay(
+                    "yyyy年MM月dd日",
+                    item.checkTime
+                  );
                 });
                 this.list.push(...res.data.result);
                 this.total = res.data.total;
