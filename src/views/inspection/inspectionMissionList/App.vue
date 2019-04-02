@@ -39,7 +39,7 @@ body {
     <Spin size="large" fix v-if="spinShow"></Spin>
     <myHeader :title="title" search="inspectionMissionList" indexBack="true"></myHeader>
     <scroll class="main" :on-reach-bottom="handleReachBottom">
-      <Card dis-hover v-for="(item, index) in list" class="list" :key="index">
+      <Card dis-hover v-for="item in list" class="list" :key="item.inspTaskPk">
         <div @click="toDetail(item.inspTaskPk)">
           <p>
             <span>区域：</span>

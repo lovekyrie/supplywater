@@ -71,11 +71,11 @@ body {
         <p>水箱注水时间：{{info.waterInjectionFromTm}}-{{info.waterInjectionToTm}},共计：{{info.waterInjectionAmtTm}}</p>
         <p>完成时间：{{info.checkTime}}</p>
         <p>清洗前照片：</p>
-        <div v-for="(item, index) in info.clearImgPre" :key="index">
+        <div v-for="item in info.clearImgPre" :key="item">
           <img :src="item" alt>
         </div>
         <p>清洗前照片：</p>
-        <div v-for="(item, index) in info.clearImgPost" :key="index">
+        <div v-for="item in info.clearImgPost" :key="item">
           <img :src="item" alt>
         </div>
       </div>

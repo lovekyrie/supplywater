@@ -70,7 +70,7 @@ body {
     <p style="text-align: center; line-height: .3rem" v-show="total==0">暂无数据</p>
 
     <scroll class="main" :on-reach-bottom="handleReachBottom">
-      <Card dis-hover v-for="(item, index) in list" class="list" :key="index">
+      <Card dis-hover v-for="item in list" class="list" :key="item.deviceRepairPk">
         <div @click="toDetail(item.deviceRepairPk,item.devicePk)">
           <p>
             <span>设备编号：</span>

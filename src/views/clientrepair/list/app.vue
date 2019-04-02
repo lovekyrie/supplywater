@@ -66,11 +66,11 @@ body {
 <template>
   <div id="container">
     <Spin size="large" fix v-if="spinShow"></Spin>
-    <myHeader :title="title" :search="search" :appBack="appBack" :add="add" ></myHeader>
+    <myHeader :title="title" :search="ifSearch" :appBack="appBack" :add="add"></myHeader>
     <p style="text-align: center; line-height: .3rem" v-show="total==0">暂无数据</p>
 
     <scroll class="main" :on-reach-bottom="handleReachBottom">
-      <Card dis-hover v-for="(item, index) in list" class="list" :key="index">
+      <Card dis-hover v-for="item in list" class="list" :key="item.deviceRepairPk">
         <div @click="toDetail(item.deviceRepairPk,item.devicePk)">
           <p>
             <span>设备编号：</span>
@@ -118,11 +118,11 @@ export default {
   data() {
     return {
       title: "设备维修申请",
-      search:true,
-      appBack:true,
+      ifSearch: true,
+      appBack: true,
       spinShow: false,
       noMore: false,
-      add:true,
+      add: true,
       pageNo: 1,
       pageSize: 10,
       total: 0,
@@ -155,24 +155,28 @@ export default {
       let $q = new Promise((resolve, reject) => {
         let query = new this.Query();
 
-       if(this.search.sbCd){
-         query.buildWhereClause("deviceCd", this.search.sbCd, "LK");
-       }
-       if(this.search.estateNm){
-         query.buildWhereClause("estateNm", this.search.estateNm, "LK");
-       }
-       if(this.search.districtCd){
-         query.buildWhereClause("deviceScatNm", this.search.districtCd, "LK");
-       }
-       if(this.search.billCode){
-         query.buildWhereClause("billCode", this.search.billCode, "LK");
-       }
-       if(this.search.applyUnit){
-         query.buildWhereClause("applicantUnitNm", this.search.applyUnit, "LK");
-       }
-       if(this.search.treatState){
-         query.buildWhereClause("statCd", this.search.treatState, "LK");
-       }
+        if (this.search.sbCd) {
+          query.buildWhereClause("deviceCd", this.search.sbCd, "LK");
+        }
+        if (this.search.estateNm) {
+          query.buildWhereClause("estateNm", this.search.estateNm, "LK");
+        }
+        if (this.search.districtCd) {
+          query.buildWhereClause("deviceScatNm", this.search.districtCd, "LK");
+        }
+        if (this.search.billCode) {
+          query.buildWhereClause("billCode", this.search.billCode, "LK");
+        }
+        if (this.search.applyUnit) {
+          query.buildWhereClause(
+            "applicantUnitNm",
+            this.search.applyUnit,
+            "LK"
+          );
+        }
+        if (this.search.treatState) {
+          query.buildWhereClause("statCd", this.search.treatState, "LK");
+        }
 
         query.buildPageClause(this.pageNo, this.pageSize);
         let param = query.getParam();

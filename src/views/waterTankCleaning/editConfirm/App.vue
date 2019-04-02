@@ -99,29 +99,17 @@ body {
         </FormItem>
         <FormItem label="监护人" prop="keepPersonnel">
           <Select v-model="formValidate.keepPersonnel" filterable disabled>
-            <Option
-              v-for="(item,index) in regionUserList"
-              :value="item.nkNm"
-              :key="index"
-            >{{item.nkNm}}</Option>
+            <Option v-for="item in regionUserList" :value="item.nkNm" :key="item">{{item.nkNm}}</Option>
           </Select>
         </FormItem>
         <FormItem label="填写人" prop="writePersonnel">
           <Select v-model="formValidate.writePersonnel" filterable disabled>
-            <Option
-              v-for="(item,index) in regionUserList"
-              :value="item.nkNm"
-              :key="index"
-            >{{item.nkNm}}</Option>
+            <Option v-for="item in regionUserList" :value="item.nkNm" :key="item">{{item.nkNm}}</Option>
           </Select>
         </FormItem>
         <FormItem label="作业人" prop="workPersonnel">
           <Select multiple v-model="formValidate.workPersonnel" filterable disabled>
-            <Option
-              v-for="(item,index) in regionUserList"
-              :value="item.nkNm"
-              :key="index"
-            >{{item.nkNm}}</Option>
+            <Option v-for="item in regionUserList" :value="item.nkNm" :key="item">{{item.nkNm}}</Option>
           </Select>
         </FormItem>
         <FormItem label="开工时间" prop="workTime">
@@ -183,9 +171,10 @@ body {
         </FormItem>
         <FormItem label="11" prop="safetyMeasure11">
           <Row>
-            <Checkbox disabled v-model="formValidate.safetyMeasure11">准确的作业监护措施：消防器材</Checkbox>
-            <Checkbox disabled v-model="formValidate.safetyFireEquipment">救生绳</Checkbox>
-            <Checkbox disabled v-model="formValidate.safetyLifeLine">急救箱</Checkbox>
+            <Checkbox disabled v-model="formValidate.safetyMeasure11">准确的作业监护措施：</Checkbox>
+            <Checkbox disabled v-model="formValidate.safetyFireEquipment">消防器材</Checkbox>
+            <Checkbox disabled v-model="formValidate.safetyLifeLine">救生绳</Checkbox>
+            <Checkbox disabled v-model="formValidate.safetyAidKit">急救箱</Checkbox>
           </Row>
         </FormItem>
         <FormItem label="12" prop="safetyMeasure12">
@@ -232,10 +221,10 @@ body {
           </div>
         </FormItem>
         <FormItem label="签字日期">
-          <datetime v-model="formValidate.departmentPresonSignDate" format="YYYY-MM-DD"></datetime>
+          <datetime v-model="entity.departmentPresonSignDate" format="YYYY-MM-DD"></datetime>
         </FormItem>
         <FormItem label="完工确认" prop="finishWorkDate">
-          <datetime v-model="formValidate.finishWorkDate" format="YYYY-MM-DD HH:mm"></datetime>
+          <datetime v-model="entity.finishWorkDate" format="YYYY-MM-DD HH:mm"></datetime>
         </FormItem>
         <FormItem label="确认人签名：">
           <div>
@@ -379,7 +368,7 @@ export default {
               );
               //处理false
               Object.keys(this.formValidate).forEach(item => {
-                let regex = /\d/g;
+                let regex = /\d$/g;
                 if (item.match(regex)) {
                   this.formValidate[item] =
                     this.formValidate[item] === 1 ? true : false;

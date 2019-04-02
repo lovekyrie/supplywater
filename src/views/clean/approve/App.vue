@@ -185,11 +185,12 @@ body {
         </FormItem>
         <FormItem label="11" prop="safetyMeasure11">
           <Row>
-            <Checkbox v-model="formValidate.safetyMeasure11">准确的作业监护措施：消防器材</Checkbox>
+            <Checkbox v-model="formValidate.safetyMeasure11">准确的作业监护措施：</Checkbox>
 
-            <Checkbox v-model="formValidate.safetyFireEquipment">救生绳</Checkbox>
+            <Checkbox v-model="formValidate.safetyFireEquipment">消防器材</Checkbox>
+            <Checkbox v-model="formValidate.safetyLifeLine">救生绳</Checkbox>
 
-            <Checkbox v-model="formValidate.safetyLifeLine">急救箱</Checkbox>
+            <Checkbox v-model="formValidate.safetyAidKit">急救箱</Checkbox>
           </Row>
         </FormItem>
         <FormItem label="12" prop="safetyMeasure12">
@@ -322,7 +323,7 @@ export default {
     add() {
       //处理false
       Object.keys(this.formValidate).forEach(item => {
-        let regex = /\d/g;
+        let regex = /\d$/g;
         if (item.match(regex)) {
           this.formValidate[item] = this.formValidate[item] ? 1 : 0;
         }

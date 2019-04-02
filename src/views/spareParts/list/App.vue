@@ -40,7 +40,7 @@ body {
     <Spin size="large" fix v-if="spinShow"></Spin>
     <myHeader :title="title" search="searchPlan" appBack="true"></myHeader>
     <scroll class="main" :on-reach-bottom="handleReachBottom">
-      <Card dis-hover v-for="(item, index) in list" class="list" :key="index">
+      <Card dis-hover v-for="item in list" class="list" :key="item.stockManagePk">
         <div>
           <p>
             <span>设备名称：</span>
@@ -155,13 +155,6 @@ export default {
       return $q;
     },
 
-    // change(val){
-    //   this.type = val
-    //   this.list = []
-    //   this.pageNo = 1
-    //     this.spinShow = true
-    //   this.getList()
-    // },
     //到底部时触发
     handleReachBottom() {
       return new Promise(resolve => {
@@ -176,30 +169,6 @@ export default {
       });
     }
   }
-
-  // filters:{
-  //     state(val){
-  //         if(val==0){
-  //             val='未确认'
-  //         }
-  //         if(val==1){
-  //             val='已确认'
-  //         }
-  //         if(val==2){
-  //             val='已接单'
-  //         }
-  //         if(val==3){
-  //             val='已处理'
-  //         }
-  //         if(val==4){
-  //             val='已回访'
-  //         }
-  //         if(val==5){
-  //             val='完成'
-  //         }
-  //         return val
-  //     }
-  // }
 };
 </script>
 

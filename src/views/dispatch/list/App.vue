@@ -82,7 +82,7 @@ body {
       <p @click="change(3)" :class="{active:type==3}">完成工单</p>
     </div>
     <scroll class="main" :on-reach-bottom="handleReachBottom">
-      <Card dis-hover v-for="(item, index) in list" class="list" :key="index">
+      <Card dis-hover v-for="item in list" class="list" :key="item.dispatchSendPk">
         <div @click="toDetail(item.dispatchSendPk)">
           <p>
             <span>工单来源：</span>

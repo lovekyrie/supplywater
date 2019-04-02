@@ -19,7 +19,7 @@
       </div>
       <!-- weather -->
       <div>
-        <dl v-for="(item, index) in castsList" :key="index">
+        <dl v-for="item in castsList" :key="item">
           <dt>{{item.dateName}}</dt>
           <dd>
             <div>

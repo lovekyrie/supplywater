@@ -75,7 +75,7 @@ body {
     <p style="text-align: center; line-height: .3rem" v-show="total==0">暂无数据</p>
 
     <scroll class="main" :on-reach-bottom="handleReachBottom">
-      <Card dis-hover v-for="(item, index) in list" class="list" :key="index">
+      <Card dis-hover v-for="item in list" class="list" :key="item.deviceRepairPk">
         <div @click="toDetail(item.deviceRepairPk)">
           <p>
             <span>设备编号：</span>
@@ -179,13 +179,20 @@ export default {
           query.buildWhereClause("billCode", this.search.billCode, "LK");
         }
         if (this.search.applyUnit) {
-          query.buildWhereClause("applicantUnitNm", this.search.applyUnit, "LK");
+          query.buildWhereClause(
+            "applicantUnitNm",
+            this.search.applyUnit,
+            "LK"
+          );
         }
         if (this.search.treatState) {
-            query.buildWhereClause("statCd", this.search.treatState, "LK");
-        }
-        else{
-           query.buildWhereClause("statCd",'30020.170,30020.180,30020.190', "IN"); //已确认 进行中 已完成
+          query.buildWhereClause("statCd", this.search.treatState, "LK");
+        } else {
+          query.buildWhereClause(
+            "statCd",
+            "30020.170,30020.180,30020.190",
+            "IN"
+          ); //已确认 进行中 已完成
         }
 
         query.buildPageClause(this.pageNo, this.pageSize);

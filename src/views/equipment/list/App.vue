@@ -62,7 +62,7 @@ body {
     <div class="menu" v-if="estateNm">（{{estateNm}}）小区设备登记表</div>
     <p style="text-align: center; line-height: .3rem" v-show="total==0">暂无数据</p>
     <scroll class="main" :on-reach-bottom="handleReachBottom">
-      <Card dis-hover v-for="(item, index) in list" class="list" :key="index">
+      <Card dis-hover v-for="item in list" class="list" :key="item.phDevicePk">
         <div @click="toDetail(item.phDevicePk)">
           <p>
             <span>设备名称：</span>

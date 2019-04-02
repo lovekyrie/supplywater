@@ -27,7 +27,7 @@ body {
     .ivu-date-picker {
       width: 100%;
     }
-    h3{
+    h3 {
       margin-bottom: 20px;
     }
   }
@@ -146,7 +146,7 @@ body {
 
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
         <h3>维修过程</h3>
-        <FormItem label="维修级别：" prop="repairLevel"  >
+        <FormItem label="维修级别：" prop="repairLevel">
           <Input v-model="formValidate.repairLevel" :disabled="isOver"></Input>
         </FormItem>
         <FormItem label="故障类型：" prop="faultType">
@@ -160,7 +160,7 @@ body {
             <Option v-for="item in treatStateList" :value="item.cd" :key="item.cd">{{item.nm}}</Option>
           </Select>
         </FormItem>
-        <FormItem label="完成时间："  prop="complateTm">
+        <FormItem label="完成时间：" prop="complateTm">
           <Row>
             <Col span="11">
               <FormItem>
@@ -176,7 +176,12 @@ body {
           <Input v-model="formValidate.repairCost" :disabled="isOver"></Input>
         </FormItem>
         <FormItem label="故障分析及工作明细：" prop="report">
-          <Input v-model="formValidate.report" type="textarea" :autosize="{minRows: 2,maxRows: 5}" :disabled="isOver"></Input>
+          <Input
+            v-model="formValidate.report"
+            type="textarea"
+            :autosize="{minRows: 2,maxRows: 5}"
+            :disabled="isOver"
+          ></Input>
         </FormItem>
         <h3>更换配件</h3>
         <FormItem label="是否更换配件" prop="replaceFittingCd">
@@ -189,58 +194,22 @@ body {
             </Radio>
           </RadioGroup>
         </FormItem>
-
         <FormItem label="配件名称:" prop="stockNm">
-          <Input  v-model="repInfo.stockNm" disabled></Input>
+          <Input v-model="repInfo.stockNm" disabled></Input>
         </FormItem>
-
         <FormItem label="规格型号:" prop="stockSpec">
-          <Input  v-model="repInfo.stockSpec" disabled></Input>
+          <Input v-model="repInfo.stockSpec" disabled></Input>
         </FormItem>
-
         <FormItem label="品牌:" prop="stockBrand">
-          <Input  v-model="repInfo.stockBrand" disabled></Input>
+          <Input v-model="repInfo.stockBrand" disabled></Input>
         </FormItem>
-
-
-
-        <!-- <FormItem  v-if="formValidate.replaceFittingCd=='10000.150'"  label="配件名称"  prop="deviceCd" >
-          <Select placeholder="请输入关键字"   v-model="formValidate.deviceCd"  filterable  @on-change="">
-            <Option  v-for="item in replaceList"  :value="item.stockManagePk"  >
-              {{item.deviceNm}},{{item.deviceSpec}},【{{item.deviceBrand}}】
-            </Option>
-          </Select>
-        </FormItem> -->
-
-        <!-- <table>
-          <thead>
-            <tr>
-              <th>配件名称</th>
-              <th>规格型号</th>
-              <th>品牌</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(item, index) in repairStockRoList" :key="index">
-              <td>{{item.deviceNm}}</td>
-              <td>{{item.deviceSpec}}</td>
-              <td>{{item.deviceBrand}}</td>
-            </tr>
-           <tr>
-           </tr>
-          </tbody>
-        </table> -->
-
-        <!-- <h3>反馈信息</h3>
-        <FormItem label="客户评价：" prop="clientEvel">
-          <Input v-model="formValidate.clientEvel"></Input>
-        </FormItem>
-        <FormItem label="详细意见：" prop="option">
-          <Input v-model="formValidate.option" type="textarea" :autosize="{minRows: 2,maxRows: 5}"></Input>
-        </FormItem> -->
         <FormItem>
           <Button type="primary" @click="handleSubmit('formValidate')" :disabled="isOver">提交</Button>
-          <Button @click="handleReset('formValidate')" style="margin-left: 8px" :disabled="isOver">重置</Button>
+          <Button
+            @click="handleReset('formValidate')"
+            style="margin-left: 8px"
+            :disabled="isOver"
+          >重置</Button>
         </FormItem>
       </Form>
     </div>
@@ -254,15 +223,15 @@ export default {
   data() {
     return {
       title: "设备维修详情",
-      isOver:false,
+      isOver: false,
       ipPk: "",
       repInfo: {},
-      replaceList:[],
+      replaceList: [],
       treatStateList: [],
       repairStockRoList: [],
       formValidate: {
-        replaceFittingCd:'',
-        deviceCd:'',
+        replaceFittingCd: "",
+        deviceCd: "",
         repairLevel: "",
         faultType: "",
         serviceman: "",
@@ -275,7 +244,7 @@ export default {
         clientEvel: "",
         option: ""
       },
-       modalValidate:{
+      modalValidate: {
         deviceCd: "",
         deviceNm: "",
         deviceSpec: "",
@@ -284,11 +253,26 @@ export default {
         stockManagePk: ""
       },
       ruleValidate: {
-        repairLevel: [ { required: true, message: "请输入维修级别", trigger: "blur" } ],
-        faultType: [ {required: true, message: "请输入故障类型", trigger: "blur" }   ],
-        serviceman: [{ required: true, message: "请输入维修人员", trigger: "blur" } ],
-        statCd: [{ required: true, message: "请选择维修状态", trigger: "change" }],
-        complateTm:[ { required: true ,type:"date",message:"请输入维修用时（小时）",trigger:"blur"}],
+        repairLevel: [
+          { required: true, message: "请输入维修级别", trigger: "blur" }
+        ],
+        faultType: [
+          { required: true, message: "请输入故障类型", trigger: "blur" }
+        ],
+        serviceman: [
+          { required: true, message: "请输入维修人员", trigger: "blur" }
+        ],
+        statCd: [
+          { required: true, message: "请选择维修状态", trigger: "change" }
+        ],
+        complateTm: [
+          {
+            required: true,
+            type: "date",
+            message: "请输入维修用时（小时）",
+            trigger: "blur"
+          }
+        ],
         //repairUsedTm:[ { required: true ,type:"number",message:"请输入维修用时（小时）",trigger:"blur"}],
         //repairCost:[ { required: true ,type:"number",message:"请输入维修费用（元）",trigger:"blur"}],
         report: [
@@ -304,16 +288,22 @@ export default {
         clientEvel: [
           { required: true, message: "请输入客户评价", trigger: "blur" }
         ],
-        option: [
-          { required: true, message: "请输入详细意见", trigger: "blur" }
-        ]
+        option: [{ required: true, message: "请输入详细意见", trigger: "blur" }]
       },
-       ruleModalValidate:{
-        deviceCd: [{ required: true, message: "请选择配件编号", trigger: "change" }],
-        deviceNm: [{ required: true, message: "请输入配件名称", trigger: "blur" }],
-        deviceSpec: [{ required: true, message: "请输入规格型号", trigger: "blur" }],
-        deviceBrand: [{ required: true, message: "请输入品牌", trigger: "blur" }],
-        stockNum: [{ required: true, message: "请输入数量", trigger: "blur" }],
+      ruleModalValidate: {
+        deviceCd: [
+          { required: true, message: "请选择配件编号", trigger: "change" }
+        ],
+        deviceNm: [
+          { required: true, message: "请输入配件名称", trigger: "blur" }
+        ],
+        deviceSpec: [
+          { required: true, message: "请输入规格型号", trigger: "blur" }
+        ],
+        deviceBrand: [
+          { required: true, message: "请输入品牌", trigger: "blur" }
+        ],
+        stockNum: [{ required: true, message: "请输入数量", trigger: "blur" }]
       }
     };
   },
@@ -325,62 +315,57 @@ export default {
     this.ipPk = this.until.getQueryString("ipPk");
     this.getInfo();
     this.getTreatStateList();
-    this.getDeviceCdList()
+    this.getDeviceCdList();
   },
   methods: {
     getInfo() {
       this.until.get("/ph/deviceRepair/info/" + this.ipPk).then(res => {
         this.repInfo = res.data;
         console.log(this.repInfo);
-       // this.formValidate.deviceCd = this.repInfo.stockId;
-       this.formValidate.replaceFittingCd = this.repInfo.replaceFittingCd;
+        // this.formValidate.deviceCd = this.repInfo.stockId;
+        this.formValidate.replaceFittingCd = this.repInfo.replaceFittingCd;
         var a = {
-            deviceNm:this.repInfo.stockNm,
-            deviceSpec:this.repInfo.stockSpec,
-            deviceBrand:this.repInfo.stockBrand,
-            stockManagePk:this.repInfo.stockId,
-            stockNum:1,
-        }
-        this.repairStockRoList.push(a)
-        
-        if (this.repInfo.statNm === '已完成' || this.repInfo.statNm === '已结束' ) {
+          deviceNm: this.repInfo.stockNm,
+          deviceSpec: this.repInfo.stockSpec,
+          deviceBrand: this.repInfo.stockBrand,
+          stockManagePk: this.repInfo.stockId,
+          stockNum: 1
+        };
+        this.repairStockRoList.push(a);
+
+        if (
+          this.repInfo.statNm === "已完成" ||
+          this.repInfo.statNm === "已结束"
+        ) {
           let query = new this.Query();
-          query.buildWhereClause("deviceRepairPk",this.repInfo.deviceRepairPk,"EQ");
+          query.buildWhereClause(
+            "deviceRepairPk",
+            this.repInfo.deviceRepairPk,
+            "EQ"
+          );
           let param = query.getParam();
-           this.until.get("/ph/repairProcess/list",param).then(res => {
-            console.log(res.data); 
-            this.formValidate = res.data.items[0]
+          this.until.get("/ph/repairProcess/list", param).then(res => {
+            console.log(res.data);
+            this.formValidate = res.data.items[0];
             this.formValidate.replaceFittingCd = this.repInfo.replaceFittingCd;
             this.formValidate.statCd = this.repInfo.statCd;
-            this.isOver=true
-
-
+            this.isOver = true;
+          });
+        }
       });
-    }
-
-
-
-      });
-      
-      
-    
-    
-  
-
-
     },
     getTreatStateList() {
       this.until.get("/general/cat/listByPrntCd?prntCd=30020").then(res => {
         if (res.status === "200") {
           this.treatStateList = res.data.items;
-          this.treatStateList=this.treatStateList.filter(item=>{
-            return item.cd==='30020.180' || item.cd==='30020.190'
-          })
+          this.treatStateList = this.treatStateList.filter(item => {
+            return item.cd === "30020.180" || item.cd === "30020.190";
+          });
         }
       });
     },
     //配件编号
-    getDeviceCdList(){
+    getDeviceCdList() {
       this.until.get("/ph/stockManage/list").then(res => {
         if (res.status === "200") {
           this.replaceList = res.data.items;
@@ -392,9 +377,10 @@ export default {
       this.$refs[name].validate(valid => {
         if (valid) {
           let myDate = this.until.formatDate(this.formValidate.applicationTm);
-          this.formValidate.applicationTm = myDate.year + "-" + myDate.month + "-" + myDate.day;
-    
-           this.repInfo.repairStockRoList=this.repairStockRoList;
+          this.formValidate.applicationTm =
+            myDate.year + "-" + myDate.month + "-" + myDate.day;
+
+          this.repInfo.repairStockRoList = this.repairStockRoList;
           //维修单号 后端生成
           Object.assign(this.repInfo, this.formValidate);
           this.until

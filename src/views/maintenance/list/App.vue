@@ -82,7 +82,7 @@ body {
       <p @click="change(3)" :class="{active:type==3}">已过期</p>
     </div>
     <scroll class="main" :on-reach-bottom="handleReachBottom">
-      <Card dis-hover v-for="(item, index) in list" class="list" :key="index">
+      <Card dis-hover v-for="item in list" class="list" :key="item.maintTaskPk">
         <div @click="toDetail(item.maintTaskPk)">
           <p>
             <span>区域：</span>
