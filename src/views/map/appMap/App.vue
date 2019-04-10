@@ -373,10 +373,7 @@ export default {
     },
     //跳转维修管理
     lookWX(val) {
-      // window.open(
-      //   "http://111.2.25.208:6081/view/ph/deviceRepair/deviceRepairComplate.html?estateNm=" +
-      //     val
-      // );
+    
       let search = {
         estateNm: val
       };
@@ -385,10 +382,7 @@ export default {
     },
     //跳转巡检报表
     lookXJ(val) {
-      /*  window.open(
-        "http://111.2.25.208:6081/view/ph/insptaskAll/insptask.html?estateNm=" +
-          val
-      ); */
+     
       let search = {
         estateNm: val
       };

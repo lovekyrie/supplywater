@@ -173,8 +173,7 @@ export default {
       window.location.href =
         "http://111.2.25.208:6081/view/ph/equipment/equipmentInfoApp.html?pk=" +
         num;
-      //window.open("http://111.2.25.208:6081/view/ph/equipment/equipmentInfoApp.html?pk="+num)
-      //this.showDialogStyle = true;
+     
     },
 
     reset() {

@@ -29,11 +29,7 @@ export default {
     this.ipPk = this.until.getQueryString("ipPk");
     this.type = this.until.getQueryString("type");
     this.loadLineChart();
-    // this.src =
-    //   "http://111.2.25.208:6081/view/ph/equipment/equipment-chart.html?pk=" +
-    //   this.ipPk +
-    //   "&type=" +
-    //   this.type;
+   
   },
   methods: {
     loadLineChart() {

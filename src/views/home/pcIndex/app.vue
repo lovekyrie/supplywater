@@ -159,19 +159,15 @@
               <i>{{mapData.yinzhouNum}}</i>
             </span>
             <span>
-              （江东）
-              <i>{{mapData.jiangdongNum}}</i>
-            </span>
-            <span>
               海曙
               <i>{{mapData.haishuNum}}</i>
             </span>
-          </div>
-          <div>
             <span>
               江北
               <i>{{mapData.jiangbeiNum}}</i>
             </span>
+          </div>
+          <div>
             <span>
               北仑
               <i>{{mapData.beilunNum}}</i>

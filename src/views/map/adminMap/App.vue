@@ -83,7 +83,7 @@ html,body{
                                    <el-date-picker style="width:100%" value-format="yyyy-MM-dd" v-model="endTime"  type="date" placeholder="结束时间"> </el-date-picker>
                             </el-row>
                             <span slot="footer">
-                             <el-button type="primary" @click="startGps">确 定</el-button>
+                             <el-button type="primary" @click="startGps()">确 定</el-button>
                             </span>
                       </el-dialog> 
                   </el-row>
@@ -494,30 +494,33 @@ export default {
     },
     //开始回放巡检轨迹
     startGps() {
+
         let query = new this.Query();
         query.buildWhereClause('sysUserNm',this.userVal,'EQ');
         query.buildWhereClause('crtTm',this.startTime,'GE');
         query.buildWhereClause('crtTm',this.endTime,'LE');
+        query.buildOrderClause("crtTm","asc");
         let param = query.getParam();
-        this.until.get("/ph/inspGps/pageMap", param).then(res => {
+        this.until.get("/ph/inspGps/page", param).then(res => {
         var pts = [];
-        for (var i = 0; i < res.data[0].length; i++) {
+       
+        for (var i = 0; i < res.data.items.length; i++) {
          // console.log(res.data[0][i].inspGpsVo.crtTm);
           //pts.push(
-         var pt =   new BMap.Point(
-              res.data[0][i].inspGpsVo.longitude,
-              res.data[0][i].inspGpsVo.latitude,
+         var pt  =   new BMap.Point(
+              res.data.items[i].longitude,
+              res.data.items[i].latitude,
             )
-            pt.crtTm = res.data[0][i].inspGpsVo.crtTm
+            pt.crtTm = res.data.items[i].crtTm
           pts.push(pt)
         // );
         }
-        this.center.lng = res.data[0][0].inspGpsVo.longitude;
-        this.center.lat = res.data[0][0].inspGpsVo.latitude;
+        this.center.lng = res.data.items[0].longitude;
+        this.center.lat = res.data.items[0].latitude;
         this.zoom = 15;
         this.path = pts;
         this.polylinePath = pts;
-         console.log(this.polylinePath);
+         
       });
 
       this.dialogxj = false;
