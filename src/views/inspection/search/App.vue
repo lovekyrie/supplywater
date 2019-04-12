@@ -84,9 +84,6 @@ body {
 import Vue from "vue";
 import Loading from "../../../hero/components/loading";
 import myHeader from "../components/myHead";
-import ElementUI from "element-ui";
-import "element-ui/lib/theme-chalk/index.css";
-Vue.use(ElementUI);
 export default {
   data() {
     return {

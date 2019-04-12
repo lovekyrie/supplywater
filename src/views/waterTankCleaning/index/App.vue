@@ -112,9 +112,9 @@ export default {
       console.log("测试@@@=====>" + res);
       this.until.loSave("appToken", res);
     });
-    /*  this.until.loSave(
+    /* this.until.loSave(
       "appToken",
-      `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmbGR5bGYiLCJpYXQiOjE1NTQxNjY1OTEsInN1YiI6IjZhNDgxYTlkNmJmMTQ0NjM4YWRjYmRjMWQ3ZDdjMjgzIiwiZXhwIjoxNTU0MjUyOTkxfQ.0qWvcppxjr0q8sMmn2ygLcItvXSYZAJd8cgehD7YDdo`
+      `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmbGR5bGYiLCJpYXQiOjE1NTQ5NjIyNDIsInN1YiI6ImFlYjc1ZTI1NzM4YTQ2MDQ5NTA1NGZmNzI4MWJhNjNhIiwiZXhwIjoxNTU1MDQ4NjQyfQ.a2rbIt1oTgIBnmLGkdbFdZ33sVZsUJr-8y7JSDoHTp8`
     ); */
   },
   methods: {

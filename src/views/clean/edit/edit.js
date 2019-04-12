@@ -1,9 +1,8 @@
 import Vue from 'vue';
 import init from 'assets/js/init.js'
-import "element-ui/lib/theme-chalk/index.css";
 import {
   Select,
-  Option,
+  Option
 }
 from 'element-ui';
 Vue.use(init);

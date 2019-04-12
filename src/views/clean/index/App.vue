@@ -123,13 +123,13 @@ export default {
       console.log("测试@@@=====>" + res);
       this.until.loSave("appToken", res);
     });
-    /*   this.until.loSave(
+    /*    this.until.loSave(
       "appToken",
-      `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmbGR5bGYiLCJpYXQiOjE1NTMzNDU0MTgsInN1YiI6IjI1ODUwODEwZmExZjQyZGI4MzBkZTIyZmVmM2ZjNzYyIiwiZXhwIjoxNTUzNDMxODE4fQ.cHgtW4uvw7bNS8N3XIXW3TRnRGM3pGtdP5B-Krgj3pA`
+      `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJmbGR5bGYiLCJpYXQiOjE1NTUwMzIwNTMsInN1YiI6IjUzYTM4MDIyMjhmNjRkZDZiYmE4MzM2NWZkYTBjYjI5IiwiZXhwIjoxNTU1MTE4NDUzfQ.8n8vrB14hrRhvcIXwDYc7NZmO574XI9GXtBAogkowAk`
     ); */
-    let data = await this.getList();
-    this.listTotal = data.hasCount;
-    this.pendingTotal = data.noCount;
+    let { hasCount, noCount } = await this.getList();
+    this.listTotal = hasCount;
+    this.pendingTotal = noCount;
   },
   methods: {
     //全部保养

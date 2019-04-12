@@ -98,19 +98,13 @@ body {
           <Input v-model="formValidate.mainRiskFactors" disabled></Input>
         </FormItem>
         <FormItem label="监护人" prop="keepPersonnel">
-          <Select v-model="formValidate.keepPersonnel" filterable disabled>
-            <Option v-for="item in regionUserList" :value="item.nkNm" :key="item">{{item.nkNm}}</Option>
-          </Select>
+          <Input v-model="formValidate.keepPersonnel" disabled></Input>
         </FormItem>
         <FormItem label="填写人" prop="writePersonnel">
-          <Select v-model="formValidate.writePersonnel" filterable disabled>
-            <Option v-for="item in regionUserList" :value="item.nkNm" :key="item">{{item.nkNm}}</Option>
-          </Select>
+          <Input v-model="formValidate.writePersonnel" disabled></Input>
         </FormItem>
         <FormItem label="作业人" prop="workPersonnel">
-          <Select multiple v-model="formValidate.workPersonnel" filterable disabled>
-            <Option v-for="item in regionUserList" :value="item.nkNm" :key="item">{{item.nkNm}}</Option>
-          </Select>
+          <Input v-model="formValidate.workPersonnel" disabled></Input>
         </FormItem>
         <FormItem label="开工时间" prop="workTime">
           <DatePicker

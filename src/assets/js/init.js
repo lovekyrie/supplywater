@@ -1,17 +1,8 @@
-// require ('assets/css/index.less');
 require('assets/css/common.css');
-// var VueTouch = require('vue-touch')
-// require ('assets/css/reset.css');
-// require ('assets/css/help.css');
-// require ('assets/css/mobile.less');
-// require ('assets/css/project.less');
 import 'assets/js/ScreenAdaptive.js';
 import 'assets/js/vconsole.js';
-// import 'element-ui/lib/theme-default/index.css'
-// import ElementUI from 'element-ui'
 
 import "babel-polyfill"; // 解决 IE11 Promise对象未定义
-import axios from 'axios';
 import './vueFilter'; //全局过滤器F
 import {
   until,
@@ -21,10 +12,7 @@ import {
   hostUrl
 } from 'assets/js/until'
 import {
-  msg,
-  confirm,
-  loading,
-  dialog
+  msg
 } from 'hero'
 import 'assets/js/wconfig.js';
 import './iconfont' //字体库
@@ -34,14 +22,13 @@ import {
   Query
 } from 'assets/js/query'
 
-import {
+/* import {
   Lunar
 } from 'assets/js/time'
-
+ */
 //引入安卓 苹果
-import 'assets/js/Ios';
+// import 'assets/js/Ios';
 import 'assets/js/WebViewJavascriptBridge';
-
 
 import {
   LoadingPlugin
@@ -55,15 +42,13 @@ import 'iview/dist/styles/iview.css';
 export default {
   install(Vue) {
     Vue.use(iView)
-    // Vue.use(YDUI)
-    Vue.prototype.axios = axios;
     Vue.prototype.until = new until();
     Vue.prototype.reg = new reg();
     Vue.prototype.app = new app();
     Vue.prototype.postImgUrl = postImgUrl;
     Vue.prototype.hostUrl = hostUrl;
     Vue.prototype.Query = Query;
-    Vue.prototype.lunar = Lunar;
+    /*   Vue.prototype.lunar = Lunar; */
 
     Vue.use(LoadingPlugin);
     Vue.use(msg)

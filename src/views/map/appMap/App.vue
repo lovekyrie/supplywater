@@ -165,7 +165,8 @@ body {
         <li>负责人：{{infoWindow.principal}}</li>
         <li>具体地址：{{infoWindow.phAddr}}</li>
         <li>设备厂家：{{infoWindow.deviceSupplyerNm}}</li>
-        <li>供水区域：
+        <li>
+          供水区域：
           <el-button
             @click.native="clickWaterSupplyAreaNm(value)"
             type="text"
@@ -230,14 +231,12 @@ import Vue from "vue";
 import Loading from "../../../hero/components/loading";
 import { log } from "util";
 import BaiduMap from "vue-baidu-map";
-import ElementUI from "element-ui";
-import "element-ui/lib/theme-chalk/index.css";
+
 import { BmlLushu, BmlMarkerClusterer, BmlCurveLine } from "vue-baidu-map";
 // import { XButton, Popup, Search, Picker, Datetime} from "vux";
 Vue.use(BaiduMap, {
   ak: "hKosSsrAcdMkt2lcjYkwLrDA83qfoBvk"
 });
-Vue.use(ElementUI);
 export default {
   data() {
     return {
@@ -373,7 +372,6 @@ export default {
     },
     //跳转维修管理
     lookWX(val) {
-    
       let search = {
         estateNm: val
       };
@@ -382,7 +380,6 @@ export default {
     },
     //跳转巡检报表
     lookXJ(val) {
-     
       let search = {
         estateNm: val
       };

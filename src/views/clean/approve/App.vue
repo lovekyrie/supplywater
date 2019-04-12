@@ -438,7 +438,7 @@ export default {
               );
               //处理false
               Object.keys(this.formValidate).forEach(item => {
-                let regex = /\d/g;
+                let regex = /\d$/g;
                 if (item.match(regex)) {
                   this.formValidate[item] =
                     this.formValidate[item] === 1 ? true : false;

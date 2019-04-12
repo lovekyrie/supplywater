@@ -12,7 +12,12 @@
     "./src/assets/js/mui.previewimage.js",
     "./src/assets/js/mui.zoom.js"
   ],
-  "plugins": ["transform-runtime"],
+  "plugins": ["transform-runtime", [
+    "component", {
+      "librarayName": "element-ui",
+      "styleLibraryName": "theme-chalk"
+    }
+  ]],
   "comments": false,
   "env": {
     "test": {
