@@ -22,12 +22,6 @@ import {
   Query
 } from 'assets/js/query'
 
-/* import {
-  Lunar
-} from 'assets/js/time'
- */
-//引入安卓 苹果
-// import 'assets/js/Ios';
 import 'assets/js/WebViewJavascriptBridge';
 
 import {
@@ -52,19 +46,6 @@ export default {
 
     Vue.use(LoadingPlugin);
     Vue.use(msg)
-    // Vue.use(VueTouch, {name: 'v-touch'})
-    Vue.prototype.$dialog = {
-      // confirm: Confirm,
-      // alert: Alert,
-      // toast: Toast,
-      // notify: Notify,
-      // loading: Loading,
-    };
-    /* ===调用=== */
-    // this.$dialog.confirm({ /* 参数 */ });
-    // this.$dialog.alert({ /* 参数 */ });
-    // this.$dialog.toast({ /* 参数 */ });
-    // this.$dialog.notify({ /* 参数 */ });
-    // this.$dialog.loading({ /* 参数 */ });
+
   }
 }

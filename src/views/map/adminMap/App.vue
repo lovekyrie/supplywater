@@ -238,9 +238,10 @@ body {
 
 <script>
 import Vue from "vue";
+import Loading from "../../../hero/components/loading";
 import { log } from "util";
 import BaiduMap from "vue-baidu-map";
-// import { BmlLushu, BmlMarkerClusterer, BmlCurveLine } from "vue-baidu-map";
+import { BmlLushu, BmlMarkerClusterer, BmlCurveLine } from "vue-baidu-map";
 // import { XButton, Popup, Search, Picker, Datetime} from "vux";
 Vue.use(BaiduMap, {
   ak: "hKosSsrAcdMkt2lcjYkwLrDA83qfoBvk"
