@@ -31,13 +31,13 @@ body {
     <myHeader :title="title"></myHeader>
     <div class="main">
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
-        <FormItem label="工单来源" prop="dispatchFromNm">
-          <Select v-model="formValidate.dispatchFromNm">
+        <FormItem label="工单来源" prop="dispatchFromCd">
+          <Select v-model="formValidate.dispatchFromCd">
             <Option v-for="item in dispatchFromNm" :value="item.cd" :key="item.cd">{{item.nm}}</Option>
           </Select>
         </FormItem>
-        <FormItem label="部门" prop="bmNm">
-          <Select v-model="formValidate.bmNm">
+        <FormItem label="部门" prop="bmCd">
+          <Select v-model="formValidate.bmCd">
             <Option v-for="item in bmNm" :value="item.cd" :key="item.cd">{{item.nm}}</Option>
           </Select>
         </FormItem>
@@ -65,18 +65,27 @@ body {
         <FormItem label="反映电话" prop="reportPhone">
           <Input v-model="formValidate.reportPhone"></Input>
         </FormItem>
-        <FormItem label="故障现象分类" prop="proLvNm">
-          <Select v-model="formValidate.proLvNm">
+        <FormItem label="故障现象分类" prop="proLvCd">
+          <Select v-model="formValidate.proLvCd">
             <Option v-for="item in proLvNm" :value="item.cd" :key="item.cd">{{item.nm}}</Option>
           </Select>
         </FormItem>
-        <FormItem label="行政区域" prop="districtNm">
-          <Select v-model="formValidate.districtNm">
+        <FormItem label="行政区域" prop="districtCd">
+          <Select v-model="formValidate.districtCd">
             <Option v-for="item in districtNm" :value="item.cd" :key="item.cd">{{item.nm}}</Option>
           </Select>
         </FormItem>
-        <FormItem label="泵房地址" prop="address">
-          <Input v-model="formValidate.address"></Input>
+        <FormItem label="泵房名称" prop="estatePk">
+          <Select
+            placeholder="请输入关键字"
+            v-model="formValidate.estatePk"
+            filterable
+            remote
+            :remote-method="remotePhQuery"
+            @on-change="remoteQuery()"
+          >
+            <Option v-for="item in phList" :value="item.estatePk" :key="item.phCd">{{item.estateNm}}</Option>
+          </Select>
         </FormItem>
         <FormItem label="问题详情" prop="proContent">
           <Input
@@ -104,6 +113,10 @@ export default {
   data() {
     return {
       title: "新建工单",
+      token: "",
+      loading1: false,
+      phList: [],
+      equipmentList: [],
       dispatchFromNm: [
         {
           cd: "gd120.01",
@@ -132,15 +145,15 @@ export default {
       formValidate: {
         date: "",
         time: "",
-        dispatchFromNm: "", //工单来源
-        bmNm: "", //部门
+        dispatchFromCd: "", //工单来源
+        bmCd: "", //部门
         sendTm: "", //派单间日期
         dealLimit: "", //处理时限
         reportMan: "", //反映人
         reportPhone: "", //反映人电话号码
-        proLvNm: "", //故障现象
-        districtNm: "", //行政区域
-        address: "", //泵房地址
+        proLvCd: "", //故障现象
+        districtCd: "", //行政区域
+        estateCd: "", //泵房地址
         proContent: "", //问题详情
         receiveMsg: "" //接单备注
       },
@@ -198,7 +211,15 @@ export default {
     myHeader
   },
   mounted() {
-    this.getSelect();
+    let cookieVal = this.until.getCookie("yui2-token");
+    if (!cookieVal) {
+      let promise = this.until.login();
+      promise.then(res => {
+        this.getSelect();
+      });
+    } else {
+      this.getSelect();
+    }
   },
   methods: {
     //提交
@@ -238,6 +259,58 @@ export default {
     //取消
     handleReset(name) {
       this.$refs[name].resetFields();
+    },
+    remotePhQuery(val) {
+      if (val) {
+        this.loading1 = true;
+        let query = new this.Query();
+        query.buildWhereClause("phNm", val, "LK");
+        let param = query.getParam();
+        setTimeout(() => {
+          this.until.get("/ph/pumph/list", param).then(res => {
+            if (res.status === "200") {
+              this.phList = res.data.items;
+            } else {
+              this.phList = [];
+            }
+          });
+        }, 200);
+      } else {
+        this.phList = [];
+      }
+    },
+    remoteQuery(val) {
+      this.loading1 = true;
+      let query = new this.Query();
+      if (val) {
+        query.buildWhereClause("deviceCd", val, "LK");
+      } else {
+        if (this.formValidate.estateNm) {
+          query.buildWhereClause("estateNm", this.formValidate.estateNm, "EQ");
+        }
+        if (this.deviceBigPk) {
+          query.buildWhereClause("deviceBcatCd", this.deviceBigPk, "EQ");
+        }
+        if (this.deviceSmallPk) {
+          query.buildWhereClause("deviceScatCd", this.deviceSmallPk, "EQ");
+        }
+        if (this.deviceDPk) {
+          query.buildWhereClause("deviceDcatCd", this.deviceDPk, "EQ");
+        }
+        if (this.deviceNm) {
+          query.buildWhereClause("deviceNm", this.deviceNm, "EQ");
+        }
+      }
+      let param = query.getParam();
+      setTimeout(() => {
+        this.until.get("/ph/device/list", param).then(res => {
+          if (res.status === "200") {
+            this.equipmentList = res.data.items;
+          } else {
+            this.equipmentList = [];
+          }
+        });
+      }, 200);
     },
     //获取选项数据
     getSelect() {

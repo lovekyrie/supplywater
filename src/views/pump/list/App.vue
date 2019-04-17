@@ -99,6 +99,14 @@ body {
             <span>物业电话：</span>
             {{item.wyPhone}}
           </p>
+          <p>
+            <span>设备商：</span>
+            {{item.deviceSupplyerNm}}
+          </p>
+          <p>
+            <span>泵房位置信息：</span>
+            {{item.phAddr}}
+          </p>
           <img src="../components/img/toDetail.png">
           <p>
             <span @click.stop="map(item.lng,item.lat)">导航</span>

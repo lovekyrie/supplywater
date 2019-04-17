@@ -62,7 +62,7 @@ body {
           <p>反映人电话：{{formValidate.reportPhone }}</p>
           <p>故障现象分类：{{formValidate.proLvNm}}</p>
           <p>行政区域：{{formValidate.districtNm}}</p>
-          <p>泵房地址：{{formValidate.address}}</p>
+          <p>泵房名称：{{formValidate.estateNm}}</p>
           <p>问题详情：{{formValidate.proContent}}</p>
           <p>接单备注：{{formValidate.receiveMsg}}</p>
         </div>
@@ -230,7 +230,7 @@ export default {
             .postData(
               "/ph/dispatchSend/edit",
               JSON.stringify(this.formValidate),
-              this.tokens
+              this.token
             )
             .then(res => {
               if (res.status == 200) {
