@@ -43,6 +43,26 @@ body {
       line-height: 0.4rem;
       margin-bottom: 15px;
     }
+    div {
+      padding: 10px 15px;
+      line-height: 0.3rem;
+      > div {
+        display: flex;
+        width: 30%;
+        height: 2rem;
+        justify-content: space-between;
+        &:nth-of-type(n + 4) {
+          margin-top: 0.3rem;
+        }
+        > img {
+          max-width: 100%;
+          max-height: 100%;
+          width: auto;
+          height: auto;
+          vertical-align: middle;
+        }
+      }
+    }
   }
 }
 </style>
@@ -68,8 +88,10 @@ body {
         </div>
         <h3 v-show="type2=='3'|| type=='visit'">回执信息</h3>
         <div v-show="type2=='3'|| type=='visit'" class="content">
-          <p>确认初次时间：{{formValidate.arriveTm }}</p>
+          <p>初次确认时间：{{formValidate.arriveTm }}</p>
+          <p>初次确认人员：{{formValidate.conNm }}</p>
           <p>最终确认时间：{{formValidate.startTm }}</p>
+          <p>最终确认人员：{{formValidate.con2Nm }}</p>
         </div>
         <h3 v-show="type2=='3'|| type=='visit'">处理信息</h3>
         <div v-show="type2=='3'|| type=='visit'" class="content">
@@ -80,6 +102,14 @@ body {
           <p>故障类型：{{formValidate.proTypeNm}}</p>
           <p>故障原因：{{formValidate.proReason}}</p>
           <p>处理记录：{{formValidate.recordMsg}}</p>
+          <p>处理前照片：</p>
+          <div v-for="item in info.preImgs" :key="item">
+            <img :src="item" alt>
+          </div>
+          <p>处理后照片：</p>
+          <div v-for="item in info.postImgs" :key="item">
+            <img :src="item" alt>
+          </div>
         </div>
 
         <div v-show="type=='visit'">
