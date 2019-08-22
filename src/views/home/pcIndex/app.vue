@@ -14,8 +14,8 @@
       </div>
       <!-- titleName -->
       <div>
-        <span>宁波城市二次供水智慧管理平台</span>
-        <span>Ningbo Wisdom Water Supply Management Platform</span>
+        <span>富莱迪二次供水智慧管理平台</span>
+        <span>FuLaiDe Water Supply Management Platform</span>
       </div>
       <!-- weather -->
       <div>

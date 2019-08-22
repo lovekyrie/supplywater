@@ -30,22 +30,6 @@ body {
   div {
     padding: 10px 15px;
     line-height: 0.3rem;
-    > div {
-      display: flex;
-      width: 30%;
-      height: 2rem;
-      justify-content: space-between;
-      &:nth-of-type(n + 4) {
-        margin-top: 0.3rem;
-      }
-      > img {
-        max-width: 100%;
-        max-height: 100%;
-        width: auto;
-        height: auto;
-        vertical-align: middle;
-      }
-    }
   }
 }
 </style>
@@ -84,14 +68,14 @@ body {
         <p>故障类型：{{info.proTypeNm}}</p>
         <p>故障原因：{{info.proReason}}</p>
         <p>处理记录：{{info.recordMsg}}</p>
-        <p>处理前照片：</p>
+        <!--  <p>处理前照片：</p>
         <div v-for="item in info.preImgs" :key="item">
           <img :src="item" alt>
         </div>
         <p>处理后照片：</p>
         <div v-for="item in info.postImgs" :key="item">
           <img :src="item" alt>
-        </div>
+        </div>-->
       </div>
       <h3>回访信息</h3>
       <div>

@@ -19,7 +19,8 @@ body {
   overflow: auto;
   .ivu-form {
     padding: 20px 25px 0 15px;
-    .ivu-date-picker {
+    .ivu-date-picker,
+    .el-select {
       width: 100%;
     }
   }
@@ -32,14 +33,19 @@ body {
     <div class="main">
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
         <FormItem label="工单来源" prop="dispatchFromCd">
-          <Select v-model="formValidate.dispatchFromCd">
-            <Option v-for="item in dispatchFromNm" :value="item.cd" :key="item.cd">{{item.nm}}</Option>
-          </Select>
+          <el-select v-model="formValidate.dispatchFromCd" placeholder="请选择">
+            <el-option
+              v-for="item in dispatchFromNm"
+              :value="item.cd"
+              :key="item.cd"
+              :label="item.nm"
+            ></el-option>
+          </el-select>
         </FormItem>
         <FormItem label="部门" prop="bmCd">
-          <Select v-model="formValidate.bmCd">
-            <Option v-for="item in bmNm" :value="item.cd" :key="item.cd">{{item.nm}}</Option>
-          </Select>
+          <el-select v-model="formValidate.bmCd" placeholder="请选择">
+            <el-option v-for="item in bmNm" :value="item.cd" :key="item.cd" :label="item.nm"></el-option>
+          </el-select>
         </FormItem>
         <FormItem label="派单时间">
           <Row>
@@ -117,28 +123,7 @@ export default {
       loading1: false,
       phList: [],
       equipmentList: [],
-      dispatchFromNm: [
-        {
-          cd: "gd120.01",
-          nm: "96390清泉热线"
-        },
-        {
-          cd: "gd120.02",
-          nm: "安全检查（巡检）"
-        },
-        {
-          cd: "gd120.03",
-          nm: "物业社区"
-        },
-        {
-          cd: "gd120.04",
-          nm: "属地分公司"
-        },
-        {
-          cd: "gd120.05",
-          nm: "系统报警"
-        }
-      ], //工单来源
+      dispatchFromNm: [], //工单来源
       proLvNm: [], //故障现象
       bmNm: [], //部门
       districtNm: [], //行政区域
@@ -211,15 +196,10 @@ export default {
     myHeader
   },
   mounted() {
-    let cookieVal = this.until.getCookie("yui2-token");
-    if (!cookieVal) {
-      let promise = this.until.login();
-      promise.then(res => {
-        this.getSelect();
-      });
-    } else {
+    let promise = this.until.login();
+    promise.then(res => {
       this.getSelect();
-    }
+    });
   },
   methods: {
     //提交
@@ -315,7 +295,7 @@ export default {
     //获取选项数据
     getSelect() {
       //工单来源
-      this.until.get("/general/cat/listByPrntCd?prntCd=gz120").then(res => {
+      this.until.get("/general/cat/listByPrntCd?prntCd=gd120").then(res => {
         if (res.data.items) {
           this.dispatchFromNm = res.data.items;
         }

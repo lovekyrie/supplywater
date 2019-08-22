@@ -46,22 +46,6 @@ body {
     div {
       padding: 10px 15px;
       line-height: 0.3rem;
-      > div {
-        display: flex;
-        width: 30%;
-        height: 2rem;
-        justify-content: space-between;
-        &:nth-of-type(n + 4) {
-          margin-top: 0.3rem;
-        }
-        > img {
-          max-width: 100%;
-          max-height: 100%;
-          width: auto;
-          height: auto;
-          vertical-align: middle;
-        }
-      }
     }
   }
 }
@@ -102,14 +86,14 @@ body {
           <p>故障类型：{{formValidate.proTypeNm}}</p>
           <p>故障原因：{{formValidate.proReason}}</p>
           <p>处理记录：{{formValidate.recordMsg}}</p>
-          <p>处理前照片：</p>
-          <div v-for="item in info.preImgs" :key="item">
+          <!--   <p>处理前照片：</p>
+          <div v-for="item in formValidate.preImgs" :key="item">
             <img :src="item" alt>
           </div>
           <p>处理后照片：</p>
-          <div v-for="item in info.postImgs" :key="item">
+          <div v-for="item in formValidate.postImgs" :key="item">
             <img :src="item" alt>
-          </div>
+          </div>-->
         </div>
 
         <div v-show="type=='visit'">
@@ -147,7 +131,7 @@ body {
 
         <FormItem>
           <Button type="primary" @click="handleSubmit('formValidate')" v-if="type=='visit'">提交</Button>
-          <Button type="primary" @click="handleSubmit2()" v-else>提交</Button>
+          <Button :disabled="setBtn" type="primary" @click="handleSubmit2()" v-else>提交</Button>
           <Button @click="handleReset('formValidate')" style="margin-left: 8px">重置</Button>
         </FormItem>
       </Form>
@@ -166,6 +150,7 @@ export default {
       type: "", //编辑类型，确认还是回访
       type2: "", //初次确认还是最终确认
       token: "",
+      setBtn: false,
       myDate: {
         date: "",
         time: ""
@@ -276,6 +261,8 @@ export default {
       });
     },
     handleSubmit2() {
+      debugger;
+      this.setBtn = true;
       this.formValidate.dealStatus = this.formValidate.dealStatus == 0 ? 1 : 6;
 
       console.log(JSON.stringify(this.formValidate));

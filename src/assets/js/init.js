@@ -1,6 +1,6 @@
 require('assets/css/common.css');
 import 'assets/js/ScreenAdaptive.js';
-// import 'assets/js/vconsole.js';
+//import 'assets/js/vconsole.js';
 
 import "babel-polyfill"; // 解决 IE11 Promise对象未定义
 import './vueFilter'; //全局过滤器F

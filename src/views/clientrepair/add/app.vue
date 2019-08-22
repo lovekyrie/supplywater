@@ -19,7 +19,8 @@ body {
   overflow: auto;
   .ivu-form {
     padding: 20px 25px 0 15px;
-    .ivu-date-picker {
+    .ivu-date-picker,
+    .el-select {
       width: 100%;
     }
   }
@@ -132,9 +133,14 @@ body {
     <div class="main">
       <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
         <FormItem label="申请单位" prop="applicantUnitCd">
-          <Select v-model="formValidate.applicantUnitCd" filterable>
-            <Option v-for="item in applyUnitList" :value="item.cd" :key="item.sysCatPk">{{item.nm}}</Option>
-          </Select>
+          <el-select v-model="formValidate.applicantUnitCd" filterable placeholder="请选择">
+            <el-option
+              v-for="item in applyUnitList"
+              :value="item.cd"
+              :key="item.sysCatPk"
+              :label="item.nm"
+            ></el-option>
+          </el-select>
         </FormItem>
 
         <FormItem label="申请时间">
@@ -152,66 +158,93 @@ body {
         </FormItem>
 
         <FormItem label="维修单位" prop="repairUnitCd">
-          <Select v-model="formValidate.repairUnitCd" filterable>
-            <Option v-for="item in applyUnitList" :value="item.cd" :key="item.sysCatPk">{{item.nm}}</Option>
-          </Select>
+          <el-select v-model="formValidate.repairUnitCd" filterable placeholder="请选择">
+            <el-option
+              v-for="item in applyUnitList"
+              :value="item.cd"
+              :key="item.sysCatPk"
+              :label="item.nm"
+            ></el-option>
+          </el-select>
         </FormItem>
 
         <FormItem label="泵房名称" prop="estateNm">
-          <Select
+          <el-select
             placeholder="请输入关键字"
             v-model="formValidate.estateNm"
             filterable
             remote
             :remote-method="remotePhQuery"
-            @on-change="remoteQuery()"
+            @change="remoteQuery()"
           >
-            <Option v-for="item in phList" :value="item.estateNm" :key="item.phCd">{{item.estateNm}}</Option>
-          </Select>
+            <el-option
+              v-for="item in phList"
+              :value="item.estateNm"
+              :key="item.phCd"
+              :label="item.estateNm"
+            ></el-option>
+          </el-select>
         </FormItem>
 
         <FormItem label="设备大类" prop="deviceBigPk">
-          <Select v-model="deviceBigPk" @on-change="selectBig($event)">
-            <Option v-for="item in deviceBigList" :value="item.cd" :key="item.sysCatPk">{{item.nm}}</Option>
-          </Select>
+          <el-select v-model="deviceBigPk" @change="selectBig($event)">
+            <el-option
+              v-for="item in deviceBigList"
+              :value="item.cd"
+              :key="item.sysCatPk"
+              :label="item.nm"
+            ></el-option>
+          </el-select>
         </FormItem>
 
         <FormItem label="设备小类" prop="deviceSmallPk">
-          <Select v-model="deviceSmallPk" @on-change="selectSamll($event)">
-            <Option
+          <el-select v-model="deviceSmallPk" @change="selectSamll($event)">
+            <el-option
               v-for="item in deviceSmallList"
               :value="item.cd"
               :key="item.sysCatPk"
-            >{{item.nm}}</Option>
-          </Select>
+              :label="item.nm"
+            ></el-option>
+          </el-select>
         </FormItem>
 
         <FormItem label="设备子类" prop="deviceDPk">
-          <Select v-model="deviceDPk" @on-change="selectDcat($event)">
-            <Option v-for="item in deviceDList" :value="item.cd" :key="item.sysCatPk">{{item.nm}}</Option>
-          </Select>
+          <el-select v-model="deviceDPk" @change="selectDcat($event)">
+            <el-option
+              v-for="item in deviceDList"
+              :value="item.cd"
+              :key="item.sysCatPk"
+              :label="item.nm"
+            ></el-option>
+          </el-select>
         </FormItem>
 
         <FormItem label="设备名称" prop="deviceNm">
-          <Select v-model="deviceNm" @on-change="remoteQuery()">
-            <Option v-for="item in deviceNms" :value="item.nm" :key="item.sysCatPk">{{item.nm}}</Option>
-          </Select>
+          <el-select v-model="deviceNm" @change="remoteQuery()">
+            <el-option
+              v-for="item in deviceNms"
+              :value="item.nm"
+              :key="item.sysCatPk"
+              :label="item.nm"
+            ></el-option>
+          </el-select>
         </FormItem>
 
         <FormItem label="设备编号" prop="devicePk">
-          <Select
+          <el-select
             v-model="formValidate.devicePk"
             filterable
             remote
             :remote-method="remoteQuery"
-            @on-change="selectOpt($event)"
+            @change="selectOpt($event)"
           >
-            <Option
+            <el-option
               v-for="item in equipmentList"
               :value="item.deviceCd"
               :key="item.phDevicePk"
-            >{{item.deviceCd}}</Option>
-          </Select>
+              :label="item.deviceCd"
+            ></el-option>
+          </el-select>
         </FormItem>
 
         <FormItem label="故障描述" prop="diagnosis">
@@ -239,18 +272,19 @@ body {
         </FormItem>
 
         <FormItem v-if="formValidate.replaceFittingCd=='10000.150'" label="配件名称" prop="deviceCd">
-          <Select
+          <el-select
             placeholder="请输入关键字"
             v-model="formValidate.deviceCd"
             filterable
-            @on-change="getRepairStock($event)"
+            @change="getRepairStock($event)"
           >
-            <Option
+            <el-option
               v-for="item in replaceList"
               :value="item.stockManagePk"
               :key="item.stockManagePk"
-            >{{item.deviceNm}},{{item.deviceSpec}},【{{item.deviceBrand}}】</Option>
-          </Select>
+              :label="item.deviceNm"
+            >{{item.deviceNm}},{{item.deviceSpec}},【{{item.deviceBrand}}】</el-option>
+          </el-select>
         </FormItem>
         <!-- <i-table  border   :content="self"  :columns="columns7"  :data="listData"></i-table> -->
         <FormItem>
